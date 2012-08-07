@@ -1,0 +1,2 @@
+﻿Đây là SVN server chỉ cho lưu trữ những project mở, vì vậy DB anh em mình không nên share ở đây nhé... Một số core class cũng không nên vứt nên đây :d
+Ai nắm code project thì xóa những phần ít thay đổi để tránh bị cốc mò cò xơi
