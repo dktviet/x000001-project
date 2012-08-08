@@ -9,9 +9,9 @@
 	if (!session_is_registered('log')){
 		header("Location: login.php");
 	}
-	require_once('../config.php');
-	require_once('../common_start.php');
-	require_once('../lib/func.lib.php');
+	require_once('config.php');
+	require_once('common_start.php');
+	require_once('lib/func.lib.php');
 
 	$act_req = $_REQUEST['act'];
 	$act = substr($act_req,-2,2)!='_m'?$act_req:substr($act_req,0,-2);

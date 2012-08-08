@@ -1,6 +1,6 @@
 <?
-	require_once('../config.php');
-	require_once('../lib/func.lib.php');
+	require_once('config.php');
+	require_once('lib/func.lib.php');
 	$parent_id = $_POST['id'];
 	$cat_id = $_POST['cat'];
 	$cat_title = $_POST['title'];
@@ -36,7 +36,7 @@
 	<table class="toolbar">
     	<tr>
         	<td id="toolbar-new" class="button">
-	            <a class="toolbar" onclick="add_new(<?=$parent_id?>);">
+	            <a class="toolbar" onclick="add_new('<?=$tbl?>',<?=$parent_id?>);">
                 	<span class="icon-32-new" title="Thêm mới"> </span>Thêm mới
                 </a>
             </td>
@@ -60,18 +60,18 @@
 		<tr>
 		<?php
 			switch($code){
-				case 'news' 		: require('template/news_thead_ajax.php'); 			break;
+				case 'news' 		: require('template/news_thead_ajax.php'); 		break;
 				case 'advup' 		: require('template/advup_thead_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_thead_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_thead_ajax.php'); 		break;
-				case 'contact_info' : require('template/contact_info_thead_ajax.php'); 	break;
+				case 'contact_info'     : require('template/contact_info_thead_ajax.php'); 	break;
 				case 'contact' 		: require('template/contact_thead_ajax.php'); 		break;
-				case 'entertainment': require('template/entertainment_thead_ajax.php'); break;
+				case 'entertainment'    : require('template/entertainment_thead_ajax.php');     break;
 				case 'site_index'	: require('template/site_index_thead_ajax.php'); 	break;
 				case 'alexa_rank'	: require('template/alexa_rank_thead_ajax.php'); 	break;
-				case 'link'			: require('template/site_link_thead_ajax.php'); 	break;
+				case 'link'		: require('template/site_link_thead_ajax.php'); 	break;
 				case 'partners'		: require('template/partner_thead_ajax.php'); 		break;
-				default 			: require('template/content_thead_ajax.php'); 		break; 
+				default 		: require('template/content_thead_ajax.php'); 		break; 
 			} 
 		?>
 		</tr>

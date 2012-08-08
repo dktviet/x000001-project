@@ -5,10 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Control Panel</title>
-<script type="text/javascript" language="javascript" src="../lib/javascript.lib-min.js"></script>
+<script type="text/javascript" language="javascript" src="lib/javascript.lib-min.js"></script>
 <script type="text/javascript" language="javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript" language="javascript" src="js/jquery-ui-1.8.18.min.js"></script>
-<script type="text/javascript" language="javascript" src="../lib/md5.js"></script>
+<script type="text/javascript" language="javascript" src="lib/md5.js"></script>
 <script type="text/javascript" language="javascript" src="js/script.js"></script>
 <script type="text/javascript" language="javascript" src="js/top_panel/top_panel.js"></script>
 <link href="css/cssAdmin.css" rel="stylesheet" type="text/css">
@@ -22,23 +22,11 @@
 <link href="css/teal.css" rel="stylesheet" type="text/css">
 <link href="css/white.css" rel="stylesheet" type="text/css">
 <link href="css/yellow.css" rel="stylesheet" type="text/css">
-<!--[if IE 7]>
-
-<link href="templates/jbsimpla/css/ie7.css" rel="stylesheet" type="text/css" />
-
-<![endif]-->
-<!--[if lte IE 6]>
-
-<script type="text/javascript" src="templates/jbsimpla/js/supersleight-min.js"></script>
-
-<link href="templates/jbsimpla/css/ie6.css" rel="stylesheet" type="text/css" />
-
-<![endif]-->
 </head>
 <body id="body_main">
 <div id="header-box">
 	
-	<div id="logoText">HAYTUYET.NET</div>
+	<div id="logoText">BATDONGSAN</div>
 
 	<div class="clear"></div>
 
@@ -85,4 +73,4 @@
 
 </body>
 </html>
-<? require("../common_end.php") ?>
+<? require('common_end.php') ?>

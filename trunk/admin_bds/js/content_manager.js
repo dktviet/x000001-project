@@ -50,7 +50,7 @@ function up_down_sort(id, sort_index){
 	if(sort_index == '1'){
 		sort_num = parseInt(sort_num) + 1;
 	}else{
-		if(sort_num>0){	sort_num = parseInt(sort_num) - 1; }else{ sort_num = 0; }
+		if(sort_num>0){sort_num = parseInt(sort_num) - 1;}else{sort_num = 0;}
 	}
 	$.post("ajax/content_action.php", {
 		fnc:'sort_row',
@@ -317,60 +317,34 @@ function edit_image(id, code){
 			$('#img_space').html(data);
 		});
 }
-function add_new(parent_id){
+function add_new(tbl, parent_id){
+        var cur_url = $(location).attr('href');
 	$('#dialog').dialog({
-		title: 'Thêm danh mục',
+		title: 'Thêm nội dung',
 		autoOpen: true,
 		modal: true,
-		width: 380,
+		width: 800,
 		position: 'center',
 		buttons: {
 			'Cập nhật': function() {
-				var code = $('#code_space').val();
-				var name_vn = $('#name_vn_space').val();
-				var name_en = $('#name_en_space').val();
-				$.post("ajax/content_action.php", {
-					fnc:'add_new',
-					code:code,
-					name_vn:name_vn,
-					name_en:name_en,
-					parent_id:parent_id
-				}, function(data) {
-					alert(data.msg);
-					if(data.error=='SUCCESS'){
-						var set_class = $('.adminlist tbody tr:last').attr('class') == 'row0' ? 'row1' : 'row0';
-						if($('.adminlist tbody')){
-							$('.adminlist tbody').append('<tr id="cat_id_'+data.id+'" class="'+set_class+'"></tr>');
-						}else{
-							$('.adminlist').append('<tbody><tr id="cat_id_'+data.id+'" class="'+set_class+'"></tr></tbody>');
-						}
-						var td_1 = '<td align="center" class="smallfont"><input type="checkbox" name="chk[]" value="'+data.id+'"></td>';
-						var td_2 = '<td class="smallfont" align="center">'+data.id+'</td>';
-						var td_3 = '<td align="center" class="smallfont"><span onClick="delrow(\''+data.id+'\');">Xóa</span></td>';
-						var td_4 = '<td class="smallfont" align="center"><span id="name_vn_'+data.id+'" onclick="edit_name(\''+name_vn+'\',\''+name_en+'\',\''+data.id+'\');" title="Name: '+name_en+'">'+name_vn+'</span></td>';
-						var td_5 = '<td class="smallfont sort-num" align="center"><img src="images/up.png" alt="" onclick="up_down_sort(\''+data.id+'\',\'1\');" /><div id="sort_num_'+data.id+'" align="center">0</div><img src="images/down.png" alt="" onclick="up_down_sort(\''+data.id+'\',\'0\');" /></td>';
-						var td_6 = '<td class="smallfont" align="center"><img id="status_icon_'+data.id+'" src="images/check.png" onclick="show_hide(\''+data.id+'\',\'1\');" style="cursor:pointer;" /></td>';
-						var td_7 = '<td class="smallfont" align="center"><img id="top_menu_icon_'+data.id+'" src="images/uncheck.png" onclick="top_menu(\''+data.id+'\',\'1\');" style="cursor:pointer;" /></td>';
-						var td_8 = '<td class="smallfont" align="center"><img id="bottom_menu_icon_'+data.id+'" src="images/uncheck.png" onclick="bottom_menu(\''+data.id+'\',\'1\');" style="cursor:pointer;" /></td>';
-						var td_9 = '<td class="smallfont" align="center"><img id="admin_menu_icon_'+data.id+'" src="images/uncheck.png" onclick="admin_menu(\''+data.id+'\',\'1\');" style="cursor:pointer;" /></td>';
-						var td_10 = '<td class="smallfont" align="center">'+Date('d/m/Y h:i:s',data.time)+'</td><td class="smallfont" align="center">'+Date('d/m/Y h:i:s',data.time)+'</td>';
-						if($('.adminlist tbody tr:last')){
-							$('.adminlist tbody tr:last').html(td_1+td_2+td_3+td_4+td_5+td_6+td_7+td_8+td_9+td_10);
-						}else{
-							$('.adminlist tbody tr').html(td_1+td_2+td_3+td_4+td_5+td_6+td_7+td_8+td_9+td_10);
-						}
-					}
-				}, 'json');
-				$(this).dialog('close');
+				if($('#add_new_form').submit()){
+					$(this).dialog('close');
+				}
 			},
 			'Hủy': function() {
 				$(this).dialog('close');
 			}
 		}
-	}).html('<div style="float:left;padding: 20px;">Mã code:<input type="text" id="code_space" value="" size="30" /></div><div style="float:left;padding: 20px;">Tên tiếng Việt:<input type="text" id="name_vn_space" value="" size="40" /></div><div style="float:left;padding:20px 0px 20px 20px;">Tên tiếng Anh:<input type="text" id="name_en_space" value="" size="40" /></div>');
-	$('#code_space').focus();
+	}).html('<div id="add_new_space"></div>');
+		$.post("ajax/content_action.php", {
+			fnc:'view_add_new_content',
+			url: cur_url,
+			tbl: tbl,
+			parent_id: parent_id
+		}, function(data) {
+			$('#add_new_space').html(data);
+		});
 }
-
 
 function choose_cat(){
 	var url_cat_id = $(location).attr('href').split('#')[1];

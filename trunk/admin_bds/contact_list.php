@@ -1,6 +1,6 @@
 <?
-	require_once('../config.php');
-	require_once('../lib/func.lib.php');
+	require_once('config.php');
+	require_once('lib/func.lib.php');
 	$type = $_POST['cat'];
 	$cat_title = $_POST['title'];
 	$page = $_POST['page'];
