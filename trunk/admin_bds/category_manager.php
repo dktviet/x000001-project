@@ -1,6 +1,6 @@
 <?php 
-	require_once('../config.php');
-	require_once('../lib/func.lib.php');
+	require_once('config.php');
+	require_once('lib/func.lib.php');
 	$get_id = $_POST['id'] ? $_POST['id'] : 0;
 	$cat_title = $_POST['title'];
 ?>

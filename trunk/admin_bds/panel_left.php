@@ -58,11 +58,10 @@
         <ul>
             <li class="cat_list_menu"><a cat_id="0">Quản lý các danh mục</a></li>
         <?php
-			$field = lang_change('id, name_vn','id, name_en');
-			$nav_cats = getMultiRecord(tbl_config::tbl_category, $field, 'status=0 AND parent=0 AND admin_menu=1', 'ORDER BY sort ASC');
+			$nav_cats = getMultiRecord(tbl_config::tbl_category, 'id, name_vn', 'status=0 AND parent=0 AND admin_menu=1', 'ORDER BY sort ASC');
 			foreach($nav_cats as $nav_cat){
 				$nav_id = $nav_cat['id'];
-				$nav_name = lang_change($nav_cat['name_vn'],$nav_cat['name_en']);
+				$nav_name = $nav_cat['name_vn'];
 		?>
         
             <li class="cat_list_menu"><a cat_id="<?=$nav_id?>"><?=$nav_name?></a></li>
@@ -73,11 +72,10 @@
     <li class="node"><a class="top">Quản Lý Nội dung</a>
         <ul>
         <?php
-			$field = lang_change('id, name_vn','id, name_en');
-			$nav_cats = getMultiRecord(tbl_config::tbl_category, $field, 'status=0 AND parent=0', 'ORDER BY sort, date_added ASC');
+			$nav_cats = getMultiRecord(tbl_config::tbl_category, 'id, name_vn', 'status=0 AND parent=0', 'ORDER BY sort, date_added ASC');
 			foreach($nav_cats as $nav_cat){
 				$nav_id = $nav_cat['id'];
-				$nav_name = lang_change($nav_cat['name_vn'],$nav_cat['name_en']);
+				$nav_name = $nav_cat['name_vn'];
 		?>
         
             <li class="content_list_menu"><a href="#<?=$nav_id?>" cat_id="<?=$nav_id?>"><?=$nav_name?></a></li>

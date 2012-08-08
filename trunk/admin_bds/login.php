@@ -1,8 +1,7 @@
 <? 
-if(!session_id()) session_start();
-require('../config.php');
-require('../common_start.php');
-require('../lib/func.lib.php');
+require('config.php');
+require('common_start.php');
+require('lib/func.lib.php');
 $errMsg='';
 
 if (isset($_POST['btnLogin'])){
@@ -50,9 +49,9 @@ if (isset($_POST['btnLogin'])){
 
 <![endif]-->
 <script type="text/javascript" language="javascript" src="js/jquery-1.7.min.js"></script>
-<script type="text/javascript" language="javascript" src="../lib/md5.js"></script>
-<script type="text/javascript" language="javascript" src="../lib/javascript.lib.js"></script>
-<script type="text/javascript" language="javascript" src="../lib/varAlert.vn.unicode.js"></script>
+<script type="text/javascript" language="javascript" src="lib/md5.js"></script>
+<script type="text/javascript" language="javascript" src="lib/javascript.lib.js"></script>
+<script type="text/javascript" language="javascript" src="lib/varAlert.vn.unicode.js"></script>
 <script type="text/javascript" language="javascript" src="js/login.js"></script>
 </head>
 
@@ -119,4 +118,4 @@ if (isset($_POST['btnLogin'])){
 <? if($errMsg!=''){echo '<p align=center class="err">'.$errMsg.'<br>&nbsp;</p>';}?>
 </body>
 </html>
-<? require("../common_end.php") ?>
+<? require("common_end.php") ?>

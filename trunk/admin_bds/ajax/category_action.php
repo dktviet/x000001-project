@@ -1,6 +1,6 @@
 <?php
-	require_once('../../config.php');
-	require_once('../../lib/func.lib.php');
+	require_once('../config.php');
+	require_once('../lib/func.lib.php');
 	
 	$id = $_POST['id'];
 	$chk = $_POST['chk'];
