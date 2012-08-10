@@ -400,11 +400,10 @@ function insert($table,$fields_arr){
 			$strvalues .= ", $fields_arr[$i]";
 		}
 	}
-	
 	$query = "INSERT INTO $table $strfields VALUES ($strvalues)";
-	//echo $query;
-	mysql_query($query, $conn);
-        return mysql_insert_id();
+	$result = mysql_query($query, $conn);
+        $last_id = $result ? mysql_insert_id() : 0;
+        return $last_id;
 }
 
 function update($table,$fields_arr,$where) {
