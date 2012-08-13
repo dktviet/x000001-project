@@ -38,18 +38,18 @@ class system_config{
 }
 // Set Table data:
 class tbl_config{
-	const tbl_category 		= 'tddb_category';
-	const tbl_content 		= 'tddb_content';
-	const tbl_news 			= 'tddb_news';
-	const tbl_contact 		= 'tddb_contact';
-	const tbl_controller            = 'tddb_controller';
-	const tbl_controller_per        = 'tddb_controller_per';
-	const tbl_member 		= 'tddb_member';
-	const tbl_guest_ip 		= 'tddb_guest_ip';
-	const tbl_site_rank             = 'tddb_site_rank';
-	const tbl_config 		= 'tddb_config';
-	const tbl_visitor 		= 'tddb_visitor';
-	const tbl_total_visits          = 'tddb_total_visits';
+	const tbl_category 		= 'xteam_category';
+	const tbl_content 		= 'xteam_content';
+	const tbl_news 			= 'xteam_news';
+	const tbl_contact 		= 'xteam_contact';
+	const tbl_controller            = 'xteam_controller';
+	const tbl_controller_per        = 'xteam_controller_per';
+	const tbl_member 		= 'xteam_member';
+	const tbl_guest_ip 		= 'xteam_guest_ip';
+	const tbl_site_rank             = 'xteam_site_rank';
+	const tbl_config 		= 'xteam_config';
+	const tbl_visitor 		= 'xteam_visitor';
+	const tbl_total_visits          = 'xteam_total_visits';
 }
 include '#connect/config.php';
 ?>

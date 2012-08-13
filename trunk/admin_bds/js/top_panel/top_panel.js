@@ -1,88 +1,28 @@
 $(document).ready(function() {
 	/* Load top menu - status bar: */
+        load_top_menu();
+	/* Load admin theme bar: */
+        load_admin_theme_bar();
+	/* Load horizontal menu: */
+	$('#border-top').load('template/top_panel/hor_menu.html');
+});
+function load_top_menu(){
 	$('#module-status').load('template/top_panel/module_status.html', function() {
 		/* Load admin name: */
 		$.post('first_run.php', { val:'admin_log' }, function(data) {
 			$('#module-status .loggedin-users a').text(data);
 		});
 		/* Admin change pass: */
-		$('#module-status .loggedin-users a').click(function() {
-			$('#dialog').dialog({
-				title: 'Đổi mật khẩu',
-				autoOpen: true,
-				modal: true,
-				width: 500,
-				position: 'center',
-				buttons: {
-					'Cập nhật': function() {
-						var old_pw = $('#txtPwdOld').val();
-						var new_pw_1 = $('#txtPwdNew1').val();
-						var new_pw_2 = $('#txtPwdNew2').val();
-						if(test_empty(old_pw)){
-							alert('Hãy nhập "mật khẩu cũ" !');$('#txtPwdOld').focus();return false;
-						}
-						if(test_empty(new_pw_1)){
-							alert('Hãy nhập "mật khẩu" !');$('#txtPwdNew1').focus();return false;
-						}
-						if(test_empty(new_pw_2)){
-							alert('Hãy nhập "mật khẩu" lần 2 !');$('#txtPwdNew2').focus();return false;
-						}
-						if(!test_confirm_pass(new_pw_1,new_pw_2)){
-							alert('Hai mật khẩu phải đồng nhất !');
-							$('#txtPwdNew1').val('');
-							$('#txtPwdNew2').val('');
-							$('#txtPwdNew1').focus();return false;
-						}
-						old_pw = hex_md5(old_pw);
-						new_pw_1 = hex_md5(new_pw_1);
-						$.post('first_run.php', {
-							val:'check_pw',
-							oldPw: old_pw
-						}, function(data) {
-							if(data[2]+data[3] != 'ok'){
-								alert(data);
-							}else{
-								$.post('first_run.php', {
-									val:'change_pw',
-									new_pw: new_pw_1
-								}, function(data) {
-									alert(data);
-								});
-							}
-						});
-						$(this).dialog('close');
-					},
-					'Hủy': function() {
-						$(this).dialog('close');
-					}
-				}
-			}).load('template/top_panel/changePassword.html');
-		});
+                admin_change_pass();
 		/* For empty cache dir control: */
 		    $('#module-status .empty-cache ul').hide();
 		    $('#module-status .empty-cache').click(function () {
 		    	$('#module-status .empty-cache ul').slideToggle();
 		    });
 		/* Empty cache select: */
-		$('#module-status .empty-cache ul li a').click(function() {
-			var cache_val = $(this).attr('title');
-			var cache_text = $(this).text();
-			$.post('first_run.php', {
-				val:'empty_cache',
-				cache_val: cache_val,
-				cache_text: cache_text 
-			}, function(data) {
-				alert(data.msg);
-			}, 'json');
-		});
+                empty_cache();
 		/* Logout: */
-		$('#module-status .logout a').click(function() {
-			$.post('first_run.php', {
-				val:'logout'
-			}, function(data) {
-				window.location='./?frame=home';
-			});
-		});
+                logout();
 		/* Get news: */
 		$('#module-status .get-news a').click(function() {
 			$.post('../plugins/auto_get_news/get_news.php',{ fnc: 'dantri' });
@@ -93,7 +33,86 @@ $(document).ready(function() {
 			});
 		});
 	});
-	/* Load admin theme bar: */
+}
+function admin_change_pass(){
+        $('#module-status .loggedin-users a').click(function() {
+                $('#dialog').dialog({
+                        title: 'Đổi mật khẩu',
+                        autoOpen: true,
+                        modal: true,
+                        width: 500,
+                        position: 'center',
+                        buttons: {
+                                'Cập nhật': function() {
+                                        var old_pw = $('#txtPwdOld').val();
+                                        var new_pw_1 = $('#txtPwdNew1').val();
+                                        var new_pw_2 = $('#txtPwdNew2').val();
+                                        if(test_empty(old_pw)){
+                                                alert('Hãy nhập "mật khẩu cũ" !');$('#txtPwdOld').focus();return false;
+                                        }
+                                        if(test_empty(new_pw_1)){
+                                                alert('Hãy nhập "mật khẩu" !');$('#txtPwdNew1').focus();return false;
+                                        }
+                                        if(test_empty(new_pw_2)){
+                                                alert('Hãy nhập "mật khẩu" lần 2 !');$('#txtPwdNew2').focus();return false;
+                                        }
+                                        if(!test_confirm_pass(new_pw_1,new_pw_2)){
+                                                alert('Hai mật khẩu phải đồng nhất !');
+                                                $('#txtPwdNew1').val('');
+                                                $('#txtPwdNew2').val('');
+                                                $('#txtPwdNew1').focus();return false;
+                                        }
+                                        old_pw = hex_md5(old_pw);
+                                        new_pw_1 = hex_md5(new_pw_1);
+                                        $.post('first_run.php', {
+                                                val:'check_pw',
+                                                oldPw: old_pw
+                                        }, function(data) {
+                                                if(data.error == 'err'){
+                                                        alert(data.msg);
+                                                }else{
+                                                        $.post('first_run.php', {
+                                                                val:'change_pw',
+                                                                new_pw: new_pw_1
+                                                        }, function(data) {
+                                                                alert(data.msg);
+                                                                if(data.error == 'ok'){
+                                                                    $('#dialog').dialog('close');
+                                                                }
+                                                        }, 'json');
+                                                }
+                                        }, 'json');
+                                },
+                                'Hủy': function() {
+                                        $(this).dialog('close');
+                                }
+                        }
+                }).load('template/top_panel/changePassword.html');
+        });
+}
+function empty_cache(){
+        $('#module-status .empty-cache ul li a').click(function() {
+                var cache_val = $(this).attr('title');
+                var cache_text = $(this).text();
+                $.post('first_run.php', {
+                        val:'empty_cache',
+                        cache_val: cache_val,
+                        cache_text: cache_text
+                }, function(data) {
+                        alert(data.msg);
+                }, 'json');
+        });
+}
+function logout(){
+        $('#module-status .logout a').click(function() {
+                $.post('first_run.php', {
+                        val:'logout'
+                }, function(data) {
+                        window.location='./?frame=home';
+                });
+        });
+}
+function load_admin_theme_bar(){
 	$('#admin-theme').load('template/top_panel/admin_theme.html', function(){
 		/* Load admin theme: */
 		$.post('first_run.php', { val:'admin_theme' }, function(data) {
@@ -114,8 +133,4 @@ $(document).ready(function() {
 			});
 		});
 	});
-	/* Load horizontal menu: */
-	$('#border-top').load('template/top_panel/hor_menu.html');
-});
-
-
+}

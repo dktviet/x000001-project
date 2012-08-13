@@ -74,17 +74,27 @@
 	}
 	function check_pw($old,$adminPw){
 		$errMessage = '';
-		if($old != $adminPw) $errMessage = 'Sai mật khẩu!';
-		else $errMessage = 'ok';
-		return $errMessage;
+		if($old != $adminPw){
+                    $err = 'err';
+                    $errMessage = 'Sai mật khẩu!';
+                }else{
+                    $err = 'ok';
+                    $errMessage = 'Đổi mật khẩu...';
+                }
+                echo json_encode(array('error' => $err, 'msg' => $errMessage));
 	}
 	function change_pw($newPw,$adminUid){
 		$errMessage = '';
 		$fields_arr = array('pwd' => "'$newPw'");
 		$result = update(tbl_config::tbl_controller,$fields_arr,"uid='".$adminUid."'");
-		if ($result) $errMessage = "Cập nhật thành công!";
-		else $errMessage = "Không thể cập nhật !";
-		return $errMessage;
+		if ($result){
+                    $err = 'ok';
+                    $errMessage = "Cập nhật thành công!";
+                }else{
+                    $err = 'err';
+                    $errMessage = "Không thể cập nhật !";
+                }
+                echo json_encode(array('error' => $err, 'msg' => $errMessage));
 	}
 	function empty_cache($cache_val,$cache_text){
 		$errMsg = '';
