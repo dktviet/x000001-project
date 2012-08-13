@@ -9,14 +9,14 @@
 	$val2 = $_POST['val2'];
 	
 	switch ($_POST['fnc']){	
-		case 'del' 			: del($id); 					break;
+		case 'del' 		: del($id); 					break;
 		case 'del_multi' 	: del_multi($chk); 				break;
 		case 'show_hide' 	: show_hide($id, $val); 		break;
 		case 'sort_row' 	: sort_row($id, $val); 			break;
 		case 'top_menu' 	: top_menu($id, $val); 			break;
 		case 'bottom_menu' 	: bottom_menu($id, $val); 		break;
 		case 'admin_menu' 	: admin_menu($id, $val); 		break;
-		case 'edit_name' 	: edit_name($id, $val1, $val2); break;
+		case 'edit_name' 	: edit_name($id, $val); break;
 		case 'add_new' 		: insert_new_category(); 		break;
 	}
 	
@@ -25,7 +25,7 @@
 		$fields_arr = array("id" => $id);
 		$result = delete_rows(tbl_config::tbl_category,$fields_arr);
 		if ($result){
-			if(file_exists('../'.$r['image'])) @unlink('../'.$r['image']);
+			if(file_exists('../'.$r['image_thumbs'])) @unlink('../'.$r['image_thumbs']);
 			if(file_exists('../'.$r['image_large'])) @unlink('../'.$r['image_large']);
 			$err = 'SUCCESS';
 			$errMsg = "Đã xóa thành công!";
@@ -44,7 +44,7 @@
 				$fields_arr = array("id" => $id);
 				$result = delete_rows(tbl_config::tbl_category,$fields_arr);
 				if ($result){
-					if(file_exists('../'.$r['image'])) @unlink('../'.$r['image']);
+					if(file_exists('../'.$r['image_thumbs'])) @unlink('../'.$r['image_thumbs']);
 					if(file_exists('../'.$r['image_large'])) @unlink('../'.$r['image_large']);
 					$cntDel++;
 				}else $cntNotDel++;
@@ -134,8 +134,8 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
-	function edit_name($id, $val1, $val2){
-		$fields_arr = array("name_vn" => "'$val1'", "name_en" => "'$val2'","last_modified" => time());
+	function edit_name($id, $val){
+		$fields_arr = array("name" => "'$val'", "last_modified" => time());
 		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -147,25 +147,21 @@
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
 	function insert_new_category(){
-		$code = $_POST['code'];
 		$parent_id = $_POST['parent_id'];
-		$name_vn = $_POST['name_vn'];
-		$name_en = $_POST['name_en'];
+		$name = $_POST['name'];
 		$time = time();
 		$fields_arr = array(
-			"code"          => "'$code'",
-			"name_vn"       => "'$name_vn'",
-			"name_en"      	=> "'$name_en'",
-			"parent"      	=> "'$parent_id'",
-			"status"		=> "0",
+			"name"          => "'$name'",
+			"parent_id"     => "'$parent_id'",
+			"status"        => "0",
 			"date_added"    => "$time",
 			"last_modified" => "$time"
 		);
-		$result = insert(tbl_config::tbl_category,$fields_arr);
-		if($result) {
+		$insert_id = insert(tbl_config::tbl_category,$fields_arr);
+		if($insert_id && $insert_id > 0) {
 			$err = 'SUCCESS';
 			$errMsg = "Thêm danh mục mới thành công";
-			$id = mysql_insert_id();	
+			$id = $insert_id;
 		}else{
 			$err = 'ERROR';
 			$errMsg = "Không thể thêm danh mục mới!";
