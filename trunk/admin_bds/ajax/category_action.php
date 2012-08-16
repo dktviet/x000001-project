@@ -9,19 +9,17 @@
 	$val2 = $_POST['val2'];
 	
 	switch ($_POST['fnc']){	
-		case 'del' 		: del($id); 					break;
-		case 'del_multi' 	: del_multi($chk); 				break;
-		case 'show_hide' 	: show_hide($id, $val); 		break;
-		case 'sort_row' 	: sort_row($id, $val); 			break;
-		case 'top_menu' 	: top_menu($id, $val); 			break;
-		case 'bottom_menu' 	: bottom_menu($id, $val); 		break;
-		case 'admin_menu' 	: admin_menu($id, $val); 		break;
-		case 'edit_name' 	: edit_name($id, $val); break;
-		case 'add_new' 		: insert_new_category(); 		break;
+		case 'del' 		: del($id);                 break;
+		case 'del_multi' 	: del_multi($chk);          break;
+		case 'show_hide' 	: show_hide($id, $val);     break;
+                case 'sort_row' 	: sort_row($id, $val);      break;
+		case 'top_menu' 	: top_menu($id, $val);      break;
+		case 'edit_name' 	: edit_name($id, $val);     break;
+		case 'add_new' 		: insert_new_category();    break;
 	}
 	
 	function del($id){
-		$r = getRecord(tbl_config::tbl_category,"id=".$id);
+		$r = selectOne(tbl_config::tbl_category,"id=".$id);
 		$fields_arr = array("id" => $id);
 		$result = delete_rows(tbl_config::tbl_category,$fields_arr);
 		if ($result){
@@ -40,7 +38,7 @@
 		$cntNotDel=0;
 		if($chk!=''){
 			foreach ($chk as $id){
-				$r = getRecord(tbl_config::tbl_category,"id=".$id);
+				$r = selectOne(tbl_config::tbl_category,"id=".$id);
 				$fields_arr = array("id" => $id);
 				$result = delete_rows(tbl_config::tbl_category,$fields_arr);
 				if ($result){
@@ -75,7 +73,7 @@
 	}	
 	function sort_row($id, $val){
 		$fields_arr = array("sort" => $val,"last_modified" => time());
-		$sort = getRecord(tbl_config::tbl_category, "id=".$id);
+		$sort = selectOne(tbl_config::tbl_category, "id=".$id);
 		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -104,36 +102,6 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
-	function bottom_menu($id, $val){
-		$fields_arr = array("bottom_menu" => $val,"last_modified" => time());
-		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
-		if ($result && $val=='1'){
-			$err = 'SUCCESS';
-			$errMsg = "Đã Cập nhật trạng thái bottom menu.";
-		}else if ($result && $val=='0'){
-			$err = 'SUCCESS';
-			$errMsg = "Đã Huỷ trạng thái bottom menu.";
-		}else{
-			$err = 'ERROR';
-			$errMsg = "Không thể cập nhật!";
-		}
-		echo json_encode(array('error' => $err, 'msg' => $errMsg));
-	}
-	function admin_menu($id, $val){
-		$fields_arr = array("admin_menu" => $val,"last_modified" => time());
-		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
-		if ($result && $val=='1'){
-			$err = 'SUCCESS';
-			$errMsg = "Đã Cập nhật trạng thái admin menu.";
-		}else if ($result && $val=='0'){
-			$err = 'SUCCESS';
-			$errMsg = "Đã Huỷ trạng thái admin menu.";
-		}else{
-			$err = 'ERROR';
-			$errMsg = "Không thể cập nhật!";
-		}
-		echo json_encode(array('error' => $err, 'msg' => $errMsg));
-	}
 	function edit_name($id, $val){
 		$fields_arr = array("name" => "'$val'", "last_modified" => time());
 		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
@@ -153,7 +121,7 @@
 		$fields_arr = array(
 			"name"          => "'$name'",
 			"parent_id"     => "'$parent_id'",
-			"status"        => "0",
+			"status"        => "1",
 			"date_added"    => "$time",
 			"last_modified" => "$time"
 		);

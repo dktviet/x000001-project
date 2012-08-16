@@ -7,13 +7,13 @@
 	<span onClick="delrow('<?=$id?>');">Xóa</span>
 </td>
 <td class="smallfont" align="center">
-	<span id="name_vn_<?=$id?>" onclick="edit_name('<?=killInjection($name_vn)?>','<?=killInjection($name_en)?>','<?=$id?>');" title="Name: <?=$name_en!=''?killInjection($name_en):'Rỗng'?>"><?=killInjection($name_vn)?></span>
+	<span id="name_vn_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');"><?=killInjection($name)?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="parent_name_<?=$id?>" onclick="edit_parent('<?=$getParent['id']?>','<?=$id?>');" title="Name: <?=$name_en!=''?$name_en:'Rỗng'?>"><?=$getParent['name_vn']?></span>
+	<span id="parent_name_<?=$id?>" onclick="edit_parent('<?=$get_cat_info['id']?>','<?=$id?>');"><?=$get_cat_info['name']?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="short_detail_<?=$id?>" onclick="edit_short_detail('<?=$id?>');" title="Short detail: <?=$short_en!=''?'...':'Rỗng'?>"><?=$short_vn!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>			
+	<span id="short_detail_<?=$id?>" onclick="edit_short_detail('<?=$id?>');"><?=$detail_short!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
 	<span id="detail_<?=$id?>" onclick="edit_detail('<?=$id?>');" title="Detail: <?=$detail_en!=''?'...':'Rỗng'?>"><?=$detail_vn!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>			
@@ -29,7 +29,5 @@
 	<img src="images/down.png" alt="" onclick="up_down_sort('<?=$id?>','0');" />
 </td>
 <td class="smallfont" align="center"><img id="status_icon_<?=$id?>" src="<?=$status>0?'images/uncheck.png':'images/check.png'?>" onclick="show_hide('<?=$id?>','<?=$status>0?'0':'1'?>');" style="cursor:pointer;" /></td>
-<td class="smallfont" align="center"><img id="show_home_icon_<?=$id?>" src="<?=$show_home>0?'images/check.png':'images/uncheck.png'?>" onclick="show_home('<?=$id?>','<?=$show_home>0?'0':'1'?>');" style="cursor:pointer;" /></td>
-<td class="smallfont" align="center"><img id="show_hot_icon_<?=$id?>" src="<?=$show_hot>0?'images/check.png':'images/uncheck.png'?>" onclick="show_hot('<?=$id?>','<?=$show_hot>0?'0':'1'?>');" style="cursor:pointer;" /></td>
 <td class="smallfont" align="center"><?=date('d/m/Y h:i:s A',$date_added)?></td>
 <td class="smallfont" align="center"><?=date('d/m/Y h:i:s A',$last_modified)?></td>

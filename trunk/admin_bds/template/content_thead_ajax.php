@@ -10,7 +10,5 @@
 <th width="59" class="title"><a class="title" href="<?=getLinkSort(7)?>">Lượt xem</a></th>
 <th width="109" class="title"><a class="title" href="<?=getLinkSort(8)?>">Thứ tự sắp xếp</a></th>
 <th width="54" class="title"><a class="title" href="<?=getLinkSort(11)?>">Hiển thị</a></th>
-<th width="47" class="title"><a class="title" href="<?=getLinkSort(9)?>">Hiển thị trang chủ</a></th>
-<th width="51" class="title"><a class="title" href="<?=getLinkSort(10)?>">Tiêu điểm</a></th>	
 <th width="58" class="title"><a class="title" href="<?=getLinkSort(12)?>">Ngày tạo lập</a></th>
 <th width="62" class="title"><a class="title" href="<?=getLinkSort(13)?>">Lần hiệu chỉnh trước</a></th>

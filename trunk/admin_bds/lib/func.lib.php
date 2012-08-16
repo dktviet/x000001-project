@@ -9,15 +9,15 @@ if (phpversion()< "4.1.0") {
 }
 //*********************************************************************************************************
 //************************************** Get email config *************************************************
-$emailConfigRecord = getRecord(tbl_config::tbl_config,"code='adminEmail'");
+$emailConfigRecord = selectOne(tbl_config::tbl_config,"code='adminEmail'");
 $adminEmail = $emailConfigRecord['detail'];
 //*********************************************************************************************************
 //*********************************** Get currency unit config ********************************************
-$currencyUnitConfigRecord = getRecord(tbl_config::tbl_config,"code='currencyUnit'");
+$currencyUnitConfigRecord = selectOne(tbl_config::tbl_config,"code='currencyUnit'");
 $currencyUnit = $currencyUnitConfigRecord['detail'];
 //*********************************************************************************************************
 //************************************* Get hot line config ***********************************************
-$hotlineConfigRecord = getRecord(tbl_config::tbl_config,"code='hotline'");
+$hotlineConfigRecord = selectOne(tbl_config::tbl_config,"code='hotline'");
 $hotline = $hotlineConfigRecord['detail'];
 //*********************************************************************************************************
 //************************************** Public Key Interface *********************************************
@@ -166,7 +166,20 @@ function makeUpload($f,$newfile){
 }
 //************************************************************************************************************
 //************************************************************************************************************
-function getMultiRecord($table, $colume, $where='1=1', $orderby='', $limit=''){
+function query($sql){
+    global $conn;
+    if ($sql == '') return false;
+    $result_array = array();
+	$result = mysql_query($sql,$conn);
+	if($result){
+		while($row=mysql_fetch_assoc($result)){
+			$result_array[] = $row;
+		}
+	}
+	return $result_array;
+}
+
+function selectMulti($table, $colume, $where='1=1', $orderby='', $limit=''){
     global $conn;
     if ($table == '') return false;
     $result_array = array();
@@ -179,7 +192,7 @@ function getMultiRecord($table, $colume, $where='1=1', $orderby='', $limit=''){
 	return $result_array;
 }
 
-function getRecord($table, $where='1=1', $orderby='date_added desc'){
+function selectOne($table, $where='1=1', $orderby='date_added desc'){
     global $conn;
     if ($table == '') return false;
 	$result = mysql_query("select * from $table where $where order by $orderby limit 1",$conn);
@@ -210,7 +223,7 @@ function dateFormat($dateField, $lang='vn'){
 
 function getArrayCategory($table, $catid="", $split="="){
     global $conn;
-    $hide = "status=0";
+    $hide = "status=1";
     if (isset($_SESSION['log'])) $hide="1=1";
     $ret = array();
     if ($catid=="") $catid=0;
@@ -227,7 +240,7 @@ function getArrayCategory($table, $catid="", $split="="){
 function getArrayCombo($table, $valueField, $textField, $where=""){
 	global $conn;
 	$ret = array();
-	$hide = "status=0";
+	$hide = "status=1";
 	$where = $where!="" ? $where : "1=1";
 	$result = mysql_query("select $valueField,$textField from $table where $hide and $where",$conn);
 	while($row=mysql_fetch_assoc($result)){
@@ -271,6 +284,21 @@ function comboCategory($name, $arrSource, $class, $index, $all){
 	$out = '';
 	$out .= '<select id="'.$name.'" name="'.$name.'" class="'.$class.'" onChange="choose_cat();" size="1">';
 	$out .= $all==1 ? '<option value="">--Tất cả--</option>' : '';
+	$cats = $arrSource;
+	foreach ($cats as $cat){
+		$selected = $cat[0] == $index ? 'selected' : '';
+		$out .= '<option value="'.$cat[0].'" '.$selected.'>'.$cat[1].'</option>';
+	}
+	$out .= '</select>';
+	return $out;
+}
+function comboProperties($name, $arrSource, $class, $index, $all, $allow_change=false, $ext_id=0, $prod_id=0){
+	$name = $name != '' ? $name : 'cmbParent';
+	if(!$arrSource){return false;}
+        $onchange = $allow_change ? 'onChange="choose_properties(this.value, '.$ext_id.', '.$prod_id.');" ' : '';
+	$out = '';
+	$out .= '<select id="'.$name.'" name="'.$name.'" class="'.$class.'" '.$onchange.'size="1">';
+	$out .= $all==1 ? '<option value="">--Chọn thuộc tính--</option>' : '';
 	$cats = $arrSource;
 	foreach ($cats as $cat){
 		$selected = $cat[0] == $index ? 'selected' : '';

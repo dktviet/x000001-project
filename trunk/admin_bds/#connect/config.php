@@ -3,7 +3,6 @@ class system_db{
 	const hostname     	= "localhost";
 	const username     	= "root";
 	const password     	= "root";
-//	const databasename 	= "haytuyet_v2";
         const databasename 	= "bds";
 }
 $conn = @mysql_connect(system_db::hostname, system_db::username, system_db::password) or 

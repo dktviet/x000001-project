@@ -3,7 +3,8 @@
 	require_once('../lib/func.lib.php');
         $fnc = $_POST['fnc'] ? $_POST['fnc'] : $_GET['fnc'];
 	$tbl = $_POST['tbl'] ? $_POST['tbl'] : $_GET['tbl'];
-	$parent_id = $_POST['parent_id'] ? $_POST['parent_id'] : $_GET['parent_id'];
+	$parent_cat_id = $_POST['parent_cat_id'] ? $_POST['parent_cat_id'] : $_GET['parent_cat_id'];
+        $cat_id = $_POST['cat_id'] ? $_POST['cat_id'] : $_GET['cat_id'];
 	$id = $_POST['id'];
 	$chk = $_POST['chk'];
 	$val = $_POST['val'];
@@ -18,11 +19,13 @@
 		case 'show_home' 		: show_home($tbl,$id, $val); 		break;
 		case 'show_hot' 		: show_hot($tbl,$id, $val); 		break;
 		case 'update_views'             : update_views($tbl,$id, $val); 	break;
-		case 'edit_name' 		: edit_name($tbl,$id, $val1, $val2);    break;
-		case 'view_edit_parent'         : view_edit_parent($parent_id, $id);    break;
+		case 'edit_name' 		: edit_name($tbl,$id, $val);    break;
+		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);    break;
 		case 'update_parent'            : update_parent($tbl, $id, $val);	break;
-                case 'view_add_new_content'     : view_add_new_content($tbl, $parent_id); break;
-		case 'add_new' 			: add_new_content($tbl, $parent_id);    break;
+                case 'view_add_new_content'     : view_add_new_content($tbl, $parent_cat_id, $cat_id); break;
+		case 'add_new' 			: add_new_content($tbl, $parent_cat_id, $cat_id);    break;
+                case 'add_new_properties'       : add_new_properties($cat_id); break;
+                case 'update_properties'        : update_properties(); break;
 		case 'view_edit_detail_short' 	: view_edit_detail_short($tbl, $id);	break;
 		case 'update_detail_short' 	: update_detail_short($tbl, $id);	break;
 		case 'view_edit_detail'         : view_edit_detail($tbl, $id);		break;
@@ -33,12 +36,12 @@
 	}
 	
 	function del($tbl, $id){
-		$r = getRecord($tbl,"id=".$id);
+		$r = selectOne($tbl,"id=".$id);
 		$fields_arr = array("id" => $id);
 		$result = delete_rows($tbl,$fields_arr);
 		if ($result){
 			if(file_exists('../../'.$r['image_thumbs'])) @unlink('../../'.$r['image_thumbs']);
-			if(file_exists('../../'.$r['image'])) @unlink('../../'.$r['image']);
+			if(file_exists('../../'.$r['image_large'])) @unlink('../../'.$r['image_large']);
 			$err = 'SUCCESS';
 			$errMsg = "Đã xóa thành công!";
 		}else{
@@ -52,12 +55,12 @@
 		$cntNotDel=0;
 		if($chk!=''){
 			foreach ($chk as $id){
-				$r = getRecord($tbl,"id=".$id);
+				$r = selectOne($tbl,"id=".$id);
 				$fields_arr = array("id" => $id);
 				$result = delete_rows($tbl,$fields_arr);
 				if ($result){
 					if(file_exists('../../'.$r['image_thumbs'])) @unlink('../../'.$r['image_thumbs']);
-					if(file_exists('../../'.$r['image'])) @unlink('../../'.$r['image']);
+					if(file_exists('../../'.$r['image_large'])) @unlink('../../'.$r['image_large']);
 					$cntDel++;
 				}else $cntNotDel++;
 			}
@@ -73,10 +76,10 @@
 	function show_hide($tbl, $id, $val){
 		$fields_arr = array("status" => "'$val'","last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
-		if ($result && $val=='1'){
+		if ($result && $val=='0'){
 			$err = 'SUCCESS';
 			$errMsg = "Đã cập nhật trạng thái Ẩn.";
-		}else if ($result && $val=='0'){
+		}else if ($result && $val=='1'){
 			$err = 'SUCCESS';
 			$errMsg = "Đã cập nhật trạng thái Hiện.";
 		}else{
@@ -87,7 +90,7 @@
 	}	
 	function sort_row($tbl, $id, $val){
 		$fields_arr = array("sort" => $val,"last_modified" => time());
-		$sort = getRecord($tbl, "id=".$id);
+		$sort = selectOne($tbl, "id=".$id);
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -143,8 +146,8 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
-	function edit_name($tbl, $id, $val1, $val2){
-		$fields_arr = array("name_vn" => "'$val1'", "name_en" => "'$val2'","last_modified" => time());
+	function edit_name($tbl, $id, $val){
+		$fields_arr = array("name" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -155,18 +158,18 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
-	function view_edit_parent($parent_id, $id){
-		$arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name_vn','parent = ' . $parent_id);
+	function view_edit_parent($parent_cat_id, $cat_id){
+		$arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name','parent_id = ' . $parent_cat_id);
 		if ($arraySourceCombo){
 			$err = 'SUCCESS';
-			$drop_list = comboCategory('ddCatParent',$arraySourceCombo,'smallfont',$id,0);
+			$drop_list = comboCategory('ddCatParent',$arraySourceCombo,'smallfont',$cat_id,0);
 		}else{
 			$err = 'ERROR';
 		}
 		echo json_encode(array('error' => $err, 'drop_list' => $drop_list));
 	}
 	function update_parent($tbl, $id, $val){
-		$fields_arr = array("parent" => $val,"last_modified" => time());
+		$fields_arr = array("parent_id" => $val,"last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -181,36 +184,28 @@
 		require_once ('../ckeditor/ckeditor.php') ;
 		require_once ('../ckfinder/ckfinder.php') ;
 		$random_id = rand(1,9999);
-		$detail_short = getRecord($tbl,'id = '.$id);
+		$detail_short = selectOne($tbl,'id = '.$id);
 		$url = $_POST['url'];
 		$form_data = '<form id="short_detail_form" name="short_detail_form" method="post" enctype="multipart/form-data" action="ajax/content_action.php">
                     <input type="hidden" name="fnc" value="update_detail_short" />
                     <input type="hidden" name="url" value="'.$url.'" />
                     <input type="hidden" name="tbl" value="'.$tbl.'" />
                     <input type="hidden" name="id" value="'.$id.'" />
-                    <div style="float:left;padding: 20px;">Nội dung tiếng Việt:
-                            <textarea name="txtshort_vn" cols="100" rows="10" id="txtshort_vn'.$random_id.'" class="to_get_id_short_vn">'.$detail_short['detail_short_vn'].'</textarea>
-                    </div>
-                    <div id="short_en_call" style="float:left;padding:10px 20px;">
-                            <input type="button" value="Thêm/Sửa Tiếng Anh" />
-                    </div>
-                    <div id="short_en_show" style="float:left;padding:20px;">Nội dung tiếng Anh:
-                            <textarea name="txtshort_en" cols="100" rows="10" id="txtshort_en'.$random_id.'" class="to_get_id_short_en">'.$detail_short['detail_short_en'].'</textarea>
+                    <div style="float:left;padding: 20px;">Nội dung ngắn:
+                            <textarea name="txtshort" cols="100" rows="10" id="txtshort'.$random_id.'" class="to_get_id_short">'.$detail_short['detail_short'].'</textarea>
                     </div>
 		</form>';
                 $form_data .= script_for_edit_content();
 		$ckeditor = new CKEditor( ) ;
 		$ckeditor->basePath    = 'ckeditor/' ;
 		CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
-		$ckeditor->replace("txtshort_vn".$random_id);
-		$ckeditor->replace("txtshort_en".$random_id);	
+		$ckeditor->replace("txtshort".$random_id);
 		echo $form_data;
 	}
 	function update_detail_short($tbl, $id){
-		$val1 = $_POST['txtshort_vn'];
-		$val2 = $_POST['txtshort_en'];
+		$val = $_POST['txtshort'];
 		$url = $_POST['url'];
-		$fields_arr = array("detail_short_vn" => "'$val1'", "detail_short_en" => "'$val2'", "last_modified" => time());
+		$fields_arr = array("detail_short" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -227,7 +222,7 @@
 		require_once ('../ckeditor/ckeditor.php') ;
 		require_once ('../ckfinder/ckfinder.php') ;
 		$random_id = rand(1,9999);
-		$detail = getRecord($tbl,'id = '.$id);
+		$detail = selectOne($tbl,'id = '.$id);
 		$url = $_POST['url'];
 		$form_data = '<form id="detail_form" name="detail_form" method="post" enctype="multipart/form-data" action="ajax/content_action.php">
                     <input type="hidden" name="fnc" value="update_detail" />
@@ -235,28 +230,20 @@
                     <input type="hidden" name="tbl" value="'.$tbl.'" />
                     <input type="hidden" name="id" value="'.$id.'" />
                     <div style="float:left;padding: 20px;">Nội dung tiếng Việt:
-                            <textarea name="txtlong_vn" cols="100" rows="10" id="txtlong_vn'.$random_id.'" class="to_get_id_vn">'.$detail['detail_vn'].'</textarea>
-                    </div>
-                    <div id="long_en_call" style="float:left;padding:10px 20px;">
-                            <input type="button" value="Thêm/Sửa Tiếng Anh" />
-                    </div>
-                    <div id="long_en_show" style="float:left;padding:20px;">Nội dung tiếng Anh:
-                            <textarea name="txtlong_en" cols="100" rows="10" id="txtlong_en'.$random_id.'" class="to_get_id_en">'.$detail['detail_en'].'</textarea>
+                            <textarea name="txtlong" cols="100" rows="10" id="txtlong'.$random_id.'" class="to_get_id">'.$detail['detail'].'</textarea>
                     </div>
 		</form>';
                 $form_data .= script_for_edit_content();
 		$ckeditor = new CKEditor( ) ;
 		$ckeditor->basePath    = 'ckeditor/' ;
 		CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
-		$ckeditor->replace("txtlong_vn".$random_id);
-		$ckeditor->replace("txtlong_en".$random_id);	
+		$ckeditor->replace("txtlong".$random_id);
 		echo $form_data;
 	}
 	function update_detail($tbl, $id){
-		$val1 = $_POST['txtlong_vn'];
-		$val2 = $_POST['txtlong_en'];
+		$val = $_POST['txtlong'];
 		$url = $_POST['url'];
-		$fields_arr = array("detail_vn" => "'$val1'", "detail_en" => "'$val2'", "last_modified" => time());
+		$fields_arr = array("detail" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -304,7 +291,7 @@
                 if(!is_dir($path_thumb)) mkdir($path_thumb,0777);
                 $pathdb_thumb = $pathdb.'/thumbs';
 		
-		$r = getRecord($tbl,"id=".$id);
+		$r = selectOne($tbl,"id=".$id);
 		$return_img = '';
 		if (!$img_check_clear || $img_check_clear==''){
 			$extImg=getFileExtention($_FILES['txtImage']['name']);
@@ -316,17 +303,17 @@
 				}else{
 					change_img_size("$path/".$code."_l".$id.$extImg,"$path_thumb/".$code."_t".$id.$extImg,292,950);
 				}
-				$fields_arr = array("image" => "'".$pathdb."/".$code."_l".$id.$extImg."'",
+				$fields_arr = array("image_large" => "'".$pathdb."/".$code."_l".$id.$extImg."'",
 									"image_thumbs" => "'".$pathdb_thumb."/".$code."_t".$id.$extImg."'",
 									"last_modified" => time());
 				$return_img = '../'.$pathdb_thumb."/".$code."_t".$code.$extImg;
 				
 			}	
 		}else{
-			if(file_exists('../../'.$r['image']) && file_exists('../../'.$r['image_thumbs'])){
-				@unlink('../../'.$r['image']); @unlink('../../'.$r['image_thumbs']);
+			if(file_exists('../../'.$r['image_large']) && file_exists('../../'.$r['image_thumbs'])){
+				@unlink('../../'.$r['image_large']); @unlink('../../'.$r['image_thumbs']);
 			}
-			$fields_arr = array("image" => "''",
+			$fields_arr = array("image_large" => "''",
 									"image_thumbs" => "''",
 									"last_modified" => time());
 		}		
@@ -341,178 +328,183 @@
 		}
 		echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
 	}
-        function view_add_new_content($tbl, $parent_id){
-            require_once ('../ckeditor/ckeditor.php') ;
-            require_once ('../ckfinder/ckfinder.php') ;
-            $url = $_POST['url'];
+        function view_add_new_content($tbl, $parent_cat_id, $cat_id){
             $random_id = rand(1,9999);
-            $arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name_vn','parent = ' . $parent_id);
-            $get_parent_code = getRecord(tbl_config::tbl_category, 'id = ' . $parent_id);
+            $arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name','parent_id = ' . $parent_cat_id);
+            $get_parent_code = selectOne(tbl_config::tbl_category, 'id = ' . $parent_cat_id);
             $code = $get_parent_code['code'];
-            $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
-                <input type="hidden" name="fnc" value="add_new" />
-                <input type="hidden" name="url" value="'.$url.'" />
-                <input type="hidden" name="tbl" value="'.$tbl.'" />
-                <input type="hidden" name="code" value="'.$code.'" />
-                <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Tên</td>
-                            <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
-                            <td width="83%" class="smallfont">
-                                    <input value="" type="text" name="txtName_vn" class="textbox" size="34">
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Name</td>
-                            <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
-                            <td width="83%" class="smallfont">
-                                    <input value="" type="text" name="txtName_en" class="textbox" size="34">
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Hình ảnh</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">
-                                    <input type="file" name="txtImage" class="textbox" size="34" />
-                                    (Kích thước&lt;2MB)(jpg,gif,bmp)
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Nội dung ngắn</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">
-                                    <textarea name="txtshort_vn" cols="80" rows="10" id="txtshort_vn'.$random_id.'"></textarea>
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right"></td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont" id="short_en_call">
-                                    <input type="button" value="Thêm/Sửa Tiếng Anh" />
-                            </td>
-                    </tr>
-                    <tr id="short_en_show">
-                            <td width="15%" class="smallfont" align="right">Short content</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">
-                                    <textarea name="txtshort_en" cols="80" rows="10" id="txtshort_en'.$random_id.'"></textarea>
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Nội dung chi tiết</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">
-                                    <textarea name="txtlong_vn" cols="80" rows="10" id="txtlong_vn'.$random_id.'"></textarea>
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right"></td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont" id="long_en_call">
-                                    <input type="button" value="Thêm/Sửa Tiếng Anh">
-                            </td>
-                    </tr>
-                    <tr id="long_en_show">
-                            <td width="15%" class="smallfont" align="right">Detail content</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">
-                                    <textarea name="txtlong_en" cols="80" rows="10" id="txtlong_en'.$random_id.'"></textarea>
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Thuộc danh mục</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">'.comboCategory('ddCat',$arraySourceCombo,'smallfont',$parent,0).'</td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Lượt xem</td>
-                            <td width="1%" class="smallfont" align="right"></td>
-                            <td width="83%" class="smallfont">
-                                    <input value="" type="text" name="txtViews" class="textbox" size="10">
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Thứ tự sắp xếp</td>
-                            <td width="1%" class="smallfont" align="right"></td>
-                            <td width="83%" class="smallfont">
-                                    <input value="" type="text" name="txtSort" class="textbox" size="10">
-                            </td>
-                    </tr>
-                    <tr>
-                            <td width="15%" class="smallfont" align="right">Không hiển thị</td>
-                            <td width="1%" class="smallfont" align="center"></td>
-                            <td width="83%" class="smallfont">
-                                    <input type="checkbox" name="chkStatus" />
-                            </td>
-                    </tr>
-                </table>
-            </form>';
-            $html .= script_for_edit_content();
-            $ckeditor = new CKEditor( ) ;
-            $ckeditor->basePath    = 'ckeditor/' ;
-            CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
-            $ckeditor->replace('txtshort_vn'.$random_id);
-            $ckeditor->replace('txtshort_en'.$random_id);
-            $ckeditor->replace('txtlong_vn'.$random_id);
-            $ckeditor->replace('txtlong_en'.$random_id);
+            if($code == 'properties'){
+                $html = '<table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
+                        <tr>
+                                <td width="30%" class="smallfont" align="right">Chi tiết thuộc tính</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="69%" class="smallfont">
+                                        <input value="" type="text" id="txtName" name="txtName" class="textbox" size="34">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="30%" class="smallfont" align="right">Thứ tự sắp xếp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="69%" class="smallfont">
+                                        <input value="" type="text" id="txtSort" name="txtSort" class="textbox" size="10">
+                                </td>
+                        </tr>
+                    </table>';
+            }else{
+                $url = $_POST['url'];
+                require_once ('../ckeditor/ckeditor.php') ;
+                require_once ('../ckfinder/ckfinder.php') ;
+                $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
+                    <input type="hidden" name="fnc" value="add_new" />
+                    <input type="hidden" name="url" value="'.$url.'" />
+                    <input type="hidden" name="tbl" value="'.$tbl.'" />
+                    <input type="hidden" name="parent_cat_id" value="'.$parent_cat_id.'" />
+                    <input type="hidden" name="cat_id" value="'.$cat_id.'" />
+                    <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Tên</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtName" class="textbox" size="34">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Hình ảnh</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <input type="file" name="txtImage" class="textbox" size="34" />
+                                        (Kích thước&lt;2MB)(jpg,gif,bmp)
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Nội dung ngắn</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <textarea name="txtshort" cols="80" rows="10" id="txtshort'.$random_id.'"></textarea>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Nội dung chi tiết</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <textarea name="txtlong" cols="80" rows="10" id="txtlong'.$random_id.'"></textarea>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Thuộc danh mục</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">'.comboCategory('ddCat',$arraySourceCombo,'smallfont',$cat_id,0).'</td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Lượt xem</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtViews" class="textbox" size="10">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Thứ tự sắp xếp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtSort" class="textbox" size="10">
+                                </td>
+                        </tr>';
+                if($code == 'product'){
+                    $html .= '<tr>
+                                <td width="15%" class="smallfont" align="right">-----------------</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont"><strong>Thuộc tính:</strong></td>
+                        </tr>';
+                    $get_parent_id = selectOne(tbl_config::tbl_category, 'status=1 AND parent_id=0 AND code = "properties"', 'sort, date_added ASC');
+                    $parent_id = $get_parent_id['id'];
+                    $prop_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $parent_id, 'ORDER BY sort, date_added ASC');
+                    foreach($prop_cats as $prop_cat){
+                    $html .= '<tr>
+                                <td width="15%" class="smallfont" align="right">'.$prop_cat['name'].'</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        '.comboProperties(utf8_to_ascii($prop_cat['name']),getArrayCombo(tbl_config::tbl_properties,'id','name','parent_id = ' . $prop_cat['id']),'smallfont',0,1,false).'
+                                </td>
+                        </tr>';
+                    }
+                }
+                $html .= '</table>
+                </form>';
+                $html .= script_for_edit_content();
+                $ckeditor = new CKEditor( ) ;
+                $ckeditor->basePath    = 'ckeditor/' ;
+                CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
+                $ckeditor->replace('txtshort'.$random_id);
+                $ckeditor->replace('txtlong'.$random_id);
+            }
             echo $html;
         }
-	function add_new_content($tbl, $parent_id){
+	function add_new_content($tbl, $parent_cat_id, $cat_id){
+                $get_parent_code = selectOne(tbl_config::tbl_category, 'id = ' . $parent_cat_id);
+                $code_folder = $get_parent_code['code'];
                 $url = $_POST['url'];
-		$name_vn = $_POST['txtName_vn'] ? trim($_POST['txtName_vn']) : '';
-		$name_en = $_POST['txtName_en'] ? trim($_POST['txtName_en']) : '';
-                $txtshort_vn = $_POST['txtshort_vn'] ? trim($_POST['txtshort_vn']) : '';
-		$txtshort_en = $_POST['txtshort_en'] ? trim($_POST['txtshort_en']) : '';
-                $txtlong_vn = $_POST['txtlong_vn'] ? trim($_POST['txtlong_vn']) : '';
-		$txtlong_en = $_POST['txtlong_en'] ? trim($_POST['txtlong_en']) : '';
+		$name = $_POST['txtName'] ? trim($_POST['txtName']) : '';
+                $txtshort = $_POST['txtshort'] ? trim($_POST['txtshort']) : '';
+                $txtlong = $_POST['txtlong'] ? trim($_POST['txtlong']) : '';
                 $parent_id = $_POST['ddCat'];
 		$views = $_POST['txtViews'] ? $_POST['txtViews'] : 0;
                 $sort = $_POST['txtSort'] ? $_POST['txtSort'] : 0;
-		$status = $_POST['chkStatus'] ? 1 : 0;
-                $code = $_POST['code'];
                 $folder_img = date('d-m-Y');
 		$errMsg = '';
 		$time = time();
-		$fields_arr = array(
-			"name_vn"       => "'$name_vn'",
-			"name_en"      	=> "'$name_en'",
-			"parent"      	=> $parent_id,
-                        "detail_short_vn" => "'$txtshort_vn'",
-                        "detail_short_en" => "'$txtshort_en'",
-                        "detail_vn"     => "'$txtlong_vn'",
-                        "detail_en"     => "'$txtlong_en'",
-                        "views"         => $views,
-                        "sort"          => $sort,
-			"status"	=> $status,
-			"date_added"    => $time,
-			"last_modified" => $time
-		);
+                if($code_folder == 'product'){
+                    $code = $_POST['code'] ? trim($_POST['code']) : '';
+                    $fields_arr = array(
+                            "code"          => "'$code'",
+                            "name"          => "'$name'",
+                            "parent_id"     => $parent_id,
+                            "detail_short"  => "'$txtshort'",
+                            "detail"        => "'$txtlong'",
+                            "views"         => $views,
+                            "sort"          => $sort,
+                            "status"        => 1,
+                            "date_added"    => $time,
+                            "last_modified" => $time
+                    );
+                }else{
+                    $fields_arr = array(
+                            "name"          => "'$name'",
+                            "parent_id"     => $parent_id,
+                            "detail_short"  => "'$txtshort'",
+                            "detail"        => "'$txtlong'",
+                            "views"         => $views,
+                            "sort"          => $sort,
+                            "status"        => 1,
+                            "date_added"    => $time,
+                            "last_modified" => $time
+                    );
+                }
                 $insert_content = insert($tbl,$fields_arr);
                 if($insert_content || $insert_content != ''){
                     $id = $insert_content;
                     $errMsg .= checkUpload($_FILES["txtImage"],".jpg;.gif;.bmp",2048*1024,0);
-                    $path = '../../images/'.$code;
+                    $path = '../../images/'.$code_folder;
                     if(!is_dir($path)) mkdir($path,0777);
                     $path .= '/'.$folder_img;
                     if(!is_dir($path)) mkdir($path,0777);
-                    $pathdb = 'images/'.$code.'/'.$folder_img;
+                    $pathdb = 'images/'.$code_folder.'/'.$folder_img;
 
                     $path_thumb = $path.'/thumbs';
                     if(!is_dir($path_thumb)) mkdir($path_thumb,0777);
                     $pathdb_thumb = $pathdb.'/thumbs';
 
-                    $r = getRecord($tbl,"id=".$id);
+                    $r = selectOne($tbl,"id=".$id);
                     $extImg=getFileExtention($_FILES['txtImage']['name']);
-                    if (makeUpload($_FILES['txtImage'],"$path/".$code."_l".$id.$extImg)){
-                            @chmod("$path/".$code."_l".$id.$extImg, 0777);
-                            change_img_size("$path/".$code."_l".$id.$extImg,"$path/".$code."_l".$id.$extImg,800,1000);
+                    if (makeUpload($_FILES['txtImage'],"$path/".$code_folder."_l".$id.$extImg)){
+                            @chmod("$path/".$code_folder."_l".$id.$extImg, 0777);
+                            change_img_size("$path/".$code_folder."_l".$id.$extImg,"$path/".$code_folder."_l".$id.$extImg,800,1000);
                             if($code == 'news'){
-                                    change_img_size("$path/".$code."_l".$id.$extImg,"$path_thumb/".$code."_t".$id.$extImg,140,100);
+                                    change_img_size("$path/".$code_folder."_l".$id.$extImg,"$path_thumb/".$code_folder."_t".$id.$extImg,140,100);
                             }else{
-                                    change_img_size("$path/".$code."_l".$id.$extImg,"$path_thumb/".$code."_t".$id.$extImg,292,950);
+                                    change_img_size("$path/".$code_folder."_l".$id.$extImg,"$path_thumb/".$code_folder."_t".$id.$extImg,292,950);
                             }
-                            $fields_arr = array("image" => "'".$pathdb."/".$code."_l".$id.$extImg."'",
-                                                                    "image_thumbs" => "'".$pathdb_thumb."/".$code."_t".$id.$extImg."'",
+                            $fields_arr = array("image_large" => "'".$pathdb."/".$code_folder."_l".$id.$extImg."'",
+                                                                    "image_thumbs" => "'".$pathdb_thumb."/".$code_folder."_t".$id.$extImg."'",
                                                                     "last_modified" => $time);
                     }
                     if($fields_arr!='')	{
@@ -524,14 +516,78 @@
                                 $err = 'ERROR';
                                 $errMsg = "Không thể thêm nội dung mới!";
                         }
+                    }else{
+                        $err = 'SUCCESS';
+                        $errMsg = "Thêm nội dung mới thành công";
+                    }
+                    if($code_folder == 'product'){
+                        $prop_parent_id = selectOne(tbl_config::tbl_category, 'status=1 AND parent_id=0 AND code = "properties"', 'sort, date_added ASC');
+                        $parent_id = $prop_parent_id['id'];
+                        $prop_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $parent_id, 'ORDER BY sort, date_added ASC');
+                        foreach($prop_cats as $prop_cat){
+                            if($_POST[utf8_to_ascii($prop_cat['name'])]){
+                                $props_arr = array(
+                                        "product_id"        => $id,
+                                        "properties_id"     => $_POST[utf8_to_ascii($prop_cat['name'])]
+                                );
+                                $insert_props = insert(tbl_config::tbl_product_extend,$props_arr);
+                                if($insert_props || $insert_props != ''){
+                                    $err = 'SUCCESS';
+                                    $errMsg = "Thêm nội dung mới thành công";
+                                }else{
+                                    $err = 'ERROR';
+                                    $errMsg = "Không thể thêm nội dung mới!";
+                                }
+                            }
+                        }
                     }
                 }
-                if($err == 'SUCCESS'){
-                        echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
-                }  else {
-                        echo "<script>alert('".$errMsg."');</script>";
-                }
+                echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
 	}
+	function add_new_properties($cat_id){
+		$name = $_POST['name'] ? trim($_POST['name']) : '';
+                $sort = $_POST['sort'] ? $_POST['sort'] : 0;
+		$time = time();
+		$fields_arr = array(
+			"name"          => "'$name'",
+			"parent_id"    	=> $cat_id,
+                        "sort"          => $sort,
+			"status"	=> 1,
+			"date_added"    => $time,
+			"last_modified" => $time
+		);
+                $insert_properties = insert(tbl_config::tbl_properties,$fields_arr);
+                if($insert_properties || $insert_properties != ''){
+                        $err = 'SUCCESS';
+                        $errMsg = "Thêm thuộc tính mới thành công";
+                }else{
+                        $err = 'ERROR';
+                        $errMsg = "Không thể thêm thuộc tính mới!";
+                }
+                echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
+        function update_properties(){
+                $ext_id = $_POST['ext_id'];
+		$properties_id = $_POST['pr_id'];
+                $prod_id = $_POST['prod_id'];
+                $fields_arr = array(
+			"product_id"    => $prod_id,
+			"properties_id" => $properties_id
+		);
+                if($ext_id == 0){
+                    $insert = insert(tbl_config::tbl_product_extend,$fields_arr);
+                }else{
+                    $update = update(tbl_config::tbl_product_extend,$fields_arr,'id='.$ext_id);
+                }
+                if(($insert && $insert != '') || $update){
+                        $err = 'SUCCESS';
+                        $errMsg = "Cập nhật thành công";
+                }else{
+                        $err = 'ERROR';
+                        $errMsg = "Không thể cập nhật!";
+                }
+                echo json_encode(array('error' => $err, 'msg' => $errMsg));
+        }
 	function check_contact($id, $val){
 		$fields_arr = array("status" => "'$val'","last_modified" => time());
 		$result = update(tbl_config::tbl_contact,$fields_arr,"id=".$id);

@@ -70,7 +70,7 @@ $(function(){
 <?
 	$codeSelect = "code='album'";
 	$actConfig           = $act;
-	$get_parent = getRecord(tbl_config::tbl_category,$codeSelect);
+	$get_parent = selectOne(tbl_config::tbl_category,$codeSelect);
 	$parentWhere = "parent='".$get_parent['id']."'";
 	$arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name_vn',$parentWhere);
 
