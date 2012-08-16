@@ -1,5 +1,7 @@
 function delrow(id){
-	var row_id = '#content_id_'+id;
+	var parent_cat_id = $('h3').attr('parent_id');
+        var cat_id = $('h3').attr('cat_id');
+        var para = 'parent_id='+parent_cat_id+'&id='+cat_id;
 	var tbl = $('h3').attr('tbl_data');
 	if(confirm('Bạn có chắc chắn muốn xóa ?')){
 		$.post("ajax/content_action.php", {
@@ -7,10 +9,11 @@ function delrow(id){
 			tbl: tbl,
 			id: id 
 		}, function(data) {
-			alert(data.msg);
 			if(data.error == 'SUCCESS'){
-				$(row_id).hide();
-			}
+				load_content_manager(para);
+			}else{
+                            alert(data.msg);
+                        }
 		}, 'json');
 	}
 }
@@ -24,6 +27,9 @@ function chkallClick(o) {
 }
 function del_multi_row(){
 	var tbl = $('h3').attr('tbl_data');
+	var parent_cat_id = $('h3').attr('parent_id');
+        var cat_id = $('h3').attr('cat_id');
+        var para = 'parent_id='+parent_cat_id+'&id='+cat_id;
 	var multi_id = [];
     $.each($('.chk:checked'), function() {
     	multi_id.push($(this).val()); 
@@ -36,9 +42,7 @@ function del_multi_row(){
 		}, function(data) {
 			alert(data.msg);
 			if(data.error == 'SUCCESS'){
-			    $.each(multi_id, function(id, val) {
-			    	$("#content_id_" + val).hide();
-			    });
+			    load_content_manager(para);
 			}
 		}, 'json');
 	}
@@ -58,7 +62,6 @@ function up_down_sort(id, sort_index){
 		id: id,
 		val: sort_num
 	}, function(data) {
-		/*alert(data.msg);*/
 		if(data.error == 'SUCCESS'){
 			$(sort_num_id).text(sort_num);
 		}
@@ -73,14 +76,13 @@ function show_hide(id, val){
 		id: id,
 		val: val
 	}, function(data) {
-		/*alert(data.msg);*/
 		if(data.error == 'SUCCESS'){
-			if(val==0){
+			if(val==1){
 				$(status_icon).attr("src","images/check.png");
-				$(status_icon).attr("onclick","show_hide('"+id+"','1');");
+				$(status_icon).attr("onclick","show_hide('"+id+"','0');");
 			}else{
 				$(status_icon).attr("src","images/uncheck.png");
-				$(status_icon).attr("onclick","show_hide('"+id+"','0');");
+				$(status_icon).attr("onclick","show_hide('"+id+"','1');");
 			}
 		}
 	}, 'json');
@@ -94,7 +96,6 @@ function show_home(id, val){
 		id: id,
 		val: val
 	}, function(data) {
-		/*alert(data.msg);*/
 		if(data.error == 'SUCCESS'){
 			if(val==0){
 				$(show_home_icon).attr('src','images/uncheck.png');
@@ -115,7 +116,6 @@ function show_hot(id, val){
 		id: id,
 		val: val
 	}, function(data) {
-		/*alert(data.msg);*/
 		if(data.error == 'SUCCESS'){
 			if(val==0){
 				$(show_hot_icon).attr('src','images/uncheck.png');
@@ -140,7 +140,6 @@ function update_views(id,views){
 		id: id,
 		val: views
 	}, function(data) {
-		/*alert(data.msg);*/
 		if(data.error == 'SUCCESS'){
 			$('#views_input_'+id).hide();
 			$('#views_num_'+id).show();
@@ -148,7 +147,7 @@ function update_views(id,views){
 		}
 	}, 'json');
 }
-function edit_name(name_vn, name_en, id){
+function edit_name(name, id){
 	var tbl = $('h3').attr('tbl_data');
 	$('#dialog').dialog({
 		title: 'Sửa tên',
@@ -158,19 +157,17 @@ function edit_name(name_vn, name_en, id){
 		position: 'center',
 		buttons: {
 			'Cập nhật': function() {
-				var name_vn = $('#name_vn_space').val();
-				var name_en = $('#name_en_space').val();
+				var name = $('#name_space').val();
 				$.post("ajax/content_action.php", {
 					fnc:'edit_name',
 					tbl: tbl,
 					id: id,
-					val1: name_vn,
-					val2: name_en
+					val: name
 				}, function(data) {
 					alert(data.msg);
 					if(data.error == 'SUCCESS'){
-						$('#name_vn_'+id).text(name_vn);
-						$('#name_vn_'+id).attr('title',name_en);
+						$('#name_'+id).text(name);
+                                                $('#name_'+id).attr('onclick','edit_name(\''+name+'\','+id+');');
 					}
 				}, 'json');
 				$(this).dialog('close');
@@ -179,13 +176,14 @@ function edit_name(name_vn, name_en, id){
 				$(this).dialog('close');
 			}
 		}
-	}).html('<div style="float:left;padding: 20px;">Tên tiếng Việt:<input type="text" id="name_vn_space" value="" /></div><div style="float:left;padding:20px 0px 20px 20px;">Tên tiếng Anh:<input type="text" id="name_en_space" value="" /></div>');
-	$('#name_vn_space').val(name_vn);
-	$('#name_en_space').val(name_en);
+	}).html('<div style="float:left;padding: 20px;">Tên nội dung:<input type="text" id="name_space" value="" /></div>');
+	$('#name_space').val(name);
 }
-function edit_parent(cat_id, row_id){
+function edit_parent(row_id){
 	var tbl = $('h3').attr('tbl_data');
-	var parent_id = $('h3').attr('parent_id');
+        var parent_cat_id = $('h3').attr('parent_id');
+        var cat_id = $('h3').attr('cat_id');
+        var para = 'parent_id='+parent_cat_id+'&id='+cat_id;
 	$('#dialog').dialog({
 		title: 'Sửa danh mục',
 		autoOpen: true,
@@ -195,7 +193,6 @@ function edit_parent(cat_id, row_id){
 		buttons: {
 			'Cập nhật': function() {
 				var new_parent_id = $('#parent_space select option:selected').val();
-				var new_parent_name = $('#parent_space select option:selected').text();
 				$.post("ajax/content_action.php", {
 					fnc:'update_parent',
 					tbl: tbl,
@@ -204,8 +201,7 @@ function edit_parent(cat_id, row_id){
 				}, function(data) {
 					alert(data.msg);
 					if(data.error == 'SUCCESS'){
-						$('#parent_name_'+row_id).text(new_parent_name);
-						$('#parent_name_'+row_id).attr('onclick','edit_parent(\''+new_parent_id+'\',\''+row_id+'\');');
+						load_content_manager(para);
 					}
 				}, 'json');
 				$(this).dialog('close');
@@ -217,11 +213,12 @@ function edit_parent(cat_id, row_id){
 	}).html('<div style="float:left;padding: 20px;">Chọn danh mục:  <span id="parent_space"></span></div>');
 	$.post("ajax/content_action.php", {
 		fnc:'view_edit_parent',
-		parent_id: parent_id,
-		id: cat_id
+		parent_cat_id: parent_cat_id,
+		cat_id: cat_id
 		}, function(data) {
 			if(data.error == 'SUCCESS'){
 				$('#parent_space').html(data.drop_list);
+                                $('#parent_space select').removeAttr('onchange');
 			}
 		}, 'json');
 }
@@ -317,7 +314,7 @@ function edit_image(id, code){
 			$('#img_space').html(data);
 		});
 }
-function add_new(tbl, parent_id){
+function add_new(tbl, parent_cat_id, cat_id){
         var cur_url = $(location).attr('href');
 	$('#dialog').dialog({
 		title: 'Thêm nội dung',
@@ -340,7 +337,48 @@ function add_new(tbl, parent_id){
 			fnc:'view_add_new_content',
 			url: cur_url,
 			tbl: tbl,
-			parent_id: parent_id
+                        parent_cat_id: parent_cat_id,
+			cat_id: cat_id
+		}, function(data) {
+			$('#add_new_space').html(data);
+		});
+}
+function add_new_properties(tbl, parent_cat_id, cat_id){
+	$('#dialog').dialog({
+		title: 'Thêm thuộc tính',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+                            var name = $('#txtName').val();
+                            var sort = $('#txtSort').val();
+                            $.post("ajax/content_action.php", {
+                                    fnc:'add_new_properties',
+                                    cat_id: cat_id,
+                                    name: name,
+                                    sort: sort
+                            }, function(data) {
+                                    if(data.error == 'SUCCESS'){
+                                        var param = 'parent_id='+parent_cat_id+'&id='+cat_id;
+                                        load_content_manager(param);
+                                    }else{
+                                        alert(data.msg);
+                                    }
+                            }, 'json');
+                            $(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div id="add_new_space"></div>');
+		$.post("ajax/content_action.php", {
+			fnc:'view_add_new_content',
+			tbl: tbl,
+                        parent_cat_id: parent_cat_id,
+			cat_id: cat_id
 		}, function(data) {
 			$('#add_new_space').html(data);
 		});
@@ -366,6 +404,24 @@ function choose_cat(){
 			$('#toolbar-box div.m').html(data);
 		});		
 	}
+}
+function choose_properties(properties_id, ext_id, prod_id){
+        var parent_cat_id = $('h3').attr('parent_id');
+        var cat_id = $('h3').attr('cat_id');
+        var para = 'parent_id='+parent_cat_id+'&id='+cat_id;
+
+        $.post("ajax/content_action.php", {
+                fnc: 'update_properties',
+                ext_id: ext_id,
+                pr_id : properties_id,
+                prod_id: prod_id
+        }, function(data) {
+                if(data.error == 'SUCCESS'){
+                    load_content_manager(para);
+                }else{
+                    alert(data.msg);
+                }
+        }, 'json');
 }
 
 function check_contact(id, val){
