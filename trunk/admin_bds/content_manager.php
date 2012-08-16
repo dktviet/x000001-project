@@ -1,44 +1,46 @@
 <?
 	require_once('config.php');
 	require_once('lib/func.lib.php');
-	$parent_id = $_POST['id'];
-	$cat_id = $_POST['cat'];
-	$cat_title = $_POST['title'];
+        $cat_parent_id = $_GET['parent_id'];
+        $get_parent_info = selectOne(tbl_config::tbl_category, 'id = ' . $cat_parent_id);
+        $code = $get_parent_info['code'];
+        $parent_title = $get_parent_info['name'];
+        $cat_id = $_GET['id'];
+        $get_cat_info = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
+	$cat_title = $get_cat_info['name'];
 	$page = $_POST['page'];
 
-	$cat_parent = 'parent = ' . $parent_id;
-	$count_child_cat = countRecord(tbl_config::tbl_category,$cat_parent);
-	$arraySourceCombo   = getArrayCombo(tbl_config::tbl_category,'id','name_vn',$cat_parent);
-	//$codeSelect.= 		" and id in (select cat_id from ".tbl_config::tbl_controller_per." where user_id=$adminId and cat_code='".$act."')";
-	$firstWhere = 'parent in (select id from ' . tbl_config::tbl_category . ' where ' . $cat_parent . ')';
-	$where = $cat_id || $cat_id!='' ? ' parent = ' . $cat_id : $firstWhere;
-	if($count_child_cat == 0){
-		$where = $cat_parent;
-	}
+	$where_parent = 'parent_id = ' . $cat_id;
 	$p = $page || $page!='' ? $page : 0;
-	
-	$getCode = getRecord(tbl_config::tbl_category,'id = ' . $parent_id);
-	$code = $getCode['code'];
-	$field = 'id, name_vn, name_en, parent, detail_short_vn, detail_short_en, detail_vn, detail_en, image_thumbs, image, sort, status, show_home, show_hot, date_added, last_modified, views';
+
+        $field = 'id, name, detail_short, detail, image_thumbs, image_large, sort, status, date_added, last_modified, views';
 	switch($code){
-		case 'alexa_rank' 	: $tbl = tbl_config::tbl_site_rank; $field = 'id, rank, compare, date_added'; break;
-		case 'news' 		: $tbl = tbl_config::tbl_news; $field = 'id, name_vn, name_en, parent, source, detail_short_vn, detail_short_en, detail_vn, detail_en, image_thumbs, image, sort, status, show_home, show_hot, date_added, last_modified, views'; break;
-		default 			: $tbl = tbl_config::tbl_content; 	break; 
-	} 
+		case 'properties' 	: $tbl = tbl_config::tbl_properties; $field = 'id, name, parent_id, sort, status, date_added, last_modified'; break;
+//		case 'news' 		: $tbl = tbl_config::tbl_news; $field = 'id, name_vn, name_en, parent, source, detail_short_vn, detail_short_en, detail_vn, detail_en, image_thumbs, image, sort, status, show_home, show_hot, date_added, last_modified, views'; break;
+		case 'product' 		: $tbl = tbl_config::tbl_product; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views'; break;
+		default 		: $tbl = tbl_config::tbl_content; 	break; 
+	}
+        $where = $where_parent;
 	$pageindex = createPage(countRecord($tbl,$where),$parent_id,system_config::maxpage,$page);
 ?>
 <script type="text/javascript" src="js/content_manager.js"></script>
-<h3 parent_id="<?=$parent_id?>" tbl_data="<?=$tbl?>"><?=$cat_title?></h3>
+<h3 parent_id="<?=$cat_parent_id?>" cat_id="<?=$cat_id?>" tbl_data="<?=$tbl?>"><?=$parent_title?> / <?=$cat_title?></h3>
 <form method="POST" action="./" name="frmForm" enctype="multipart/form-data">
 <div class="clear"></div>
 <?php if($code != 'alexa_rank'){?>
 <div id="toolbar" class="toolbar">
 	<table class="toolbar">
     	<tr>
-        	<td id="toolbar-new" class="button">
-	            <a class="toolbar" onclick="add_new('<?=$tbl?>',<?=$parent_id?>);">
+            <td id="toolbar-new" class="button">
+                <?php if($code == 'properties'){?>
+                <a class="toolbar" onclick="add_new_properties('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);">
                 	<span class="icon-32-new" title="Thêm mới"> </span>Thêm mới
                 </a>
+                <?php }else{?>
+                <a class="toolbar" onclick="add_new('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);">
+                	<span class="icon-32-new" title="Thêm mới"> </span>Thêm mới
+                </a>
+                <?php }?>
             </td>
         </tr>
     </table>
@@ -61,6 +63,8 @@
 		<?php
 			switch($code){
 				case 'news' 		: require('template/news_thead_ajax.php'); 		break;
+                                case 'product' 		: require('template/product_thead_ajax.php'); 		break;
+                                case 'properties'	: require('template/properties_thead_ajax.php'); 	break;
 				case 'advup' 		: require('template/advup_thead_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_thead_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_thead_ajax.php'); 		break;
@@ -80,45 +84,34 @@
 	$sortby="order by date_added";
 	$sortby = $_REQUEST['sortby']!='' ? "order by ".(int)$_REQUEST['sortby'] : "order by id";
 	$direction=($_REQUEST['direction']==''||$_REQUEST['direction']=='0'?" desc":" ");
-	$contents = getMultiRecord($tbl, $field, $where, $sortby . $direction, 'LIMIT ' . ($p * system_config::maxpage) . ',' . system_config::maxpage);
+	$contents = selectMulti($tbl, $field, $where, $sortby . $direction, 'LIMIT ' . ($p * system_config::maxpage) . ',' . system_config::maxpage);
 	$i=0;
 	foreach($contents as $content){
 		$id = $content['id'];
-		if($code == 'alexa_rank'){
-			$rank = $content['rank'];
-			$compare = $content['compare'];
-			$date_added = $content['date_added'];
-		}else{
-			$name_vn = $content['name_vn'];
-			$name_en = $content['name_en'];
-			$parent = $content['parent'];
-			$short_vn = $content['detail_short_vn'];
-			$short_en = $content['detail_short_en'];
-			$detail_vn = $content['detail_vn'];
-			$detail_en = $content['detail_en'];
-			$image_thumbs = $content['image_thumbs'];
-			$image = $content['image'];
-			$sort = $content['sort'];
-			$status = $content['status'];
-			$show_home = $content['show_home'];
-			$show_hot = $content['show_hot'];
-			$date_added = $content['date_added'];
-			$last_modified = $content['last_modified'];
-			$views = $content['views'];
-			$getParent = getRecord(tbl_config::tbl_category,'id = ' . $parent);
-		}
+                $name = $content['name'];
+                $detail_short = $content['detail_short'];
+                $detail = $content['detail'];
+                $image_thumbs = $content['image_thumbs'];
+                $image_large = $content['image_large'];
+                $sort = $content['sort'];
+                $status = $content['status'];
+                $date_added = $content['date_added'];
+                $last_modified = $content['last_modified'];
+                $views = $content['views'];
+		
 		$mau = $i++%2 ? 'class="row0"' : 'class="row1"';
 	?>
-  
 	<tr <?=$mau?> id="content_id_<?=$id?>">
 		<?php
 			switch($code){
-				case 'advup' 		: require('template/advup_rows_ajax.php'); 			break;
+				case 'news' 		: require('template/news_rows_ajax.php') ; 		break;
+                                case 'product' 		: require('template/product_rows_ajax.php') ; 		break;
+                                case 'properties'	: require('template/properties_rows_ajax.php') ; 	break;
+				case 'advup' 		: require('template/advup_rows_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_rows_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_rows_ajax.php'); 		break;
 				case 'contact_info' : require('template/contact_info_rows_ajax.php'); 	break;
 				case 'contact' 		: require('template/contact_rows_ajax.php'); 		break;
-				case 'news' 		: require('template/news_rows_ajax.php') ; 			break;
 				case 'entertainment': require('template/entertainment_rows_ajax.php'); 	break;
 				case 'site_index'	: require('template/site_index_rows_ajax.php'); 	break;
 				case 'alexa_rank'	: require('template/alexa_rank_rows_ajax.php'); 	break;
@@ -135,11 +128,15 @@
 </table>
 <table width="100%">
 	<tr>
-		<?php if($code != 'alexa_rank'){?>
-		<td width="7%">
-			<input type="button" value="Nhập mới" name="addNew" onClick="add_new(<?=$parent_id?>);" class="button">
+                <?php if($code == 'properties'){?>
+                <td width="7%">
+			<input type="button" value="Nhập mới" name="addNew" onClick="add_new_properties('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);" class="button">
 		</td>
-		<?php }?>
+                <?php }else{?>
+                <td width="7%">
+			<input type="button" value="Nhập mới" name="addNew" onClick="add_new('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);" class="button">
+		</td>
+                <?php }?>
 		<td width="7%">
 			<input type="button" value="Xóa chọn" name="btnDel" onClick="del_multi_row();" class="button">
 		</td>

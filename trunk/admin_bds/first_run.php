@@ -26,7 +26,7 @@
 	
 	$bg_td = $_REQUEST['bg_td'];
 	$adminUid = $_SESSION['log'];
-	$adminInfo 	= getRecord(tbl_config::tbl_controller,"uid='".$adminUid."'");
+	$adminInfo 	= selectOne(tbl_config::tbl_controller,"uid='".$adminUid."'");
 	$adminId	= $adminInfo['id'];
 	$adminPw	= $adminInfo['pwd'];
 	
