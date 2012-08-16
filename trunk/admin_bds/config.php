@@ -40,6 +40,9 @@ class system_config{
 class tbl_config{
 	const tbl_category 		= 'xteam_category';
 	const tbl_content 		= 'xteam_content';
+        const tbl_product		= 'xteam_product';
+        const tbl_product_extend	= 'xteam_product_extend';
+        const tbl_properties		= 'xteam_properties';
 	const tbl_news 			= 'xteam_news';
 	const tbl_contact 		= 'xteam_contact';
 	const tbl_controller            = 'xteam_controller';

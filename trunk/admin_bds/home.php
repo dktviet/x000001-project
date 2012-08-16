@@ -10,9 +10,9 @@
 				<tr>
 					<td valign="top" width="50%">
 			            <?php 
-				            $get_total_visits	= getRecord(tbl_config::tbl_total_visits,"code = 'total'");
+				            $get_total_visits	= selectOne(tbl_config::tbl_total_visits,"code = 'total'");
 				            $total_visits 		= $get_total_visits['total_visits'];
-			           		$get_visits_today 	= getRecord(tbl_config::tbl_total_visits,"code = 'today' AND date_added = " . $today);
+			           		$get_visits_today 	= selectOne(tbl_config::tbl_total_visits,"code = 'today' AND date_added = " . $today);
 							$visits_today 		= $get_visits_today['total_visits'];
 				            $guest  			= countRecord(tbl_config::tbl_visitor,"member='n'");
 							$members 			= countRecord(tbl_config::tbl_visitor,"member='y'");
@@ -127,7 +127,7 @@
 	                        				$sortby = 'ORDER BY last_modified DESC';
 	                        				$limit 	= 'LIMIT 0,10';
 	                        				$where_admin = $where . ' AND position = 1';
-                        					$admin_guest_ips = getMultiRecord(tbl_config::tbl_guest_ip, $field, $where_admin, $limit);
+                        					$admin_guest_ips = selectMulti(tbl_config::tbl_guest_ip, $field, $where_admin, $limit);
 											$tt = 0;
 											foreach($admin_guest_ips as $admin_guest_ip){
 												$tt ++;
@@ -162,7 +162,7 @@
 										<tbody>
                         				<?php
 	                        				$where_home = $where . ' AND position = 0';
-                        					$home_guest_ips = getMultiRecord(tbl_config::tbl_guest_ip, $field, $where_home, $sortby, $limit);
+                        					$home_guest_ips = selectMulti(tbl_config::tbl_guest_ip, $field, $where_home, $sortby, $limit);
 											$tt = 0;
 											foreach($home_guest_ips as $home_guest_ip){
 												$tt ++;

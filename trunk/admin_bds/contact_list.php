@@ -55,7 +55,7 @@
 		$field = 'id, name, phone, email, addr, type, content, date_added, last_modified, status';
 		$sortby = $_REQUEST['sortby']!='' ? "order by ".(int)$_REQUEST['sortby'] : "order by date_added";
 		$direction=($_REQUEST['direction']==''||$_REQUEST['direction']=='0'?" desc":" ");
-		$contacts = getMultiRecord(tbl_config::tbl_contact, $field, $where, $sortby . $direction, 'LIMIT ' . ($p * system_config::maxpage) . ',' . system_config::maxpage);
+		$contacts = selectMulti(tbl_config::tbl_contact, $field, $where, $sortby . $direction, 'LIMIT ' . ($p * system_config::maxpage) . ',' . system_config::maxpage);
 		//echo var_dump($contacts);
 		$i=0;
 		foreach($contacts as $contact){
