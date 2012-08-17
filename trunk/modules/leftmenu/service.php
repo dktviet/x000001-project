@@ -1,14 +1,14 @@
 <?
-$sql="select * from bnk_news_category where status=0 and system=0 and parent=8 order by sort asc";
+$sql="select * from xteam_category where status=0 and system=0 and parent=8 order by sort asc";
 $result=mysql_query($sql,$conn);
 while($row=mysql_fetch_assoc($result))
 {
 	$sp=$row["name"];
-	$sqlparen = "select * from bnk_product_category where parent='".$row['id']."' and status=0 order by sort asc";
+	$sqlparen = "select * from xteam_category where parent='".$row['id']."' and status=0 order by sort asc";
 	$resultparen = mysql_query($sqlparen,$conn);
-	$childcategory = countRecord("bnk_product_category","parent=".$row["id"]." AND status=0");
+	$childcategory = countRecord("xteam_category","parent=".$row["id"]." AND status=0");
 	if($childcategory > 0){
-		$parentid=getRecord("bnk_product_category",'id='.$_GET['cat']);
+		$parentid=getRecord("xteam_category",'id='.$_GET['cat']);
 		?>
 	<li>
     	<a href="<?=$curHost.$row['id'].str_replace(' ','-',$row['subject'])?>/4-<?=str_replace(' ','-',$row['name'])?>.html" <?=$row['id']==$parentid['parent'] ? "class='active'" : "";?>>

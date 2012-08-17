@@ -1,7 +1,11 @@
 <?
+if(!isset($pages) || $pages==''){
+    include("products/product_home.php");
+}else{
 
-switch ($pages){
-	case "product" : include("modules/products/product_category.php");break;
+switch (isset($pages)){
+	
+	case "product"          : include("modules/products/product_category.php");break;
 
 	case "sitemap"          : include("sitemap.php");break;
 	
@@ -33,20 +37,17 @@ switch ($pages){
 
 	case "download" 		:
 
-		if(!empty($_SESSION['member']))
+		if(!empty($_SESSION['member'])){
 
-			{
+			include("modules/download.php");
 
-					 include("modules/download.php");
-
-			}
-
-		else
-			{
-		            include("modules/member_login.php");
-			}
+		}else{
+			
+			include("modules/member_login.php");
+			
+		}
+		
 		break;
-	//--------------------------------------------------------------------------------------------------------
 
 	case "contact"          : include("modules/contact.php");break;
 
@@ -58,7 +59,7 @@ switch ($pages){
 
 	case "search"           : include("modules/search/index.php");break;
 	
-	case "keyword"           : include("modules/search/keyword.php");break;
+	case "keyword"          : include("modules/search/keyword.php");break;
 
 	case "registry"         : include("modules/member_registry.php");break;
 
@@ -76,18 +77,16 @@ switch ($pages){
 
 	case "forum"            : echo "<script>window.location='forum'</script>";break;
 
-	case "support"          : include("support.php");break;//include("box/box_yahoo.php");break;
+	case "support"          : include("support.php");break;
 	
 	case "quality"          : include("quality.php");break;
 	
 	case "solution"         : include("solution.php");break;
 	
 	case "home"             : include("content.php");break;
-	
-	default                 : include("content.php");break;
 
-
+	default                 : include("products/product_home.php");break;
 
 }
-
+}
 ?>

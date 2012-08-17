@@ -29,10 +29,10 @@ if (isset($pages_no)){
 	if ($_REQUEST['dto']!='') $where.=" and date_added<=".$_REQUEST['dto'];
 	if ($_REQUEST['p']!='') $p=$_REQUEST['p'];
 	
-	$result = mysql_query("select count(*) from bnk_product where $where",$conn);
+	$result = mysql_query("select count(*) from xteam_product where $where",$conn);
 	$total = mysql_fetch_row($result);
 
-	$sql="select * from bnk_product where $where limit ".$per_page*($p-1).",".$per_page;
+	$sql="select * from xteam_product where $where limit ".$per_page*($p-1).",".$per_page;
 	$result = mysql_query($sql,$conn);
 	?>
 	<div class="art-blockcontent">
@@ -154,7 +154,7 @@ $pages_no = countPages($total,$per_page);
 		<td class="smallfont" align="center"></td>
 		<td class="smallfont">
 			<?
-			$sourceCombo = getArrayCategory("bnk_product_category");
+			$sourceCombo = getArrayCategory("xteam_category");
 			echo comboCategory('parent',$sourceCombo,'smallfont',"",1);
 			?>		</td>
 	</tr>

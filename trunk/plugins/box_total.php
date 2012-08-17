@@ -1,23 +1,23 @@
 <?
 if(!isset($_SESSION['online'])){ 
-    mysql_query("insert into bnk_visitor (session_id, activity, ip_address, url, user_agent) values ('".session_id()."', now(), '{$_SERVER['REMOTE_ADDR']}', '{$_SERVER['HTTP_REFERER']}', '{$_SERVER['HTTP_USER_AGENT']}')",$conn); 
+    mysql_query("insert into xteam_visitor (session_id, activity, ip_address, url, user_agent) values ('".session_id()."', now(), '{$_SERVER['REMOTE_ADDR']}', '{$_SERVER['HTTP_REFERER']}', '{$_SERVER['HTTP_USER_AGENT']}')",$conn); 
     $_SESSION['online']=true;
 	
-	mysql_query("update bnk_config set detail=detail+1 where code='total_visits'",$conn); 
+	mysql_query("update xteam_config set detail=detail+1 where code='total_visits'",$conn); 
 } else { 
     if(isset($_SESSION['member']))
-        mysql_query("update bnk_visitor set activity=now(), member='y' where session_id='".session_id()."'",$conn); 
+        mysql_query("update xteam_visitor set activity=now(), member='y' where session_id='".session_id()."'",$conn); 
     else
-		mysql_query("update bnk_visitor set activity=now(), member='n' where session_id='".session_id()."'",$conn); 
+		mysql_query("update xteam_visitor set activity=now(), member='n' where session_id='".session_id()."'",$conn); 
 }
 
 $maxtime = $visitorTimeout; // 5 Minute time out. 60 * 5 = 300 
-mysql_query("delete from bnk_visitor where UNIX_TIMESTAMP(activity) < UNIX_TIMESTAMP(now())-$maxtime",$conn); 
+mysql_query("delete from xteam_visitor where UNIX_TIMESTAMP(activity) < UNIX_TIMESTAMP(now())-$maxtime",$conn); 
 
-$guest  = countRecord("bnk_visitor","member='n'");
-$members = countRecord("bnk_visitor","member='y'");
+$guest  = countRecord("xteam_visitor","member='n'");
+$members = countRecord("xteam_visitor","member='y'");
 
-$rConfig = getRecord('bnk_config',"code = 'total_visits'");
+$rConfig = getRecord('xteam_config',"code = 'total_visits'");
 $total_visits = $rConfig['detail'];
 ?>
 <div class="child-content-left" style="text-align:center;">

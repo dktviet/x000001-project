@@ -1,15 +1,15 @@
 <?
 $code = $_lang == 'vn' ? 'vn_download' : 'en_download';
-$parentWhere = "and parent = (select id from bnk_content_category where code='$code')";
+$parentWhere = "and parent = (select id from xteam_content_category where code='$code')";
 
-$parentRecord = getRecord("bnk_content","1=1 ".$parentWhere);
+$parentRecord = getRecord("xteam_content","1=1 ".$parentWhere);
 
 $cat1 = killInjection($_REQUEST['cat']);
 if ($cat1=='') $cat1 = $parentRecord['parent'];
 $per_page = 10;
 $p=0;
 if ($_REQUEST['p']!='') $p=killInjection($_REQUEST['p']);
-$total = countRecord("bnk_content","status=0 and parent=".$cat1);
+$total = countRecord("xteam_content","status=0 and parent=".$cat1);
 if($total==0){
 ?>
 <div class="content-content" style="color:#040404;font-size:1.2em;line-height:17px;text-align:left;">
@@ -29,7 +29,7 @@ if($total==0){
 </div>
 <?
 }else{
-$sql = "select * from bnk_content where status=0 $parentWhere order by sort,date_added desc limit ".$per_page*$p.",".$per_page;
+$sql = "select * from xteam_content where status=0 $parentWhere order by sort,date_added desc limit ".$per_page*$p.",".$per_page;
 $result = @mysql_query($sql,$conn);
 $i=1;
 while($row=mysql_fetch_assoc($result)){
@@ -57,7 +57,7 @@ $titlePrevious  = $_lang=="vn" ? "Về trước" : "Previous";
 $titleNext      = $_lang=="vn" ? "Tiếp theo" : "Next";
 $titleLast      = $_lang=="vn" ? "Cuối cùng" : "Last";
 
-$total=countRecord("bnk_content","status=0 and parent=".$cat1);
+$total=countRecord("xteam_content","status=0 and parent=".$cat1);
 $pages = countPages($total,$per_page);
 echo '<tr><td colspan="2" align="center"></td></tr>';
 echo '<tr><td class="smallfont" align="left"></td>';

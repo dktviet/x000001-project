@@ -66,7 +66,7 @@ if (isset(killInjection($_REQUEST['cat']))){
 	}else{
 		$pro=killInjection($_REQUEST['cat']);
 		$cart=$_SESSION['cart'];
-		if (countRecord("bnk_product","id='".killInjection($_REQUEST['cat'])."'")>0 && checkexist()==false){
+		if (countRecord("xteam_product","id='".killInjection($_REQUEST['cat'])."'")>0 && checkexist()==false){
 			$cart[]=array($pro,1);
 			$_SESSION['cart']=$cart;
 		}
@@ -115,7 +115,7 @@ if (isset(killInjection($_REQUEST['cat']))){
 $cnt=0;
 $tongcong=0;
 foreach ($cart as $product){
-	$sql = "select * from bnk_product where id='".$product[0]."'";
+	$sql = "select * from xteam_product where id='".$product[0]."'";
 	$result = mysql_query($sql,$conn);
 	if (mysql_num_rows($result)>0){
 	$pro = mysql_fetch_assoc($result)?>

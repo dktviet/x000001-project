@@ -1,5 +1,5 @@
 <?
-$news_home = getArray('bnk_news','status=0 and home=0');
+$news_home = getArray('xteam_news','status=0 and home=0');
 foreach($cat_news as $cat_n){
 	$i=0;
 	foreach($news_home as $news_h){

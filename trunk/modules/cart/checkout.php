@@ -33,7 +33,7 @@ if (count($_SESSION['cart'])<=0){
 function send_mail_order(){
 	global $conn;
 	global $adminEmail;
-	$sql = "select * from bnk_member where uid='".$_SESSION['member']."'";
+	$sql = "select * from xteam_member where uid='".$_SESSION['member']."'";
 	$result = mysql_query($sql,$conn);
 	$cust = mysql_fetch_assoc($result);
 	
@@ -48,7 +48,7 @@ function send_mail_order(){
 	$tongcong=0;
 	$cnt=0;
 	foreach ($cart as $product){
-		$sql = "select * from bnk_product where id='".$product[0]."'";
+		$sql = "select * from xteam_product where id='".$product[0]."'";
 		$result = mysql_query($sql,$conn);
 		$pro = mysql_fetch_assoc($result);
 		
@@ -75,24 +75,24 @@ if (!isset($_SESSION['member'])) echo "<script>window.location='dang_ky.html'</s
 if (count($_SESSION['cart'])<=0) echo "<script>window.location='gio_hang.html'</script>";
 $cart = $_SESSION['cart'];
 
-$sql = "select * from bnk_member where uid='".$_SESSION['member']."'";
+$sql = "select * from xteam_member where uid='".$_SESSION['member']."'";
 $result = mysql_query($sql,$conn);
 $cust = mysql_fetch_assoc($result);
 
 if (isset($_POST['btnSend'])){
 	$tongcong=0;
 	$cnt=0;
-	$sqlorder="insert into bnk_order (code,customer_id,date_added) values (".$cust['id'].",now())";		
+	$sqlorder="insert into xteam_order (code,customer_id,date_added) values (".$cust['id'].",now())";		
 	mysql_query($sqlorder,$conn);
 	$newid=mysql_insert_id();
 	foreach ($cart as $product){
 		print_r($product);echo 'p:'.$pro['price'];
-		$sql = "select * from bnk_product where id='".$product[0]."'";
+		$sql = "select * from xteam_product where id='".$product[0]."'";
 		$result = mysql_query($sql,$conn);
 		$pro=mysql_fetch_assoc($result);
 		$price = $pro['price']!=0?$pro['price']:0;
-		$sqlorderdetail="insert into bnk_order_detail (product_id,quantity,price,order_id) values (".$product[0].",".$product[1].",".$price.",".$newid.")";
-		//$sqlorderdetail="insert into bnk_order_detail (order_id,date_added,pas_quantity,price) values (".$newid.",now(),".$product[1].")";
+		$sqlorderdetail="insert into xteam_order_detail (product_id,quantity,price,order_id) values (".$product[0].",".$product[1].",".$price.",".$newid.")";
+		//$sqlorderdetail="insert into xteam_order_detail (order_id,date_added,pas_quantity,price) values (".$newid.",now(),".$product[1].")";
 		//.$product[0].",".$product[1].",".$price.",".$newid.")";
 		mysql_query($sqlorderdetail,$conn);
 		$tongcong=$tongcong+$pro['price']*$product[1];
@@ -201,7 +201,7 @@ $cart=$_SESSION['cart'];
 $cnt=0;
 $tongcong=0;
 foreach ($cart as $product){
-	$sql = "select * from bnk_product where id='".$product[0]."'";
+	$sql = "select * from xteam_product where id='".$product[0]."'";
 	$result = mysql_query($sql,$conn);
 	if(mysql_num_rows($result)>0){
 		$pro=mysql_fetch_assoc($result)?>	

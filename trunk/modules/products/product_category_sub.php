@@ -7,7 +7,7 @@ foreach($cat_pro as $Item_cat){
 	}
 }
 //loc sản phẩm trong chuyen muc con
-$ListPro = getArray('bnk_product',$where);
+$ListPro = getArray('xteam_product',$where);
 //in chuyen muc con co sản phẩm
 foreach($cat_pro as $Item_c){
 	if($Item_c['parent']==$cat){?>

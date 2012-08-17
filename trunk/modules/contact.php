@@ -86,7 +86,7 @@ if (isset($_POST['btnSend'])){
 	$tel       = trim($_REQUEST['txtTel']);
 	$detail    = trim($_REQUEST['txtDetail']);
 	$date		= date("Y-m-d");
-	$sql="insert into bnk_contact (co_name,co_addr,co_email,co_fone,co_content,co_date,co_status) values('$name','$address','$email','$tel','$detail','$date',0)";
+	$sql="insert into xteam_contact (co_name,co_addr,co_email,co_fone,co_content,co_date,co_status) values('$name','$address','$email','$tel','$detail','$date',0)";
 	$run=mysql_query($sql);
 	if ($run){
 		$errMsg = $_lang == 'vn' ? "Thông tin của bạn đã được gửi cho chúng tôi." : "Sent to us successfully.";
@@ -104,32 +104,27 @@ if($_lang=="vn"){
 	$code = "cn_contact";
 }
 
-$contact = getRecord("bnk_content","parent = (select id from bnk_content_category where code='".$code."')");?>
-<div class="fancy-header">
-<h3 class="t">Liên hệ với chúng tôi</h3>
-</div>
+$contact = getRecord("xteam_content","parent = (select id from xteam_content_category where code='".$code."')");?>
 <div class="no-title-box-text">
     <h4><strong>CKVIC DESIGN</strong></h4>
     <? include "modules/contactInfoDetailShort.php";?>
 </div>
-<div class="clear">
-    <div id="contact_form">
-        <form method="post" name="frmContact" action="<?=$curHost?>lien-he.html"  enctype="multipart/form-data">
-            <div for="author"><?=$l_hoten?>:</div> <input value="<?=$name?>" type="text" id="author" name="txtName" class="required input_field" /> <font color="#FF0000">*</font>
-            <div class="cleaner h10"></div>
-            <div for="email"><?=$l_email?>:</div> <input value="<?=$email?>" type="text" id="email" name="txtEmail" class="validate-email required input_field" /> <font color="#FF0000">*</font>
-            <div class="cleaner h10"></div>
-            <input type="hidden" name="frame" value="contact" />
-            <div for="subject"><?=$l_diachi?>:</div> <input  value="<?=$address?>"type="text" name="txtAddress" id="subject" class="input_field" />
-            <div class="cleaner h10"></div>
-            <div for="subject"><?=$l_dt?>:</div> <input  value="<?=$tel?>"type="text" name="txtTel" id="subject" class="input_field" />
-            <div class="cleaner h10"></div>
-            <div for="text"><?=$l_noidung?>:  <font color="#FF0000">*</font></div> <textarea id="text" name="txtDetail" rows="0" cols="0" class="required"></textarea>
-            <div class="cleaner h10"></div>
-            <input type="submit" value="<?=$l_nutgoi?>" id="submit" name="btnSend" class="submit_btn float_l" onclick="return btnSend_oncpck()" />
-            <input type="reset" value="<?=$l_nutxoa?>" id="reset" name="btnReset" class="submit_btn float_r" />
-        </form>
-    <div class="cleared"></div>
-    <!--end -->
-    </div>
+<div id="contact_form">
+    <form method="post" name="frmContact" action="<?=$curHost?>lien-he.html"  enctype="multipart/form-data">
+        <span for="author"><?=$l_hoten?> (<font color="#FF0000">*</font>):</span> <input value="<?=$name?>" type="text" id="author" name="txtName" class="required input_field" />
+        <span class="cleaner h10"></span>
+        <span for="email"><?=$l_email?> (<font color="#FF0000">*</font>):</span> <input value="<?=$email?>" type="text" id="email" name="txtEmail" class="validate-email required input_field" />
+        <span class="cleaner h10"></span>
+        <input type="hidden" name="frame" value="contact" />
+        <span for="subject"><?=$l_diachi?>:</span> <input  value="<?=$address?>"type="text" name="txtAddress" id="subject" class="input_field" />
+        <span class="cleaner h10"></span>
+        <span for="subject"><?=$l_dt?>:</span> <input  value="<?=$tel?>"type="text" name="txtTel" id="subject" class="input_field" />
+        <span class="cleaner h10"></span>
+        <span for="text"><?=$l_noidung?> (<font color="#FF0000">*</font>):</span> <textarea id="text" name="txtDetail" rows="0" cols="0" class="required"></textarea>
+        <span class="cleaner h10"></span>
+        <input type="submit" value="<?=$l_nutgoi?>" id="submit" name="btnSend" class="submit_btn float_l" onclick="return btnSend_oncpck()" />
+        <input type="reset" value="<?=$l_nutxoa?>" id="reset" name="btnReset" class="submit_btn float_r" />
+    </form>
+<div class="cleared"></div>
+<!--end -->
 </div>

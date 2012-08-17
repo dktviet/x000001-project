@@ -17,10 +17,10 @@ $p=1;
 if ($_REQUEST['p']!='') $p=killInjection($_REQUEST['p']);
 	if ($_REQUEST['p']!='') $p=$_REQUEST['p'];
 	
-	$result = mysql_query("SELECT count(*) FROM bnk_news WHERE detail_short like '%".$keyword."%' OR  detail like '%".$keyword."%'",$conn);
+	$result = mysql_query("SELECT count(*) FROM xteam_news WHERE detail_short like '%".$keyword."%' OR  detail like '%".$keyword."%'",$conn);
 	$total = mysql_fetch_row($result);
 
-	$sql="SELECT * FROM  bnk_news WHERE detail_short like '%".$keyword."%' OR  detail like '%".$keyword."%' limit ".$per_page*($p-1).",".$per_page;
+	$sql="SELECT * FROM  xteam_news WHERE detail_short like '%".$keyword."%' OR  detail like '%".$keyword."%' limit ".$per_page*($p-1).",".$per_page;
 	$result = mysql_query($sql,$conn);
 	?>
 	<div class="art-blockcontent">

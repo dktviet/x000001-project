@@ -6,8 +6,8 @@ if($_lang=="vn"){
 }else{
 	$code = 'cn_intro';
 }
-$parentWhere = "parent = (select id from bnk_content_category where code='$code')";
-$row = getRecord("bnk_content",$parentWhere);
+$parentWhere = "parent = (select id from xteam_content_category where code='$code')";
+$row = getRecord("xteam_content",$parentWhere);
 ?>
 <h2><?=$row['name']?></h2>
 

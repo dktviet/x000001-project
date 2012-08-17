@@ -9,22 +9,22 @@ if (phpversion()< "4.1.0") {
 }
 //*********************************************************************************************************
 //************************************** Get email config *************************************************
-$emailConfigRecord = getRecord("bnk_config","code='adminEmail'");
+$emailConfigRecord = getRecord("xteam_config","code='adminEmail'");
 $adminEmail = $emailConfigRecord['detail'];
 //*********************************************************************************************************
 //*********************************** Get currency unit config ********************************************
-$currencyUnitConfigRecord = getRecord("bnk_config","code='currencyUnit'");
+$currencyUnitConfigRecord = getRecord("xteam_config","code='currencyUnit'");
 $currencyUnit = $currencyUnitConfigRecord['detail'];
 //*********************************************************************************************************
 //************************************* Get hot line config ***********************************************
-$hotlineConfigRecord = getRecord("bnk_config","code='hotline'");
+$hotlineConfigRecord = getRecord("xteam_config","code='hotline'");
 $hotline = $hotlineConfigRecord['detail'];
 //*********************************************************************************************************
 //************************************** Public Key Interface *********************************************
-$mytitle = getRecord("bnk_config","code='title'");
-$mydescription = getRecord("bnk_config","code='description'");
-$mykeywords = getRecord("bnk_config","code='keywords'");
-$myphone = getRecord("bnk_config","code='PhoneNumber'");
+$mytitle = getRecord("xteam_config","code='title'");
+$mydescription = getRecord("xteam_config","code='description'");
+$mykeywords = getRecord("xteam_config","code='keywords'");
+$myphone = getRecord("xteam_config","code='PhoneNumber'");
 
 
 function mo ($g, $l) {
@@ -152,16 +152,18 @@ function makeUpload($f,$newfile){
 }
 //************************************************************************************************************
 //************************************************************************************************************
-function getArray($table, $where="", $limit="",$sort=""){
+function getArray($table, $where=NULL, $limit=NULL,$sort=NULL){
     global $conn;
 	$ret = array();
-	$where = $where!="" ? $where : "1=1";
-	$limit = $limit!="" ? $limit : "1000";
-	$sort = $sort!="" ? $sort : "date_added DESC";
+	$abc = array();
+	$where = $where!=NULL ? $where : '1=1';
+	$limit = $limit!=NULL ? $limit : '0, 1000';
+	$sort = $sort!=NULL ? $sort : 'date_added DESC';
+	$i=0;$j=0;
     if ($table == '') return false;
-	$result = mysql_query("SELECT * FROM $table WHERE $where ORDER BY $sort LIMIT $limit ",$conn);
+	$result = mysql_query("SELECT * FROM `$table` WHERE $where ORDER BY $sort LIMIT $limit ",$conn);
 	while($row=mysql_fetch_assoc($result)){
-		$ret[] = array(id=>$row["id"],name=>$row["name"],parent=>$row["parent"],subject=>$row["subject"],system=>$row["system"],image_large=>$row["image_large"],image=>$row["image"],detail_short=>$row["detail_short"],detail=>$row["detail"]);
+        $ret[]=$row;
 	}
 	return $ret;
 }
@@ -690,7 +692,7 @@ function get_real_ip(){
 }
 function update_ip($guest_ip,$position){
 	global $conn;
-	$table = "bnk_guest_ip";
+	$table = "xteam_guest_ip";
 	$where = "guest_ip='".$guest_ip."' and position=".$position;
 	$countIp = countRecord($table,$where);
 	if($countIp>0){

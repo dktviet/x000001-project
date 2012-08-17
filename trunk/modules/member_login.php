@@ -41,7 +41,7 @@ if($_REQUEST['boxUid']!=''){
 	$pwd = $_REQUEST['boxPwd'];
 	
 	if(!isset($_SESSION['member']) || $_SESSION['member']==''){
-		$result = mysql_query("select * from bnk_member where uid='".$uid."'",$conn);
+		$result = mysql_query("select * from xteam_member where uid='".$uid."'",$conn);
 		$rows = mysql_num_rows($result);
 		if($rows<1){
 			$errMsg = $_lang == 'vn'?'Sai "tên đăng nhập" !':'Username wrong !';
@@ -61,7 +61,7 @@ if (isset($_POST['btnLogin'])){
 	$pwd = isset($_POST['txtPwd']) ? trim($_POST['txtPwd']) : "";
 	
 	if(!isset($_SESSION['member']) || $_SESSION['member']==''){
-		$result = mysql_query("select * from bnk_member where uid='".$uid."'",$conn);
+		$result = mysql_query("select * from xteam_member where uid='".$uid."'",$conn);
 		$rows = mysql_num_rows($result);
 		if($rows<1){
 			$errMsg = '<?=$_lang=="vn" ? "Tên truy cập sai" : "Username wrong"?>';
