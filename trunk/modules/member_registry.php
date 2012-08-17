@@ -112,7 +112,7 @@ if (isset($_POST['btnRegistry'])){
 	$Rdx        = isset($_POST['HidRd']) ? trim($_POST['HidRd']) : "";
 	$strRobust  = isset($_POST['txtRobust']) ? trim($_POST['txtRobust']) : "";
 	if (md5($strRobust) == $Rdx){
-		$uidTest = getRecord("bnk_member","uid='".$uid."'");
+		$uidTest = getRecord("xteam_member","uid='".$uid."'");
 		if($uidTest['uid']==$uid){
 			$errMsg = '"Tên đăng nhập" này đã tồn tại. Hãy chọn tên khác !';
 		}else{
@@ -134,7 +134,7 @@ if (isset($_POST['btnRegistry'])){
 				"last_modified" => "now()",
 			);
 			
-			$result = insert("bnk_member",$fields_arr);
+			$result = insert("xteam_member",$fields_arr);
 			if($result) {
 				$_SESSION['member'] = $uid;
 				echo "<script>window.location='./?frame=registry&code=1'</script>";

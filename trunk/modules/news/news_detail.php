@@ -1,6 +1,6 @@
 <div class="content-new">
 <?
-$news_detail = getRecord('bnk_news','id='.$cat);
+$news_detail = getRecord('xteam_news','id='.$cat);
 	?>
     <h2><?=$news_detail["name"]?></h2>
     <div style="text-align:justify;">
@@ -19,7 +19,7 @@ $news_detail = getRecord('bnk_news','id='.$cat);
         <br />
         <blockquote>
         <ul>
-		<? $news_same=getArray('bnk_news','parent='.$news_detail['parent'].' AND id<>'.$cat);
+		<? $news_same=getArray('xteam_news','parent='.$news_detail['parent'].' AND id<>'.$cat);
         foreach($news_same as $Item_same){?>
             <li><a href="<?=$curHost.$Item_same['id'].'-'.$Item_same['subject']?>/3-<?=str_replace(' ','-',$Item_same['name'])?>.html"><?=$Item_same['name']?></a></li>
         <?	if(++$rows>=$MAXPAGE)break;

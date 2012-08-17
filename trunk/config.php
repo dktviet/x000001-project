@@ -3,11 +3,11 @@ $hostname     = "localhost";
 $username     = "root";
 $password     = "";
 $databasename = "ckvic_iphone";
-$tblIp='bnk_guest_ip';
+$tblIp='xteam_guest_ip';
 $visitorTimeout = 3600; //=15 * 60
-$inLocal  = $_SERVER['HTTP_HOST']=='localhost'?'/ckvic/':'/';
+$inLocal  = $_SERVER['HTTP_HOST']=='localhost'?'/bds/':'/';
 $curHost  = 'http://'.$_SERVER['HTTP_HOST'].$inLocal;
-$lightbox = 1;
+$lightbox = 0;
 $MAXPAGE = 10;
 $multiLanguage = 1;//0 : single  ;  1 : multi
 $arrLanguage = array(

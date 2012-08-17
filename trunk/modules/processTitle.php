@@ -4,11 +4,7 @@ switch ($pages){
 
 	case "product" :
 
-		$cat = 0;
-
-		if (killInjection($_REQUEST['cat'])!= '') $cat = killInjection($_REQUEST['cat']);
-
-		$catInfo = getRecord("bnk_product_category","id=".$cat);
+		$catInfo = getRecord("xteam_category","id=".$cat);
 
 		$title = $catInfo['name'];
 
@@ -16,11 +12,7 @@ switch ($pages){
 		
 	case "product_sub" :
 
-		$cat = 0;
-
-		if (killInjection($_REQUEST['cat'])!= '') $cat = killInjection($_REQUEST['cat']);
-
-		$catInfo = getRecord("bnk_product_category","id=".$cat);
+		$catInfo = getRecord("xteam_category","id=".$cat);
 
 		$title = $catInfo['name'];
 
@@ -28,11 +20,7 @@ switch ($pages){
 		
 	case "news_sub" :
 
-		$cat = 0;
-
-		if (killInjection($_REQUEST['cat'])!= '') $cat = killInjection($_REQUEST['cat']);
-
-		$catInfo = getRecord("bnk_news_category","id=".$cat);
+		$catInfo = getRecord("xteam_category","id=".$cat);
 
 		$title = $catInfo['name'];
 
@@ -40,11 +28,7 @@ switch ($pages){
 
 	case "product_detail" :
 
-		$cat = 0;
-
-		if (killInjection($_REQUEST['cat'])!= '') $cat = killInjection($_REQUEST['cat']);
-
-		$catInfo = getRecord("bnk_product","id=".$cat);
+		$catInfo = getRecord("xteam_product","id=".$cat);
 
 		$title = $catInfo['name'];
 
@@ -53,7 +37,6 @@ switch ($pages){
 	case "product_category"  : $title = $_lang=="vn" ? "DANH MỤC SẢN PHẨM" : "PRODUCT CATEGORY";break;
 	
 	case "product_toc"  : $title = $_lang=="vn" ? "SẢN PHẨM CỦA TÓC" : "PRODUCT CATEGORY";break;
-	
 	
 	case "contact_pro"  : $title = $_lang=="vn" ? "GỬI YÊU CẦU SẢN PHẨM" : "REQUEST PRODUCT";break;
 
@@ -99,11 +82,7 @@ switch ($pages){
 
 	case "news" :
 
-		$cat = 0;
-
-		if (killInjection($_REQUEST['cat'])!= '') $cat = killInjection($_REQUEST['cat']);
-
-		$catInfo = getRecord("bnk_news_category","id=".$cat);
+		$catInfo = getRecord("xteam_category","id=".$cat);
 
 		$title = $catInfo['name'];
 
@@ -115,18 +94,12 @@ switch ($pages){
 			else $title = "新聞詳情";
 		break;
 
-
-	 
-
 	case "home"            : $title = $_lang=="vn" ? "Trang chủ" : "Home";break;
 
 	default                : $title = $_lang=="vn" ? "Trang chủ" : "Home";break;
-
-
 
 }
 
 echo $title;
 
 ?>
-

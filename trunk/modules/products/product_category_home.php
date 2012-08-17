@@ -1,10 +1,10 @@
 <?
-$cat_pro_home =  getArray('bnk_product_category','status=0 AND system=0 AND parent>1');
+$cat_pro_home =  getArray('xteam_category','status=0 AND system=0 AND parent>1');
 $num_c = count($cat_pro_home);
 foreach($cat_pro_home as $Item_c){
 	$where .= 'parent='.$Item_c['id'].$Or=++$dem<$num_c?" OR ":"";
 }
-$top_pro = getArray('bnk_product',$where);
+$top_pro = getArray('xteam_product',$where);
 foreach($cat_pro_home as $Item_c){?>
 	<div class="fancy-header">
     <h3><a href="<?=$curHost.$Item_c['id'].'-'.str_replace(' ','-',$Item_c['subject']).'/7-'.str_replace(' ','-',$Item_c['name']).'.html'?>"><?=$Item_c['name'];?></a></h3>

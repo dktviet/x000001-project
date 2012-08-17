@@ -25,7 +25,7 @@ if (isset($_POST['btnSend'])){
 	//$uid   = isset($_POST['txtUid']) ? trim($_POST['txtUid']) : "";
 	$email = isset($_POST['txtEmail']) ? trim($_POST['txtEmail']) : "";
 	
-	$result = mysql_query("select * from bnk_member where email='".$email."'",$conn);
+	$result = mysql_query("select * from xteam_member where email='".$email."'",$conn);
 	$rows = mysql_num_rows($result);
 	if($rows<1){
 		$errMsg = $_lang == 'vn'?'Sai "Hộp thư" !':'Email wrong !';

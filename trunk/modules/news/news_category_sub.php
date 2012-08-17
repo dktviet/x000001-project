@@ -7,7 +7,7 @@ foreach($cat_news as $Item_cat){
 	}
 }
 //loc bai viet trong chuyen muc con
-$ListNews = getArray('bnk_news',$where);
+$ListNews = getArray('xteam_news',$where);
 //in chuyen muc con co bai viet
 foreach($cat_news as $Item_c){
 	if($Item_c['parent']==$cat){?>

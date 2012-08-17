@@ -1,40 +1,27 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /batdongsan6688.com
+RewriteBase /bds
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^([^/]+)/([^/]+)/page-([0-9]+)/([^/]+).html$ ?cat=$1&ali=$2&p=$3&frame=$4 [L]
+#RewriteRule ^([^/]+)/([^/]+)/([^/]+).html$ ?cat=$1&ali=$2&frame=$3 [L]
+RewriteRule ^([^/]+)/([^/]+).html$ ?cat=$1&ali=$3 [L]
+RewriteRule ^mua-hang/([0-9]+)/([A-Za-z0-9\-]+).html$ ?cat=$1&ali=$2&frame=cart [L]
+RewriteRule ^tim-key/([^/]+).html$ ?keyword=$1&frame=keyword [L]
+RewriteRule ^tim-key/([^/]+)/([0-9]+).html$ ?keyword=$1&p=$2&frame=keyword [L]
+RewriteRule ^tim-kiem/([^/]+).html$ ?keyword=$1&frame=search [L]
+RewriteRule ^tim-kiem/([^/]+)/([0-9]+).html$ ?keyword=$1&p=$2&frame=search [L]
 
-RewriteRule ^td_([0-9]+)_([0-9]+)_([0-9]+)/([^.]+).html$ ?frame=content&parent=$1&cat=$2&id=$3&cTitle=$4&cTitle2=$5&pTitle=$6 [L]
-RewriteRule ^td_([0-9]+)_([0-9]+)_p([0-9]+)/([^.]+).html$ ?frame=content&parent=$1&cat=$2&page=$3&cTitle=$4&cTitle2=$5 [L]
-RewriteRule ^td_([0-9]+)_([0-9]+)/([^.]+).html$ ?frame=content&parent=$1&cat=$2&cTitle=$3&cTitle2=$4 [L]
-RewriteRule ^td_([0-9]+)/([^.]+).html$ ?frame=content&parent=$1&cTitle=$2 [L]
-RewriteRule ^([^/]+)/([0-9]+)/([^/]+).html$ ?frame=search&page=$2&keyword=$3 [L]
-RewriteRule ^([^/]+)/([^/]+).html$ ?frame=search&keyword=$2 [L]
-
-RewriteRule ^([^/]+).html$ ?frame=$1  [L]
-
+RewriteRule ^trang-chu.html$ ?frame=home [L]
+RewriteRule ^gioi-thieu.html$ ?frame=intro [L]
+RewriteRule ^lien-he.html$ ?frame=contact [L]
+RewriteRule ^dang-nhap.html$ ?frame=login [L]
+RewriteRule ^dang-xuat.html$ ?frame=logout [L]
+RewriteRule ^gio-hang.html$ ?frame=cart [L]
+RewriteRule ^huy/([0-9]+)/gio_hang.html$ ?pos=$1&act=del&frame=cart [L]
+RewriteRule ^dang-ky.html$ ?frame=registry [L]
+RewriteRule ^quen-mat-khau.html$ ?frame=forgotpass [L]
+RewriteRule ^thanh-toan.html$ ?frame=checkout [L]
+RewriteRule ^thanh-toan-ok.html$ ?code=$&frame=checkoutok [L]
+RewriteRule ^site-map.html$ ?frame=sitemap [L]
 </IfModule>
-
-ExpiresActive On
-ExpiresDefault A0
-
-# 1 YEAR
-<filesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf|mp3|mp4)$">
-Header set Cache-Control "public"
-Header set Expires "Thu, 15 Apr 2013 20:00:00 GMT"
-Header unset Last-Modified
-</filesMatch>
-
-# 2 HOURS
-<filesMatch "\.(html|htm|xml|txt|xsl)$">
-Header set Cache-Control "max-age=7200, must-revalidate"
-</filesMatch>
-
-# CACHED FOREVER
-# MOD_REWRITE TO RENAME EVERY CHANGE
-<filesMatch "\.(js|css)$">
-Header set Cache-Control "public"
-Header set Expires "Thu, 15 Apr 2013 20:00:00 GMT"
-Header unset Last-Modified
-</filesMatch>
-

@@ -1,8 +1,8 @@
 <center>
 <?
 $code = $_lang == 'vn' ? 'vn_advright' : 'en_advright';
-$parentWhere = "parent = (select id from bnk_content_category where code='$code')";
-$sql = "select * from bnk_content where status=0 and $parentWhere order by sort,date_added limit 0,5";
+$parentWhere = "parent = (select id from xteam_content_category where code='$code')";
+$sql = "select * from xteam_content where status=0 and $parentWhere order by sort,date_added limit 0,5";
 $result = @mysql_query($sql,$conn);
 while($row=mysql_fetch_assoc($result)){
 if(getFileExtention($row["image"])=='.swf'){
