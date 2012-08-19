@@ -39,6 +39,7 @@ class system_config{
 // Set Table data:
 class tbl_config{
 	const tbl_category 		= 'xteam_category';
+	const tbl_static 		= 'xteam_static';
 	const tbl_content 		= 'xteam_content';
         const tbl_product		= 'xteam_product';
         const tbl_product_extend	= 'xteam_product_extend';

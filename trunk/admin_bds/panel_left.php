@@ -1,34 +1,8 @@
 <ul id="menu">
     <li class="node">
-    <a class="top <?=$act=='home' 
-                                    || $act=='ad_per'
-									|| $act=='ad_per_m'
-                                    || $act=='user_ip'
-                                    || $act=='alexa_rank'
-                                    || $act=='member'
-									|| $act=='member_m'
-                                    || $act=='changepass'
-									|| $act=='changepass_m'
-                                    || $act=='site_index'
-									|| $act=='site_index_m'
-                                    || $act=='config'
-									|| $act=='config_m'
-                                    ? 'opened' : '';?>">Hệ thống</a>
-        <ul id="<?=$act=='home' 
-                                    || $act=='ad_per'
-									|| $act=='ad_per_m'
-                                    || $act=='user_ip'
-                                    || $act=='alexa_rank'
-                                    || $act=='member'
-									|| $act=='member_m'
-                                    || $act=='changepass'
-									|| $act=='changepass_m'
-                                    || $act=='site_index'
-									|| $act=='site_index_m'
-                                    || $act=='config'
-									|| $act=='config_m'
-                                    ? 'opened' : '';?>">
-            <li><a href="./?act=home" <?=$act=='home' ? 'class="current"' : '';?>>Bảng điều khiển</a></li>
+    <a class="top">Hệ thống</a>
+        <ul>
+            <li><a href="./">Bảng điều khiển</a></li>
             <? if($adminInfo['id']==8388){?>
             <li><a href="./?act=ad_per" <?=$act=='ad_per' || $act=='ad_per_m'? 'class="current"' : '';?>>Quản trị viên</a></li>
             <li><a href="./?act=user_ip" <?=$act=='user_ip'? 'class="current"' : '';?>>Thông tin IP truy cập</a></li>
@@ -49,8 +23,7 @@
 			?>
             <li><a href="./?act=site_index" <?=$act=='site_index' || $act=='site_index_m'? 'class="current"' : '';?>>Chỉ mục Website</a></li>
             <? }?>
-            <li><a href="./?act=changepass" <?=$act=='changepass' || $act=='changepass_m'? 'class="current"' : '';?>>Đổi mật khẩu</a></li>
-            <li><a href="./?act=logout">Thoát</a></li>
+            <li><a onclick="change_pass();">Đổi mật khẩu</a></li>
         </ul>
     </li>
     
@@ -70,6 +43,7 @@
 
     <li class="node" id="content_manager_nav"><a class="top">Quản Lý Nội dung</a>
         <ul>
+            <li class="static_list_menu"><a href="#static" parent_cat_id="0" cat_id="0"><strong style="color:#fff;float:left;">Nội dung:</strong> mặc định</a></li>
             <?php
                 $nav_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id=0 AND code IN ("news","product")', 'ORDER BY sort, date_added ASC');
                 foreach($nav_cats as $nav_cat){
@@ -99,7 +73,22 @@
         <?php }?>
         </ul>
     </li>
-    <li class="node"><a class="top <?=$act=='advup' 
+    <li class="node" id="img_adv_manager_nav"><a class="top">Hình ảnh - Quảng cáo</a>
+        <ul>
+            <?php
+                $nav_cat = selectOne(tbl_config::tbl_category, 'status=1 AND parent_id=0 AND code = "adv"', 'sort, date_added ASC');
+                $nav_id = $nav_cat['id'];
+                $nav_name = $nav_cat['name'];
+                $nav_child_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $nav_id, 'ORDER BY sort, date_added ASC');
+                foreach($nav_child_cats as $nav_child_cat){
+                        $nav_child_id = $nav_child_cat['id'];
+                        $nav_child_name = $nav_child_cat['name'];
+            ?>
+            <li class="content_list_menu"><a href="#<?=$nav_id.'_'.$nav_child_id?>" parent_cat_id="<?=$nav_id?>" cat_id="<?=$nav_child_id?>"><strong style="color:#fff;float:left;"><?=$nav_name?>:</strong> <?=$nav_child_name?></a></li>
+        <?php }?>
+        </ul>
+    </li>
+<!--    <li class="node"><a class="top <?=$act=='advup'
 									|| $act=='advup_m'
                                     || $act=='album'
 									|| $act=='album_m'
@@ -171,7 +160,7 @@
             <li><a href="./?act=link"<?=$act=='link' || $act=='link_m'? 'class="current"' : '';?>>Liên kết website</a></li>
             <? }?>
         </ul>
-    </li>
+    </li>-->
     <li class="node"><a class="top">Hỗ Trợ - Liên Hệ</a>
     	<ul>
     		 <li class="contact_list_menu"><a href="#contact">Liên Hệ</a></li>

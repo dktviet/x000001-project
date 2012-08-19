@@ -15,10 +15,6 @@
 
 	$act_req = $_REQUEST['act'];
 	$act = substr($act_req,-2,2)!='_m'?$act_req:substr($act_req,0,-2);
-	
-	$tblTdCat 		= TBL_PREFIX.$act.'_category';
-	$tblTd         	= TBL_PREFIX.$act;
-	$tblTdComment 	= TBL_PREFIX.$act.'_comment';
 
 	$act_link = $_REQUEST['act'];
 	$cat_link = $_REQUEST['cat']!=''?'&cat='.$_REQUEST['cat']:'';
@@ -44,10 +40,7 @@
 		case 'admin_log':
 			echo 'Quản trị viên: ' . $adminUid;
 			break;
-		case 'logout':
-			if(session_unregister('log') && session_unregister('ADMIN_IP'))
-			echo $adminUid;
-			break;
+		case 'logout': logout(); break;
 		case 'admin_theme':
 			echo $adminInfo['ad_bg'];
 			break;
@@ -65,6 +58,13 @@
 			break;
 			
 	}
+        function logout(){
+                if(session_unregister('log') && session_unregister('ADMIN_IP'))
+                    $err = 'ok';
+                else
+                    $err = 'error';
+                echo json_encode(array('error' => $err));
+        }
 	function set_theme($ad_theme,$adminUid){
 		$errMessage = '';
 		$fields_arr = array('ad_bg' => "'$ad_theme'");

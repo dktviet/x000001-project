@@ -1,14 +1,14 @@
 <?
 	require_once('config.php');
 	require_once('lib/func.lib.php');
-        $cat_parent_id = $_GET['parent_id'];
+        $cat_parent_id = $_GET['parent_id'] ? $_GET['parent_id'] : $_POST['parent_id'];
         $get_parent_info = selectOne(tbl_config::tbl_category, 'id = ' . $cat_parent_id);
         $code = $get_parent_info['code'];
         $parent_title = $get_parent_info['name'];
-        $cat_id = $_GET['id'];
+        $cat_id = $_GET['id'] ? $_GET['id'] : $_POST['id'];
         $get_cat_info = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
 	$cat_title = $get_cat_info['name'];
-	$page = $_POST['page'];
+	$page = $_POST['page'] ? $_POST['page'] : $_GET['page'];
 
 	$where_parent = 'parent_id = ' . $cat_id;
 	$p = $page || $page!='' ? $page : 0;
@@ -16,8 +16,9 @@
         $field = 'id, name, detail_short, detail, image_thumbs, image_large, sort, status, date_added, last_modified, views';
 	switch($code){
 		case 'properties' 	: $tbl = tbl_config::tbl_properties; $field = 'id, name, parent_id, sort, status, date_added, last_modified'; break;
-//		case 'news' 		: $tbl = tbl_config::tbl_news; $field = 'id, name_vn, name_en, parent, source, detail_short_vn, detail_short_en, detail_vn, detail_en, image_thumbs, image, sort, status, show_home, show_hot, date_added, last_modified, views'; break;
-		case 'product' 		: $tbl = tbl_config::tbl_product; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views'; break;
+		case 'news' 		: $tbl = tbl_config::tbl_content; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views'; break;
+		case 'product' 		: $tbl = tbl_config::tbl_product; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views, price'; break;
+                case 'adv' 		: $tbl = tbl_config::tbl_content; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified'; break;
 		default 		: $tbl = tbl_config::tbl_content; 	break; 
 	}
         $where = $where_parent;
@@ -65,7 +66,7 @@
 				case 'news' 		: require('template/news_thead_ajax.php'); 		break;
                                 case 'product' 		: require('template/product_thead_ajax.php'); 		break;
                                 case 'properties'	: require('template/properties_thead_ajax.php'); 	break;
-				case 'advup' 		: require('template/advup_thead_ajax.php'); 		break;
+				case 'adv' 		: require('template/adv_thead_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_thead_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_thead_ajax.php'); 		break;
 				case 'contact_info'     : require('template/contact_info_thead_ajax.php'); 	break;
@@ -98,6 +99,7 @@
                 $date_added = $content['date_added'];
                 $last_modified = $content['last_modified'];
                 $views = $content['views'];
+                $price = $content['price'];
 		
 		$mau = $i++%2 ? 'class="row0"' : 'class="row1"';
 	?>
@@ -107,7 +109,7 @@
 				case 'news' 		: require('template/news_rows_ajax.php') ; 		break;
                                 case 'product' 		: require('template/product_rows_ajax.php') ; 		break;
                                 case 'properties'	: require('template/properties_rows_ajax.php') ; 	break;
-				case 'advup' 		: require('template/advup_rows_ajax.php'); 		break;
+				case 'adv' 		: require('template/adv_rows_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_rows_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_rows_ajax.php'); 		break;
 				case 'contact_info' : require('template/contact_info_rows_ajax.php'); 	break;
