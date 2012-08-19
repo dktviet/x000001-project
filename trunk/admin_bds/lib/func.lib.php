@@ -1057,4 +1057,15 @@ function html_entity($string, $encode = true){
         $string = $encode ? $string = htmlentities($string) : html_entity_decode($string);
         return $string;
 }
+
+function product_properties($product_id){
+        $sql = 'SELECT (SELECT name FROM ' . tbl_config::tbl_category . ' WHERE id = prop.parent_id) cat, prop.name name
+                FROM ' . tbl_config::tbl_properties . ' prop INNER JOIN ' . tbl_config::tbl_product_extend . ' ext
+                ON ext.properties_id = prop.id WHERE ext.product_id = ' . $product_id;
+        $properties = query($sql);
+        if(!$properties)
+                return false;
+        else
+                return $properties;
+}
 ?>
