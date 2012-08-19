@@ -127,7 +127,7 @@ function show_hot(id, val){
 		}
 	}, 'json');
 }
-function show_views_input(id,views){
+function show_views_input(id){
 	$('#views_num_'+id).hide();
 	$('#views_input_'+id).show();
 	$('#views_input_'+id).focus();
@@ -144,6 +144,26 @@ function update_views(id,views){
 			$('#views_input_'+id).hide();
 			$('#views_num_'+id).show();
 			$('#views_num_'+id).text(views);
+		}
+	}, 'json');
+}
+function show_price_input(id){
+	$('#price_num_'+id).hide();
+	$('#price_input_'+id).show();
+	$('#price_input_'+id).focus();
+}
+function update_price(id,price){
+	var tbl = $('h3').attr('tbl_data');
+	$.post("ajax/content_action.php", {
+		fnc:'update_price',
+		tbl: tbl,
+		id: id,
+		val: price
+	}, function(data) {
+		if(data.error == 'SUCCESS'){
+			$('#price_input_'+id).hide();
+			$('#price_num_'+id).show();
+			$('#price_num_'+id).text(price);
 		}
 	}, 'json');
 }
@@ -253,6 +273,39 @@ function edit_short_detail(id){
 				$('#detail_short_id').val(id);
 		});
 }
+function edit_adv_desc(desc, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa mô tả',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var desc = $('#desc_space').val();
+				$.post("ajax/content_action.php", {
+					fnc:'edit_adv_desc',
+					tbl: tbl,
+					id: id,
+					val: desc
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#adv_desc_'+id).text(desc);
+                                                $('#adv_desc_'+id).attr('onclick','edit_adv_desc(\''+desc+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;"><textarea id="desc_space" name="desc_space" cols="42" rows="10"></textarea></div>');
+	$('#desc_space').val(desc);
+}
+
 function edit_detail(id){
 	var cur_url = $(location).attr('href');
 	var tbl = $('h3').attr('tbl_data');
@@ -284,6 +337,39 @@ function edit_detail(id){
 				$('#detail_id').val(id);
 		});
 }
+function edit_adv_link(link, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa đường dẫn site',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var link = $('#adv_link_space').val();
+				$.post("ajax/content_action.php", {
+					fnc:'edit_adv_link',
+					tbl: tbl,
+					id: id,
+					val: link
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#adv_link_'+id).text(link);
+                                                $('#adv_link_'+id).attr('onclick','edit_adv_link(\''+link+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;"><input id="adv_link_space" name="adv_link_space" size="40" /></div>');
+	$('#adv_link_space').val(link);
+}
+
 function edit_image(id, code){
 	var cur_url = $(location).attr('href');
 	var tbl = $('h3').attr('tbl_data');
@@ -453,6 +539,17 @@ function view_detail(content){
 	}).html('<div>'+content+'</div>');
 }
 
+function change_page(page){
+	var parent_id = $('h3').attr('parent_id');
+	var cat_id = $('h3').attr('cat_id');
+	$.post("content_manager.php", {
+		parent_id : parent_id,
+		id : cat_id,
+		page : page
+	}, function(data) {
+		$('#toolbar-box div.m').html(data);
+	});
+}
 
 
 

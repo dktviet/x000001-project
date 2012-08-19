@@ -12,6 +12,12 @@ $(document).ready(function() {
         admin.main_url = admin.url.split('#')[0];
         admin.param_url = admin.url.split('#')[1];
         if(admin.param_url){
+            if(admin.param_url == 'static'){
+		$('.static_list_menu').parent('ul').parent('li').find('a.top').addClass('opened');
+                $('.static_list_menu').parent('ul').slideDown();
+                $('.static_list_menu').find('a').addClass('current');
+                load_static_manager();
+            }
             if(admin.param_url.split('_')[1]){
                 admin.parent_cat_id = admin.param_url.split('_')[0];
                 admin.cat_id = admin.param_url.split('_')[1];
@@ -48,6 +54,11 @@ $(document).ready(function() {
                 admin.param = 'id='+cat_id;
 		load_category_manager(admin.param);
 	});
+	$('.static_list_menu').click(function() {
+		$('.static_list_menu').find('a.current').removeClass('current');
+		$(this).find('a').addClass('current');
+                load_static_manager();
+	});
 
 	$('.content_list_menu').click(function() {
 		$('.content_list_menu').find('a.current').removeClass('current');
@@ -66,7 +77,7 @@ $(document).ready(function() {
                 admin.param = 'parent_id='+parent_cat_id+'&id='+cat_id;
                 load_content_manager(admin.param);
 	});
-	
+        
 	$('.contact_list_menu').click(function() {
 		$('.contact_list_menu').find('a.current').removeClass('current');
 		$(this).find('a').addClass('current');
@@ -85,27 +96,69 @@ $(document).ready(function() {
 // Display and Hide Eng block END
 
 });
-
 function load_contact_list(){
 	$('#toolbar-box div.m').load('contact_list.php');
 }
-function change_page(page){
-	var parent_id = $('h3').attr('parent_id');
-	var cat_id = $('#ddCat').val();
-	var cat_title = $('h3').text();
-	$.post("content_manager.php", {
-		id : parent_id,
-		cat : cat_id,
-		title : cat_title,
-		page : page
-	}, function(data) {
-		$('#toolbar-box div.m').html(data);
-	});	
-}
-
 function load_category_manager(para){
     $('#toolbar-box div.m').load(admin.main_url+'category_manager.php?'+para);
 }
 function load_content_manager(para){
     $('#toolbar-box div.m').load(admin.main_url+'content_manager.php?'+para);
+}
+function load_static_manager(){
+    $('#toolbar-box div.m').load(admin.main_url+'static_manager.php');
+}
+function change_pass(){
+    $('#dialog').dialog({
+            title: 'Đổi mật khẩu',
+            autoOpen: true,
+            modal: true,
+            width: 500,
+            position: 'center',
+            buttons: {
+                    'Cập nhật': function() {
+                            var old_pw = $('#txtPwdOld').val();
+                            var new_pw_1 = $('#txtPwdNew1').val();
+                            var new_pw_2 = $('#txtPwdNew2').val();
+                            if(test_empty(old_pw)){
+                                    alert('Hãy nhập "mật khẩu cũ" !');$('#txtPwdOld').focus();return false;
+                            }
+                            if(test_empty(new_pw_1)){
+                                    alert('Hãy nhập "mật khẩu" !');$('#txtPwdNew1').focus();return false;
+                            }
+                            if(test_empty(new_pw_2)){
+                                    alert('Hãy nhập "mật khẩu" lần 2 !');$('#txtPwdNew2').focus();return false;
+                            }
+                            if(!test_confirm_pass(new_pw_1,new_pw_2)){
+                                    alert('Hai mật khẩu phải đồng nhất !');
+                                    $('#txtPwdNew1').val('');
+                                    $('#txtPwdNew2').val('');
+                                    $('#txtPwdNew1').focus();return false;
+                            }
+                            old_pw = hex_md5(old_pw);
+                            new_pw_1 = hex_md5(new_pw_1);
+                            $.post('first_run.php', {
+                                    val:'check_pw',
+                                    oldPw: old_pw
+                            }, function(data) {
+                                    if(data.error == 'err'){
+                                            alert(data.msg);
+                                    }else{
+                                            $.post('first_run.php', {
+                                                    val:'change_pw',
+                                                    new_pw: new_pw_1
+                                            }, function(data) {
+                                                    alert(data.msg);
+                                                    if(data.error == 'ok'){
+                                                        $('#dialog').dialog('close');
+                                                    }
+                                            }, 'json');
+                                    }
+                            }, 'json');
+                    },
+                    'Hủy': function() {
+                            $(this).dialog('close');
+                    }
+            }
+    }).load('template/top_panel/changePassword.html');
 }
