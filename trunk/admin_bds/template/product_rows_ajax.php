@@ -8,8 +8,7 @@
 </td>
 <td class="smallfont" align="center">
 	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');"><?=killInjection($name)?></span>
-</td>
-<td class="smallfont" align="center">
+        <br><br>
 	<span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);"><?=$get_cat_info['name']?></span>
 </td>
 <td class="smallfont" align="center">
@@ -28,7 +27,7 @@
     $parent_id = $get_parent_id['id'];
     $prop_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $parent_id, 'ORDER BY sort, date_added ASC');
     foreach($prop_cats as $prop_cat){
-        $sql = 'SELECT ext.properties_id prop_id, ext.id ext_id
+        $sql = 'SELECT prop.id prop_id, ext.id ext_id
                         FROM ' . tbl_config::tbl_product_extend . ' ext
                         INNER JOIN ' . tbl_config::tbl_properties . ' prop
             ON ext.properties_id = prop.id
@@ -45,8 +44,12 @@
 ?>
 </td>
 <td class="smallfont" align="center">
-	<span id="views_num_<?=$id?>" onclick="show_views_input('<?=$id?>','<?=$views?>');"><?=$views?></span>
-	<input type="text" id="views_input_<?=$id?>" name="views_input" onblur="update_views('<?=$id?>',this.value);" value="<?=$views?>" size="2" style="display:none;" />
+	<span id="price_num_<?=$id?>" onclick="show_price_input(<?=$id?>);"><?=$price?></span>
+	<input type="text" id="price_input_<?=$id?>" name="price_input" onblur="update_price(<?=$id?>,this.value);" value="<?=$price?>" size="2" style="display:none;" />
+</td>
+<td class="smallfont" align="center">
+	<span id="views_num_<?=$id?>" onclick="show_views_input(<?=$id?>);"><?=$views?></span>
+	<input type="text" id="views_input_<?=$id?>" name="views_input" onblur="update_views(<?=$id?>,this.value);" value="<?=$views?>" size="2" style="display:none;" />
 </td>
 <td class="smallfont sort-num" align="center">
    	<img src="images/up.png" alt="" onclick="up_down_sort('<?=$id?>','1');" />
