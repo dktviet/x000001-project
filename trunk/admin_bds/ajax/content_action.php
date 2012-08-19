@@ -19,6 +19,7 @@
 		case 'show_home' 		: show_home($tbl,$id, $val); 		break;
 		case 'show_hot' 		: show_hot($tbl,$id, $val); 		break;
 		case 'update_views'             : update_views($tbl,$id, $val); 	break;
+		case 'update_price'             : update_price($tbl,$id, $val); 	break;
 		case 'edit_name' 		: edit_name($tbl,$id, $val);    break;
 		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);    break;
 		case 'update_parent'            : update_parent($tbl, $id, $val);	break;
@@ -28,8 +29,10 @@
                 case 'update_properties'        : update_properties(); break;
 		case 'view_edit_detail_short' 	: view_edit_detail_short($tbl, $id);	break;
 		case 'update_detail_short' 	: update_detail_short($tbl, $id);	break;
+                case 'edit_adv_desc'            : edit_adv_desc($tbl, $id, $val);       break;
 		case 'view_edit_detail'         : view_edit_detail($tbl, $id);		break;
 		case 'update_detail'            : update_detail($tbl, $id);		break;
+                case 'edit_adv_link'            : edit_adv_link($tbl, $id, $val);       break;
 		case 'view_edit_image'          : view_edit_image($tbl, $id);		break;
 		case 'update_image'             : update_image($tbl, $id);		break;
 		case 'check_contact'            : check_contact($id, $val); 		break;
@@ -42,6 +45,9 @@
 		if ($result){
 			if(file_exists('../../'.$r['image_thumbs'])) @unlink('../../'.$r['image_thumbs']);
 			if(file_exists('../../'.$r['image_large'])) @unlink('../../'.$r['image_large']);
+                        if($tbl == tbl_config::tbl_product){
+                                delete_rows(tbl_config::tbl_product_extend,array('product_id' => $id));
+                        }
 			$err = 'SUCCESS';
 			$errMsg = "Đã xóa thành công!";
 		}else{
@@ -61,6 +67,9 @@
 				if ($result){
 					if(file_exists('../../'.$r['image_thumbs'])) @unlink('../../'.$r['image_thumbs']);
 					if(file_exists('../../'.$r['image_large'])) @unlink('../../'.$r['image_large']);
+                                        if($tbl == tbl_config::tbl_product){
+                                                delete_rows(tbl_config::tbl_product_extend,array('product_id' => $id));
+                                        }
 					$cntDel++;
 				}else $cntNotDel++;
 			}
@@ -146,6 +155,18 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
+	function update_price($tbl, $id, $val){
+		$fields_arr = array("price" => $val,"last_modified" => time());
+		$result = update($tbl,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Đã Cập nhật giá thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
 	function edit_name($tbl, $id, $val){
 		$fields_arr = array("name" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
@@ -218,6 +239,18 @@
 			echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
 		}
 	}
+        function edit_adv_desc($tbl, $id, $val){
+		$fields_arr = array("detail_short" => "'$val'", "last_modified" => time());
+		$result = update($tbl,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật mô tả thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
 	function view_edit_detail($tbl, $id){
 		require_once ('../ckeditor/ckeditor.php') ;
 		require_once ('../ckfinder/ckfinder.php') ;
@@ -255,6 +288,18 @@
 		if($err == 'SUCCESS'){
 			echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
 		}
+	}
+        function edit_adv_link($tbl, $id, $val){
+		$fields_arr = array("detail" => "'$val'", "last_modified" => time());
+		$result = update($tbl,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật đường dẫn site thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
 	function view_edit_image($tbl, $id){
 		$url = $_POST['url'];
@@ -348,8 +393,57 @@
                                 <td width="69%" class="smallfont">
                                         <input value="" type="text" id="txtSort" name="txtSort" class="textbox" size="10">
                                 </td>
+                        </tr>';
+            }else if($code == 'adv'){
+                $url = $_POST['url'];
+                $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
+                    <input type="hidden" name="fnc" value="add_new" />
+                    <input type="hidden" name="url" value="'.$url.'" />
+                    <input type="hidden" name="tbl" value="'.$tbl.'" />
+                    <input type="hidden" name="parent_cat_id" value="'.$parent_cat_id.'" />
+                    <input type="hidden" name="cat_id" value="'.$cat_id.'" />
+                    <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Tên qc</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtName" class="textbox" size="34">
+                                </td>
                         </tr>
-                    </table>';
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Hình ảnh</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <input type="file" name="txtImage" class="textbox" size="34" />
+                                        (Kích thước&lt;2MB)(jpg,gif,bmp)
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Mô tả</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <textarea name="txtshort" cols="80" rows="10" id="txtshort'.$random_id.'"></textarea>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Đường dẫn site</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtlong" class="textbox" size="34">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Thuộc danh mục</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">'.comboCategory('ddCat',$arraySourceCombo,'smallfont',$cat_id,0).'</td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Thứ tự sắp xếp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtSort" class="textbox" size="10">
+                                </td>
+                        </tr>';
             }else{
                 $url = $_POST['url'];
                 require_once ('../ckeditor/ckeditor.php') ;
@@ -411,6 +505,13 @@
                         </tr>';
                 if($code == 'product'){
                     $html .= '<tr>
+                                <td width="15%" class="smallfont" align="right">Giá sp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtPrice" class="textbox" size="10">
+                                </td>
+                        </tr>
+                        <tr>
                                 <td width="15%" class="smallfont" align="right">-----------------</td>
                                 <td width="1%" class="smallfont" align="right"></td>
                                 <td width="83%" class="smallfont"><strong>Thuộc tính:</strong></td>
@@ -448,6 +549,7 @@
                 $txtlong = $_POST['txtlong'] ? trim($_POST['txtlong']) : '';
                 $parent_id = $_POST['ddCat'];
 		$views = $_POST['txtViews'] ? $_POST['txtViews'] : 0;
+                $price = $_POST['txtPrice'] ? $_POST['txtPrice'] : 0;
                 $sort = $_POST['txtSort'] ? $_POST['txtSort'] : 0;
                 $folder_img = date('d-m-Y');
 		$errMsg = '';
@@ -461,6 +563,18 @@
                             "detail_short"  => "'$txtshort'",
                             "detail"        => "'$txtlong'",
                             "views"         => $views,
+                            "price"         => $price,
+                            "sort"          => $sort,
+                            "status"        => 1,
+                            "date_added"    => $time,
+                            "last_modified" => $time
+                    );
+                }else if($code_folder == 'adv'){
+                    $fields_arr = array(
+                            "name"          => "'$name'",
+                            "parent_id"     => $parent_id,
+                            "detail_short"  => "'$txtshort'",
+                            "detail"        => "'$txtlong'",
                             "sort"          => $sort,
                             "status"        => 1,
                             "date_added"    => $time,
