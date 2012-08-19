@@ -12,18 +12,14 @@
         <span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);"><?=$get_cat_info['name']?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="short_detail_<?=$id?>" onclick="edit_short_detail('<?=$id?>');"><?=$detail_short!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
+	<span id="adv_desc_<?=$id?>" onclick="edit_adv_desc('<?=killInjection($detail_short)?>',<?=$id?>);"><?=$detail_short!=''?$detail_short:'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="detail_<?=$id?>" onclick="edit_detail('<?=$id?>');"><?=$detail!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>			
+	<span id="adv_link_<?=$id?>" onclick="edit_adv_link('<?=killInjection($detail)?>',<?=$id?>);"><?=$detail!=''?$detail:'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
     <img id="image_<?=$id?>" onclick="edit_image('<?=$id?>','<?=$code?>');" src="../<?=$image_thumbs!=''?$image_thumbs:'images/no_image.gif'?>" width="100" alt="" />
     <img onclick="edit_image('<?=$id?>','<?=$code?>');" src="images/icons/pencil.png" alt="" />
-</td>
-<td class="smallfont" align="center">
-	<span id="views_num_<?=$id?>" onclick="show_views_input(<?=$id?>);"><?=$views?></span>
-	<input type="text" id="views_input_<?=$id?>" name="views_input" onblur="update_views(<?=$id?>,this.value);" value="<?=$views?>" size="2" style="display:none;" />
 </td>
 <td class="smallfont sort-num" align="center">
    	<img src="images/up.png" alt="" onclick="up_down_sort('<?=$id?>','1');" />
