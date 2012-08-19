@@ -32,7 +32,6 @@
 		</td>
 	</tr>
 </table>
-
 <table width="97%" class="adminlist">
 	<thead>
 		<tr>
