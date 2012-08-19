@@ -19,14 +19,46 @@
 	}
 	
 	function del($id){
-		$r = selectOne(tbl_config::tbl_category,"id=".$id);
-		$fields_arr = array("id" => $id);
-		$result = delete_rows(tbl_config::tbl_category,$fields_arr);
-		if ($result){
-			if(file_exists('../'.$r['image_thumbs'])) @unlink('../'.$r['image_thumbs']);
-			if(file_exists('../'.$r['image_large'])) @unlink('../'.$r['image_large']);
-			$err = 'SUCCESS';
-			$errMsg = "Đã xóa thành công!";
+                $check = true;
+		$r = selectOne(tbl_config::tbl_category,'id = ' . $id);
+                $parent = selectOne(tbl_config::tbl_category,'id = ' . $r['parent_id']);
+                switch($parent['code']){
+                    case 'product':     $tbl = tbl_config::tbl_product;     break;
+                    case 'properties':  $tbl = tbl_config::tbl_properties;  break;
+                    case 'news':        $tbl = tbl_config::tbl_content;     break;
+                }
+		$fields_arr = array('id' => $id);
+		$del1 = delete_rows(tbl_config::tbl_category,array('id' => $id));
+                if($del1){
+                    if(file_exists('../'.$r['image_thumbs'])) @unlink('../'.$r['image_thumbs']);
+                    if(file_exists('../'.$r['image_large'])) @unlink('../'.$r['image_large']);
+                    if($parent['code'] == 'properties'){
+                        $columes = 'id';
+                    }else{
+                        $columes = 'id,image_thumbs,image_large';                        
+                    }
+                    $childs = selectMulti($tbl,$columes,'parent_id = ' . $id);
+                    if($childs){
+                        $del2 = delete_rows($tbl,array('parent_id' => $id));
+                        if($del2){
+                            foreach($childs as $child){
+                                if($parent['code'] == 'properties'){
+                                    delete_rows(tbl_config::tbl_product_extend,array('properties_id' => $child['id']));
+                                }else{
+                                    if(file_exists('../'.$child['image_thumbs'])) @unlink('../'.$child['image_thumbs']);
+                                    if(file_exists('../'.$child['image_large'])) @unlink('../'.$child['image_large']);
+                                }
+                            }
+                        }else{
+                            $check = false;
+                        }
+                    }
+                }else{
+                    $check = false;
+                }
+		if ($check){
+                        $err = 'SUCCESS';
+                        $errMsg = "Đã xóa thành công!";
 		}else{
 			$err = 'ERROR';
 			$errMsg = 'Không thể xóa dữ liệu!';
@@ -38,18 +70,51 @@
 		$cntNotDel=0;
 		if($chk!=''){
 			foreach ($chk as $id){
-				$r = selectOne(tbl_config::tbl_category,"id=".$id);
-				$fields_arr = array("id" => $id);
-				$result = delete_rows(tbl_config::tbl_category,$fields_arr);
-				if ($result){
-					if(file_exists('../'.$r['image_thumbs'])) @unlink('../'.$r['image_thumbs']);
-					if(file_exists('../'.$r['image_large'])) @unlink('../'.$r['image_large']);
-					$cntDel++;
-				}else $cntNotDel++;
-			}
-			$err = 'SUCCESS';
-			$errMsg = 'Đã xóa '.$cntDel.' phần tử.';
-			$errMsg .= $cntNotDel>0 ? 'Không thể xóa '.$cntNotDel.' phần tử.' : '';
+                            $check = true;
+                            $r = selectOne(tbl_config::tbl_category,'id = ' . $id);
+                            $parent = selectOne(tbl_config::tbl_category,'id = ' . $r['parent_id']);
+                            switch($parent['code']){
+                                case 'product':     $tbl = tbl_config::tbl_product;     break;
+                                case 'properties':  $tbl = tbl_config::tbl_properties;  break;
+                                case 'news':        $tbl = tbl_config::tbl_content;     break;
+                            }
+                            $fields_arr = array('id' => $id);
+                            $del1 = delete_rows(tbl_config::tbl_category,array('id' => $id));
+                            if($del1){
+                                if(file_exists('../'.$r['image_thumbs'])) @unlink('../'.$r['image_thumbs']);
+                                if(file_exists('../'.$r['image_large'])) @unlink('../'.$r['image_large']);
+                                if($parent['code'] == 'properties'){
+                                    $columes = 'id';
+                                }else{
+                                    $columes = 'id,image_thumbs,image_large';
+                                }
+                                $childs = selectMulti($tbl,$columes,'parent_id = ' . $id);
+                                if($childs){
+                                    $del2 = delete_rows($tbl,array('parent_id' => $id));
+                                    if($del2){
+                                        foreach($childs as $child){
+                                            if($parent['code'] == 'properties'){
+                                                delete_rows(tbl_config::tbl_product_extend,array('properties_id' => $child['id']));
+                                            }else{
+                                                if(file_exists('../'.$child['image_thumbs'])) @unlink('../'.$child['image_thumbs']);
+                                                if(file_exists('../'.$child['image_large'])) @unlink('../'.$child['image_large']);
+                                            }
+                                        }
+                                    }else{
+                                        $check = false;
+                                    }
+                                }
+                            }else{
+                                $check = false;
+                            }
+                            if ($check)
+                                    $cntDel++;
+                            else
+                                    $cntNotDel++;
+                        }
+                        $err = 'SUCCESS';
+                        $errMsg = 'Đã xóa '.$cntDel.' phần tử.';
+                        $errMsg .= $cntNotDel>0 ? 'Không thể xóa '.$cntNotDel.' phần tử.' : '';
 		}else{
 			$err = 'ERROR';
 			$errMsg = 'Hãy chọn trước khi xóa!';
