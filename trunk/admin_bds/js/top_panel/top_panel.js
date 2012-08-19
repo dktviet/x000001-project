@@ -108,8 +108,9 @@ function logout(){
                 $.post('first_run.php', {
                         val:'logout'
                 }, function(data) {
-                        window.location='./?frame=home';
-                });
+                    if(data.error == 'ok')
+                        window.location='./index.php';
+                }, 'json');
         });
 }
 function load_admin_theme_bar(){
