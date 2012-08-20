@@ -4,7 +4,7 @@
 </td>
 <td class="smallfont" align="center"><?=$id?></td>
 <td width="26" align="center" class="smallfont">
-	<span onClick="delrow('<?=$id?>');">Xóa</span>
+	<span onClick="delrow(<?=$id?>);">Xóa</span>
 </td>
 <td class="smallfont" align="center">
 	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);"><?=killInjection($name)?></span>
