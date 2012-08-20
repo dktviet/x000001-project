@@ -16,8 +16,8 @@
         $field = 'id, name, detail_short, detail, image_thumbs, image_large, sort, status, date_added, last_modified, views';
 	switch($code){
 		case 'properties' 	: $tbl = tbl_config::tbl_properties; $field = 'id, name, parent_id, sort, status, date_added, last_modified'; break;
-		case 'news' 		: $tbl = tbl_config::tbl_content; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views'; break;
-		case 'product' 		: $tbl = tbl_config::tbl_product; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views, price'; break;
+		case 'news' 		: $tbl = tbl_config::tbl_content; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views, seo_key'; break;
+		case 'product' 		: $tbl = tbl_config::tbl_product; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified, views, price, seo_key'; break;
                 case 'adv' 		: $tbl = tbl_config::tbl_content; $field = 'id, name, parent_id, detail_short, detail, image_thumbs, sort, status, date_added, last_modified'; break;
 		default 		: $tbl = tbl_config::tbl_content; 	break; 
 	}
@@ -100,6 +100,7 @@
                 $last_modified = $content['last_modified'];
                 $views = $content['views'];
                 $price = $content['price'];
+                $seo_key = $content['seo_key'];
 		
 		$mau = $i++%2 ? 'class="row0"' : 'class="row1"';
 	?>
