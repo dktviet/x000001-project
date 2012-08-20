@@ -7,9 +7,11 @@
 	<span onClick="delrow('<?=$id?>');">Xóa</span>
 </td>
 <td class="smallfont" align="center">
-	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');"><?=killInjection($name)?></span>
-        <br><br>
+	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);"><?=killInjection($name)?></span>
+        <br><hr>
 	<span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);"><?=$get_cat_info['name']?></span>
+        <br><hr>
+        <span id="seo_key_<?=$id?>" onclick="edit_seo_key('<?=$seo_key?>',<?=$id?>);"><?=$seo_key!=''?$seo_key:'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
 	<span id="short_detail_<?=$id?>" onclick="edit_short_detail('<?=$id?>');"><?=$detail_short!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
