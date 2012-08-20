@@ -20,13 +20,14 @@
 		case 'show_hot' 		: show_hot($tbl,$id, $val); 		break;
 		case 'update_views'             : update_views($tbl,$id, $val); 	break;
 		case 'update_price'             : update_price($tbl,$id, $val); 	break;
-		case 'edit_name' 		: edit_name($tbl,$id, $val);    break;
+		case 'edit_name' 		: edit_name($tbl,$id, $val);            break;
+                case 'edit_seo_key' 		: edit_seo_key($tbl, $id, $val);        break;
 		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);    break;
-		case 'update_parent'            : update_parent($tbl, $id, $val);	break;
+		case 'update_parent'            : update_parent($tbl, $id, $val);               break;
                 case 'view_add_new_content'     : view_add_new_content($tbl, $parent_cat_id, $cat_id); break;
-		case 'add_new' 			: add_new_content($tbl, $parent_cat_id, $cat_id);    break;
-                case 'add_new_properties'       : add_new_properties($cat_id); break;
-                case 'update_properties'        : update_properties(); break;
+		case 'add_new' 			: add_new_content($tbl, $parent_cat_id, $cat_id);      break;
+                case 'add_new_properties'       : add_new_properties($cat_id);          break;
+                case 'update_properties'        : update_properties();                  break;
 		case 'view_edit_detail_short' 	: view_edit_detail_short($tbl, $id);	break;
 		case 'update_detail_short' 	: update_detail_short($tbl, $id);	break;
                 case 'edit_adv_desc'            : edit_adv_desc($tbl, $id, $val);       break;
@@ -168,11 +169,23 @@
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
 	function edit_name($tbl, $id, $val){
-		$fields_arr = array("name" => "'$val'", "last_modified" => time());
+		$fields_arr = array("name" => "'$val'", "title" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
 			$errMsg = "Cập nhật tên thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
+	function edit_seo_key($tbl, $id, $val){
+		$fields_arr = array("seo_key" => "'$val'", "last_modified" => time());
+		$result = update($tbl,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật SEO KEY thành công.";
 		}else{
 			$err = 'ERROR';
 			$errMsg = "Không thể cập nhật!";
@@ -190,7 +203,10 @@
 		echo json_encode(array('error' => $err, 'drop_list' => $drop_list));
 	}
 	function update_parent($tbl, $id, $val){
-		$fields_arr = array("parent_id" => $val,"last_modified" => time());
+                $get_cat = selectOne(tbl_config::tbl_category, 'id = ' . $val);
+                $get_parent = selectOne(tbl_config::tbl_category, 'id = ' . $get_cat['parent_id']);
+                $seo_key = $get_parent['name'] . ' - ' . $get_cat['name'];
+		$fields_arr = array("parent_id" => $val, "last_modified" => time(), "seo_key" => "'$seo_key'");
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
@@ -335,23 +351,25 @@
                 $path_thumb = $path.'/thumbs';
                 if(!is_dir($path_thumb)) mkdir($path_thumb,0777);
                 $pathdb_thumb = $pathdb.'/thumbs';
-		
+
+                $get_name = selectOne($tbl, 'id = ' . $id);
+                $add_img_name = catchu(utf8_to_ascii($get_name['name']),100);
 		$r = selectOne($tbl,"id=".$id);
 		$return_img = '';
 		if (!$img_check_clear || $img_check_clear==''){
 			$extImg=getFileExtention($_FILES['txtImage']['name']);
-			if (makeUpload($_FILES['txtImage'],"$path/".$code."_l".$id.$extImg)){
-				@chmod("$path/".$code."_l".$id.$extImg, 0777);
-				change_img_size("$path/".$code."_l".$id.$extImg,"$path/".$code."_l".$id.$extImg,800,1000);
+			if (makeUpload($_FILES['txtImage'],"$path/".$code."_".$add_img_name."_l".$id.$extImg)){
+				@chmod("$path/".$code."_".$add_img_name."_l".$id.$extImg, 0777);
+				change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path/".$code."_".$add_img_name."_l".$id.$extImg,800,1000);
 				if($code == 'news'){
-					change_img_size("$path/".$code."_l".$id.$extImg,"$path_thumb/".$code."_t".$id.$extImg,140,100);
+					change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code."_".$add_img_name."_t".$id.$extImg,140,100);
 				}else{
-					change_img_size("$path/".$code."_l".$id.$extImg,"$path_thumb/".$code."_t".$id.$extImg,292,950);
+					change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code."_".$add_img_name."_t".$id.$extImg,292,950);
 				}
-				$fields_arr = array("image_large" => "'".$pathdb."/".$code."_l".$id.$extImg."'",
-									"image_thumbs" => "'".$pathdb_thumb."/".$code."_t".$id.$extImg."'",
+				$fields_arr = array("image_large" => "'".$pathdb."/".$code."_".$add_img_name."_l".$id.$extImg."'",
+									"image_thumbs" => "'".$pathdb_thumb."/".$code."_".$add_img_name."_t".$id.$extImg."'",
 									"last_modified" => time());
-				$return_img = '../'.$pathdb_thumb."/".$code."_t".$code.$extImg;
+				$return_img = '../'.$pathdb_thumb."/".$code."_".$add_img_name."_t".$code.$extImg;
 				
 			}	
 		}else{
@@ -541,8 +559,9 @@
             echo $html;
         }
 	function add_new_content($tbl, $parent_cat_id, $cat_id){
-                $get_parent_code = selectOne(tbl_config::tbl_category, 'id = ' . $parent_cat_id);
-                $code_folder = $get_parent_code['code'];
+                $get_parent = selectOne(tbl_config::tbl_category, 'id = ' . $parent_cat_id);
+                $code_folder = $get_parent['code'];
+                $get_cat = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
                 $url = $_POST['url'];
 		$name = $_POST['txtName'] ? trim($_POST['txtName']) : '';
                 $txtshort = $_POST['txtshort'] ? trim($_POST['txtshort']) : '';
@@ -551,6 +570,7 @@
 		$views = $_POST['txtViews'] ? $_POST['txtViews'] : 0;
                 $price = $_POST['txtPrice'] ? $_POST['txtPrice'] : 0;
                 $sort = $_POST['txtSort'] ? $_POST['txtSort'] : 0;
+                $seo_key = $get_parent['name'] . ' - ' . $get_cat['name'];
                 $folder_img = date('d-m-Y');
 		$errMsg = '';
 		$time = time();
@@ -567,7 +587,9 @@
                             "sort"          => $sort,
                             "status"        => 1,
                             "date_added"    => $time,
-                            "last_modified" => $time
+                            "last_modified" => $time,
+                            "seo_key"       => "'$seo_key'",
+                            "title"         => "'$name'"
                     );
                 }else if($code_folder == 'adv'){
                     $fields_arr = array(
@@ -590,7 +612,9 @@
                             "sort"          => $sort,
                             "status"        => 1,
                             "date_added"    => $time,
-                            "last_modified" => $time
+                            "last_modified" => $time,
+                            "seo_key"       => "'$seo_key'",
+                            "title"         => "'$name'"
                     );
                 }
                 $insert_content = insert($tbl,$fields_arr);
@@ -602,23 +626,24 @@
                     $path .= '/'.$folder_img;
                     if(!is_dir($path)) mkdir($path,0777);
                     $pathdb = 'images/'.$code_folder.'/'.$folder_img;
-
+                    
                     $path_thumb = $path.'/thumbs';
                     if(!is_dir($path_thumb)) mkdir($path_thumb,0777);
                     $pathdb_thumb = $pathdb.'/thumbs';
 
+                    $add_img_name = catchu(utf8_to_ascii($name),100);
                     $r = selectOne($tbl,"id=".$id);
                     $extImg=getFileExtention($_FILES['txtImage']['name']);
-                    if (makeUpload($_FILES['txtImage'],"$path/".$code_folder."_l".$id.$extImg)){
-                            @chmod("$path/".$code_folder."_l".$id.$extImg, 0777);
-                            change_img_size("$path/".$code_folder."_l".$id.$extImg,"$path/".$code_folder."_l".$id.$extImg,800,1000);
+                    if (makeUpload($_FILES['txtImage'],"$path/".$code_folder."_".$add_img_name."_l".$id.$extImg)){
+                            @chmod("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg, 0777);
+                            change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,800,1000);
                             if($code == 'news'){
-                                    change_img_size("$path/".$code_folder."_l".$id.$extImg,"$path_thumb/".$code_folder."_t".$id.$extImg,140,100);
+                                    change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code_folder."_".$add_img_name."_t".$id.$extImg,140,100);
                             }else{
-                                    change_img_size("$path/".$code_folder."_l".$id.$extImg,"$path_thumb/".$code_folder."_t".$id.$extImg,292,950);
+                                    change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code_folder."_".$add_img_name."_t".$id.$extImg,292,950);
                             }
-                            $fields_arr = array("image_large" => "'".$pathdb."/".$code_folder."_l".$id.$extImg."'",
-                                                                    "image_thumbs" => "'".$pathdb_thumb."/".$code_folder."_t".$id.$extImg."'",
+                            $fields_arr = array("image_large" => "'".$pathdb."/".$code_folder."_".$add_img_name."_l".$id.$extImg."'",
+                                                                    "image_thumbs" => "'".$pathdb_thumb."/".$code_folder."_".$add_img_name."_t".$id.$extImg."'",
                                                                     "last_modified" => $time);
                     }
                     if($fields_arr!='')	{
