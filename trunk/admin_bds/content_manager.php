@@ -37,6 +37,10 @@
                 <a class="toolbar" onclick="add_new_properties('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);">
                 	<span class="icon-32-new" title="Thêm mới"> </span>Thêm mới
                 </a>
+                <?php }else if($code == 'support'){?>
+                <a class="toolbar" onclick="add_new_support('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);">
+                	<span class="icon-32-new" title="Thêm mới"> </span>Thêm mới
+                </a>
                 <?php }else{?>
                 <a class="toolbar" onclick="add_new('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);">
                 	<span class="icon-32-new" title="Thêm mới"> </span>Thêm mới
@@ -67,6 +71,7 @@
                                 case 'product' 		: require('template/product_thead_ajax.php'); 		break;
                                 case 'properties'	: require('template/properties_thead_ajax.php'); 	break;
 				case 'adv' 		: require('template/adv_thead_ajax.php'); 		break;
+                                case 'support' 		: require('template/support_thead_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_thead_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_thead_ajax.php'); 		break;
 				case 'contact_info'     : require('template/contact_info_thead_ajax.php'); 	break;
@@ -111,16 +116,17 @@
                                 case 'product' 		: require('template/product_rows_ajax.php') ; 		break;
                                 case 'properties'	: require('template/properties_rows_ajax.php') ; 	break;
 				case 'adv' 		: require('template/adv_rows_ajax.php'); 		break;
+                                case 'support' 		: require('template/support_rows_ajax.php'); 		break;
 				case 'banner' 		: require('template/banner_rows_ajax.php'); 		break;
 				case 'albums' 		: require('template/albums_rows_ajax.php'); 		break;
-				case 'contact_info' : require('template/contact_info_rows_ajax.php'); 	break;
+				case 'contact_info'     : require('template/contact_info_rows_ajax.php'); 	break;
 				case 'contact' 		: require('template/contact_rows_ajax.php'); 		break;
-				case 'entertainment': require('template/entertainment_rows_ajax.php'); 	break;
+				case 'entertainment'    : require('template/entertainment_rows_ajax.php'); 	break;
 				case 'site_index'	: require('template/site_index_rows_ajax.php'); 	break;
 				case 'alexa_rank'	: require('template/alexa_rank_rows_ajax.php'); 	break;
-				case 'link'			: require('template/site_link_rows_ajax.php'); 		break;
+				case 'link'		: require('template/site_link_rows_ajax.php'); 		break;
 				case 'partners'		: require('template/partner_rows_ajax.php'); 		break;
-				default 			: require('template/content_rows_ajax.php'); 		break; 
+				default 		: require('template/content_rows_ajax.php'); 		break; 
 			} 
 		?>
 	</tr>
@@ -134,6 +140,10 @@
                 <?php if($code == 'properties'){?>
                 <td width="7%">
 			<input type="button" value="Nhập mới" name="addNew" onClick="add_new_properties('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);" class="button">
+		</td>
+                <?php }else if($code == 'support'){?>
+                <td width="7%">
+			<input type="button" value="Nhập mới" name="addNew" onClick="add_new_support('<?=$tbl?>', <?=$cat_parent_id?>, <?=$cat_id?>);" class="button">
 		</td>
                 <?php }else{?>
                 <td width="7%">
