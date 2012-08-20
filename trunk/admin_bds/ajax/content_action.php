@@ -20,7 +20,7 @@
 		case 'show_hot' 		: show_hot($tbl,$id, $val); 		break;
 		case 'update_views'             : update_views($tbl,$id, $val); 	break;
 		case 'update_price'             : update_price($tbl,$id, $val); 	break;
-		case 'edit_name' 		: edit_name($tbl,$id, $val);            break;
+		case 'edit_name' 		: edit_name($tbl, $id, $val);           break;
                 case 'edit_seo_key' 		: edit_seo_key($tbl, $id, $val);        break;
 		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);            break;
 		case 'update_parent'            : update_parent($tbl, $id, $val);                       break;
@@ -171,7 +171,10 @@
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
 	function edit_name($tbl, $id, $val){
-		$fields_arr = array("name" => "'$val'", "title" => "'$val'", "last_modified" => time());
+                if($tbl == tbl_config::tbl_properties)
+                    $fields_arr = array("name" => "'$val'", "last_modified" => time());
+                else
+                    $fields_arr = array("name" => "'$val'", "title" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
 		if ($result){
 			$err = 'SUCCESS';
