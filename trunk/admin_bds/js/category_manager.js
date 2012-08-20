@@ -121,7 +121,7 @@ function edit_name(name, id){
 				$(this).dialog('close');
 			}
 		}
-	}).html('<div style="float:left;padding: 20px;">Tên danh mục:<input type="text" id="name_space" value="" /></div>');
+	}).html('<div style="float:left;padding: 20px;">Tên danh mục:<input type="text" id="name_space" value="" size="32" /></div>');
 	$('#name_space').val(name);
 	$('#name_space').focus(function(){$('#name_space').val('');});
 }
