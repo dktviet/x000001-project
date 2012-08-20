@@ -196,8 +196,40 @@ function edit_name(name, id){
 				$(this).dialog('close');
 			}
 		}
-	}).html('<div style="float:left;padding: 20px;">Tên nội dung:<input type="text" id="name_space" value="" /></div>');
+	}).html('<div style="float:left;padding: 20px;">Tên nội dung:<input type="text" id="name_space" value="" size="32" /></div>');
 	$('#name_space').val(name);
+}
+function edit_seo_key(seo_key, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa SEO KEY',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var seo_key = $('#seo_key_space').val();
+				$.post("ajax/content_action.php", {
+					fnc:'edit_seo_key',
+					tbl: tbl,
+					id: id,
+					val: seo_key
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#seo_key_'+id).text(seo_key);
+                                                $('#seo_key_'+id).attr('onclick','edit_seo_key(\''+seo_key+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;">SEO KEY:<input type="text" id="seo_key_space" value="" size="32" /></div>');
+	$('#seo_key_space').val(seo_key);
 }
 function edit_parent(row_id){
 	var tbl = $('h3').attr('tbl_data');
