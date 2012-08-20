@@ -6,6 +6,8 @@
     <a class="title" href="<?=getLinkSort(2)?>">Tên sản phẩm</a>
     <br>
     <a class="title" href="<?=getLinkSort(3)?>">Danh mục</a>
+    <br>
+    <a class="title" href="<?=getLinkSort(3)?>">SEO KEY</a>
 </th>
 <th width="71" class="title"><a class="title" href="<?=getLinkSort(4)?>">Mô tả ngắn</a></th>
 <th width="63" class="title"><a class="title" href="<?=getLinkSort(5)?>">Chi tiết</a></th>
