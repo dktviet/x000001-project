@@ -22,15 +22,17 @@
 		case 'update_price'             : update_price($tbl,$id, $val); 	break;
 		case 'edit_name' 		: edit_name($tbl,$id, $val);            break;
                 case 'edit_seo_key' 		: edit_seo_key($tbl, $id, $val);        break;
-		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);    break;
-		case 'update_parent'            : update_parent($tbl, $id, $val);               break;
-                case 'view_add_new_content'     : view_add_new_content($tbl, $parent_cat_id, $cat_id); break;
-		case 'add_new' 			: add_new_content($tbl, $parent_cat_id, $cat_id);      break;
+		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);            break;
+		case 'update_parent'            : update_parent($tbl, $id, $val);                       break;
+                case 'view_add_new_content'     : view_add_new_content($tbl, $parent_cat_id, $cat_id);  break;
+		case 'add_new' 			: add_new_content($tbl, $parent_cat_id, $cat_id);       break;
                 case 'add_new_properties'       : add_new_properties($cat_id);          break;
+                case 'add_new_support'          : add_new_support($cat_id);             break;
                 case 'update_properties'        : update_properties();                  break;
 		case 'view_edit_detail_short' 	: view_edit_detail_short($tbl, $id);	break;
 		case 'update_detail_short' 	: update_detail_short($tbl, $id);	break;
                 case 'edit_adv_desc'            : edit_adv_desc($tbl, $id, $val);       break;
+                case 'edit_support_code'        : edit_support_code($tbl, $id, $val);   break;
 		case 'view_edit_detail'         : view_edit_detail($tbl, $id);		break;
 		case 'update_detail'            : update_detail($tbl, $id);		break;
                 case 'edit_adv_link'            : edit_adv_link($tbl, $id, $val);       break;
@@ -267,6 +269,18 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
+        function edit_support_code($tbl, $id, $val){
+		$fields_arr = array("detail_short" => "'$val'", "last_modified" => time());
+		$result = update($tbl,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật hỗ trợ trực tuyến thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
 	function view_edit_detail($tbl, $id){
 		require_once ('../ckeditor/ckeditor.php') ;
 		require_once ('../ckfinder/ckfinder.php') ;
@@ -460,6 +474,32 @@
                                 <td width="1%" class="smallfont" align="right"></td>
                                 <td width="83%" class="smallfont">
                                         <input value="" type="text" name="txtSort" class="textbox" size="10">
+                                </td>
+                        </tr>';
+            }else if($code == 'support'){
+                $get_cat = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
+                $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
+                    <input type="hidden" name="fnc" value="add_new" />
+                    <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
+                        <tr>
+                                <td width="30%" class="smallfont" align="right">Tên hiển thị</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="69%" class="smallfont">
+                                        <input value="" type="text" id="txtName" name="txtName" class="textbox" size="40" />
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="30%" class="smallfont" align="right">' . $get_cat['name'] . ' hỗ trợ</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="69%" class="smallfont">
+                                        <input value="" type="text" id="txtshort" name="txtshort" class="textbox" size="40" />
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="30%" class="smallfont" align="right">Thứ tự sắp xếp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="69%" class="smallfont">
+                                        <input value="" type="text" id="txtSort" name="txtSort" class="textbox" size="10" />
                                 </td>
                         </tr>';
             }else{
@@ -682,6 +722,30 @@
                     }
                 }
                 echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
+	}
+	function add_new_support($cat_id){
+		$name = $_POST['name'] ? trim($_POST['name']) : '';
+                $detail_short = $_POST['detail_short'] ? trim($_POST['detail_short']) : '';
+                $sort = $_POST['sort'] ? $_POST['sort'] : 0;
+		$time = time();
+		$fields_arr = array(
+			"name"          => "'$name'",
+                        "detail_short"  => "'$detail_short'",
+			"parent_id"    	=> $cat_id,
+                        "sort"          => $sort,
+			"status"	=> 1,
+			"date_added"    => $time,
+			"last_modified" => $time
+		);
+                $insert_support = insert(tbl_config::tbl_content,$fields_arr);
+                if($insert_support || $insert_support != ''){
+                        $err = 'SUCCESS';
+                        $errMsg = "Thêm hỗ trợ mới thành công";
+                }else{
+                        $err = 'ERROR';
+                        $errMsg = "Không thể thêm hỗ trợ mới!";
+                }
+                echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
 	function add_new_properties($cat_id){
 		$name = $_POST['name'] ? trim($_POST['name']) : '';
