@@ -85,14 +85,7 @@ require("validate.php");
                 <h1 id="logo"><a href="#"><?=$mykeywords['detail'].$Strkey?></a></h1>
                 <div id="main-menu">
                 	<div class="nav-left"></div>
-                    <ul id="menu-bar">
-                        <li><a href="#" class="active first">Trang chủ</a></li>
-                        <li><a href="#">Chung cư</a></li>
-                        <li><a href="#">Văn phòng cho thuê</a></li>
-                        <li><a href="#">Nhà - Biệt thự</a></li>
-                        <li><a href="#">Tin tức</a></li>
-                        <li><a href="#" nofllow class="last">Liên hệ</a></li>
-                    </ul>
+                    <? require_once 'modules/navigator/index.php';?>
                     <div class="nav-right"></div>
                 </div>
             </div>
@@ -112,81 +105,22 @@ require("validate.php");
            	
         	<div id="flash-news">
                 <div class="title-flash">Tin tức</div>
-                <marquee   direction="left"   scrollamount="3" onmouseover="this.stop()" onmouseout="this.start()">
-                <ul>
-                    <li class="news-item"><a href="#">Hà nội có liên minh bất động sản đầu tiên</a></li>
-                    <li class="news-item"><a href="#">Giá đất liên tục giảm mạnh, nhà đầu tư lao đao</a></li>
-                    <li class="news-item"><a href="#">1000 căn hộ xây rồi bỏ hoang</a></li>
-                    <li class="news-item"><a href="#">Khoản đầu tư 1000 tỷ để cứu thị trường địa ốc</a></li>
-                    <li class="news-item"><a href="#">Bất động sản vẫn ngủ yên, nhà đầu tư mất trắng</a></li>
-                </ul>
-                </marquee>
+                <? include("modules/news/flash_news.php");
+				//require_once("modules/news/flash_news.php"); ?>
             </div>
             <!-- end flash-news-->
         	<div class="right">
             	<div id="search">
                 	<h3 class="head-module">Tìm kiếm</h3>
                     <div class="search-content">
-                    	<form name="search" method="post">
-                        	<div class="radio">
-                            	<input type="radio" name="type" checked="checked" id="chothue" /><label for="chothue">Cho thuê</label><br />
-                            </div>
-                            <div class="radio">
-                            	<input type="radio" name="type" value="Bán" id="ban" /><label for="ban">Bán</label>
-                            </div>
-                            <label for="area" class="title-search">Khu vực</label>
-                            <div class="input">
-                            	<select name="area" id="area">
-                                	<option value="0">Chọn khu vực</option>
-                                    <option value="0">Hà nội</option>
-                                    <option value="0">Hồ chí minh</option>
-                                </select>
-                            </div>
-                            <label for="price" class="title-search">Khoảng giá</label>
-                            <div class="input">
-                            	<select name="khuvuc" id="price">
-                                	<option value="0">Chọn khoảng giá</option>
-                                    <option value="1">100tr - 200tr</option>
-                                    <option value="2">200tr - 300tr</option>
-                                </select>
-                            </div>
-                            <label for="acreage" class="title-search">Diện tích</label>
-                            <div class="input">
-                            	<select name="acreage" id="acreage">
-                                	<option value="0">Chọn khoảng giá</option>
-                                    <option value="1">30m2</option>
-                                    <option value="2">40m2</option>
-                                    <option value="2">50m2</option>
-                                    <option value="2">60m2</option>
-                                    <option value="2">70m2</option>
-                                    <option value="2">80m2</option>
-                                    <option value="2">90m2</option>
-                                    <option value="2">100m2</option>
-                                </select>
-                            </div>
-                            <label for="direction" class="title-search">Hường nhà</label>
-                            <div class="input">
-                            	<select name="direction" id="direction">
-                                	<option value="0">Chọn khoảng giá</option>
-                                    <option value="1">100tr - 200tr</option>
-                                    <option value="2">200tr - 300tr</option>
-                                </select>
-                            </div>
-                            <input type="submit" name="search" value="Tìm kiếm" class="bottom-search" />
-                        </form>
+                    	<? require_once 'plugins/search/index.php';?>
                     </div>
                 </div>
                 <!-- end search-->
                 <div id="menu-right">
                 	<h3 class="head-module">Chuyên mục chính</h3>
                     <div class="menu-right-top"></div>
-                	<ul>
-                    	<li><a href="#" class="active">Cần bán</a></li>
-                        <li><a href="#">Cần mua</a></li>
-                        <li><a href="#">Cho thuê</a></li>
-                        <li><a href="#">Dự án</a></li>
-                        <li><a href="#">Tin tức</a></li>
-                    </ul>
+                	<? require_once("modules/leftmenu/index.php"); ?>
                     <div class="menu-right-bottom"></div>
                 </div>
                 <!-- end menu-right-->
@@ -217,9 +151,7 @@ require("validate.php");
             <div id="contain">
                 <div id="content-news">
                 	<h2 class="title-cat iconhome">
-                        <? require_once "modules/processTitle.php";
-                        echo $pages;
-                        ?>
+                        <? require_once "modules/processTitle.php";?>
                         <? if($pages==='' || $pages==='home'){?>
                     	<a class="readmore" href="<?=$curHost?>/san-pham.html"><span>[+]</span>&nbsp;&nbsp;Xem tất</a>
                         <? }?>
@@ -227,8 +159,7 @@ require("validate.php");
                     <? if($pages==='' || $pages==='home'){}else{?>
                     <div class="line-head"></div>
                     <? }?>
-                    <? //require_once "modules/products/product_home.php";
-					require_once "modules/processFrame.php";?>
+                    <? require_once "modules/processFrame.php";?>
                     <div class="clear"></div>
                 </div>
                 <!-- end content-news-->
@@ -246,7 +177,7 @@ require("validate.php");
                 	<ul id="menu-bottom">
                     	<li><a href="<?=$curHost?>">Trang chủ</a></li>
                         <li><a href="<?=$curHost?>gioi-thieu.html" rel="nofollow">Giới thiệu</a></li>
-                        <li><a href="">Tin tức</a></li>
+                        <li><a href="<?=$curHost.$getnews['id']?>-<?=$getnews['seo_key']?>/6-<?=$getnews['name']?>.html"><?=$getnews['name']?></a></li>
                         <li><a href="<?=$curHost?>lien-he.html" rel="nofollow">Liên hệ</a></li>
                         <li><a href="<?=$curHost?>site-map.html">Sitemap</a></li>
                     </ul>

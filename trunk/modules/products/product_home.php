@@ -1,12 +1,22 @@
 <div class="block-news">
 <?
+$parent_id = getRecord('xteam_category', 'code="product"');
+$parents = getArray('xteam_category','parent_id='.$parent_id['id']);
+$parname = array();
+$parid = array();
+foreach ($parents as $parent){
+    $parname[$parent['id']] = $parent['name'];
+    $parid[$parent['id']] = $parent['id'];
+}
 $per_page=14;
 for($i=0;$i<$per_page;$i++){
-	$class = $i%2!==0? 'block-left' : 'block-right';?>
+	$class = $i%2!==0? 'block-left' : 'block-right';
+    if($parid[$top_pro[$i]['parent_id']]%2==0){$class_sp="rental";}else{$class_sp="salse";}
+    ?>
 	<div class="<?=$class?>">
     	<h3 class="title-news">
         	<a href="<?=$curHost.$top_pro[$i]['id']."-".str_replace(' ','-',$top_pro[$i]['seo_key'])?>/1-<?=str_replace(' ','-',$top_pro[$i]['name'])?>.html">
-            	<span class="rental">Rental | </span><?=$top_pro[$i]['name']?>
+            	<span class="<?=$class_sp?>"><?=$parname[$top_pro[$i]['parent_id']]?> | </span><?=$top_pro[$i]['name']?>
 			</a>
         </h3>
         <a href="<?=$curHost.$top_pro[$i]['id']."-".str_replace(' ','-',$top_pro[$i]['seo_key'])?>/1-<?=str_replace(' ','-',$top_pro[$i]['name'])?>.html">
@@ -29,7 +39,6 @@ if($i%2!==0 && $i<$per_page)
 			if ($(this).text()==''){
 				$(this).hide();
 			}
-			});
-		
+        });
 	})
 </script>

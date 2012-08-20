@@ -707,8 +707,8 @@ function Draw_Menu($arrItem, $type="", $parent_id = "",$class=""){
 	global $seokey;
 	$_return = '';
 	$class = $class!="" ? $class : "";
-	$parent_id = $parent_id != '' ? $parent_id : 1;
-	if($parent_id>1) {$_return.="<ul>";}else{$_return.='';}
+	$parent_id = $parent_id != '' ? $parent_id : 0;
+	if($parent_id>0) {$_return.="<ul>";}else{$_return.='';}
 	
 	for($i=0; $i<count($arrItem); $i++){
 		if($arrItem[$i]['parent'] == $parent_id){
@@ -740,7 +740,31 @@ function Draw_Menu($arrItem, $type="", $parent_id = "",$class=""){
 			$dem=0;
 		}else{$_return.="<li style='display:none;'></li>";}
 	}
-	if($parent_id>1) {$_return.="</ul>";}else{$_return.='';}
+	if($parent_id>0) {$_return.="</ul>";}else{$_return.='';}
 	return $_return;
+}
+function query($sql){
+    global $conn;
+    if ($sql == '') return false;
+    $result_array = array();
+	$result = mysql_query($sql,$conn);
+	if($result){
+		while($row=mysql_fetch_assoc($result)){
+			$result_array[] = $row;
+		}
+	}
+	return $result_array;
+}
+/* Ham de lay ra thuoc tinh */
+function product_properties($product_id){
+    $sql = 'SELECT (SELECT name FROM xteam_category WHERE id = prop.parent_id) cat, prop.name name
+            FROM xteam_properties prop INNER JOIN xteam__product_extend ext
+            ON ext.properties_id = prop.id WHERE ext.product_id = ' . $product_id;
+    $properties = query($sql);
+    if(!$properties){
+        return false;
+    }else{
+        return $properties;
+    }
 }
 ?>

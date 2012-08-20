@@ -1,9 +1,9 @@
 <?
-if(!isset($pages) || $pages==''){
+if($pages==''){
     include("products/product_home.php");
 }else{
 
-switch (isset($pages)){
+switch ($pages){
 	
 	case "product"          : include("modules/products/product_category.php");break;
 
@@ -83,7 +83,7 @@ switch (isset($pages)){
 	
 	case "solution"         : include("solution.php");break;
 	
-	case "home"             : include("content.php");break;
+	case "home"             : include("products/product_home.php");break;
 
 	default                 : include("products/product_home.php");break;
 
