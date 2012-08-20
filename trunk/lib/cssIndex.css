@@ -186,17 +186,20 @@
 .description li{
     border-bottom: 1px solid #ccc;
     clear: both;
+	color: #C53322;
     line-height: 25px;
 }
 .description li span{
+	color: #808080;
     float: left;
     font-weight: normal;
-    width: 30%;
+    width: 45%;
 }
 .description li label{
+	color: #808080;
     float: left;
     font-weight: bold;
-    width: 65%;
+    width: 55%;
 }
 .description span{
 	width:100%;

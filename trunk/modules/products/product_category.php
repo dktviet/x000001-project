@@ -1,22 +1,34 @@
-<? $title_cat = getRecord('xteam_category','id='.$cat);?>
 <div class="block-news">
-<? $total = count($products);
+<?
+$parent_id = getRecord('xteam_category', 'code="product"');
+$parents = getArray('xteam_category','parent_id='.$parent_id['id']);
+$parname = array();
+$parid = array();
+foreach ($parents as $parent){
+    $parname[$parent['id']] = $parent['name'];
+    $parid[$parent['id']] = $parent['id'];
+}
 $per_page = 18;
-$start = $p!='' ? $per_page*($p-1) : 0;
-$j=0;
-for($i=$start; $per_page * ($p <= 0 ? 1 : $p) > $i; $i++){
+$page_no = $p;
+$first = ($page_no) * $per_page;
+$limit = $first . ',' . $per_page;
+$products = getArray('xteam_product','parent_id='.$cat,$limit);
+$total = count($products);
+foreach ($products as $product){
+    if($i>=$per_page) break;
+    if($parid[$product['parent_id']]%2==0){$class_sp="rental";}else{$class_sp="salse";}
     $class = ++$j%2!==0? 'block-left' : 'block-right';?>
     <div class="<?=$class?>">
         <h2 class="title-news">
-            <a href="<?=$curHost.$products[$i]['id'].'-'.str_replace(' ','-',$products[$i]['subject'])?>/1-<?=str_replace(' ','-',$products[$i]['name'])?>.html">
-				<?=catchu($products[$i]['name'],40)?>
+            <a href="<?=$curHost.$product['id'].'-'.str_replace(' ','-',$product['subject'])?>/1-<?=str_replace(' ','-',$product['name'])?>.html">
+				<span class="<?=$class_sp?>"><?=$parname[$top_pro[$i]['parent_id']]?> | </span><?=catchu($product['name'],40)?>
             </a>
         </h2>
-        <a href="<?=$lightbox==1 ? $curHost.$products[$i]['image_large'] : $curHost.$products[$i]['id'].'-'.str_replace(' ','-',$products[$i]['subject']).'/1-'.str_replace(' ','-',$products[$i]['name']).'.html'?>"  <?=$lightbox==1 ? ' rel="prettyPhoto[gallery1]" class="zoom-img load-img"' : ''?>>
-            <img src="<?=$curHost.$products[$i]['image']?>" alt="<?=$products[$i]['subject']." - ".$products[$i]["name"]?>"  class="img-news" style="display: inline;" />
+        <a href="<?=$lightbox==1 ? $curHost.$product['image_large'] : $curHost.$product['id'].'-'.str_replace(' ','-',$product['subject']).'/1-'.str_replace(' ','-',$product['name']).'.html'?>"  <?=$lightbox==1 ? ' rel="prettyPhoto[gallery1]" class="zoom-img load-img"' : ''?>>
+            <img src="<?=$curHost.$product['image']?>" alt="<?=$product['subject']." - ".$product["name"]?>"  class="img-news" style="display: inline;" />
         </a>
         <div class="short-news">
-            <?=catchu(strip_tags($products[$i]['detail_short']),200)?>
+            <?=catchu(strip_tags($product['detail_short']),200)?>
         </div>
     </div>
 <?  if($j%2==0 && $j<$per_page){

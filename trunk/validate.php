@@ -7,23 +7,10 @@ if(!isset($_SESSION['USER_IP']) || $_SESSION['USER_IP'] == NULL){
 }
 // Set IP END.
 //set giá trị khởi tạo
-$pages='';
-$title='';
-$cat='';
-$p='';
-var_dump($_GET);
-//$products=array();
-//$news=array();
-//$cat_news=array();
-//$cat_pro=array();
-//$top_news=array();
-$top_pro=array();
 if(isset($_GET['ali'])){
 	$frame=killInjection(substr($_GET['ali'],0,strpos($_GET['ali'],'-')));
+    if(isset($_GET['cat'])=="category")$frame=8;
 	switch ($frame){
-		case 7:
-			$pages='product';
-			break;
 		case 1:
 			$pages='product_detail';
 			break;
@@ -42,9 +29,17 @@ if(isset($_GET['ali'])){
 		case 6:
 			$pages='news_sub';
 			break;
+        case 7:
+			$pages='product';
+			break;
+        case 8:
+			$pages='keyword';
+			break;
 		default: $pages=utf8_to_ascii($_GET['frame']);
 			break;
 	}
+}else{
+    $pages=utf8_to_ascii($_REQUEST['frame']);
 }
 if(isset($_GET['cat'])) $cat=killInjection(substr($_GET['cat'],0,strpos($_GET['cat'],'-')));
 if(isset($_GET['p'])) $p = intval(killInjection($_GET['p']));
@@ -77,11 +72,11 @@ if(isset($_GET['cat'])){
 	$description =$mydescription['detail'];
 }
 $title = $title!=='' ? $title : $mykeywords['detail'];
-$cat_news =  getArray('xteam_category','status=1 AND code="news"',NULL,"sort");
-$cat_pro =  getArray('xteam_category','status=1 AND code="product"',NULL,"sort");
+$getpro= getRecord('xteam_category', 'code="product"');
+$getnews= getRecord('xteam_category', 'code="news"');
+$cat_news =  getArray('xteam_category','status=1 AND parent_id='.$getnews['id'],NULL,"sort");
+$cat_pro =  getArray('xteam_category','status=1 AND parent_id='.$getpro['id'],NULL,"sort");
 $top_news = getArray('xteam_content','status=1');
 $top_pro = getArray('xteam_product','status=1');
 if($pages=="news") $news = getArray('xteam_content','parent_id='.$cat.' AND status=0');
-if($pages=="product") $products = getArray('xteam_product','parent_id='.$cat);
-//var_dump($top_pro);die;
 ?>

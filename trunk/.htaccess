@@ -3,12 +3,13 @@ RewriteEngine On
 RewriteBase /bds
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-#RewriteRule ^([^/]+)/([^/]+)/page-([0-9]+)/([^/]+).html$ ?cat=$1&ali=$2&p=$3&frame=$4 [L]
-#RewriteRule ^([^/]+)/([^/]+)/([^/]+).html$ ?cat=$1&ali=$2&frame=$3 [L]
-RewriteRule ^([^/]+)/([^/]+).html$ ?cat=$1&ali=$3 [L]
+
+RewriteRule ^([^/]+)/([^/]+)/page-([0-9]+).html$ ?cat=$1&ali=$2&p=$3 [L]
+RewriteRule ^([^/]+)/([^/]+).html$ ?cat=$1&ali=$2&frame=$3 [L]
+
 RewriteRule ^mua-hang/([0-9]+)/([A-Za-z0-9\-]+).html$ ?cat=$1&ali=$2&frame=cart [L]
-RewriteRule ^tim-key/([^/]+).html$ ?keyword=$1&frame=keyword [L]
-RewriteRule ^tim-key/([^/]+)/([0-9]+).html$ ?keyword=$1&p=$2&frame=keyword [L]
+#RewriteRule ^category/([a-zA-Z]+).html$ ?keyword=$1&frame=keyword [L]
+#RewriteRule ^category/([^/]+)/([0-9]+).html$ ?keyword=$1&ali=$2&frame=keyword [L]
 RewriteRule ^tim-kiem/([^/]+).html$ ?keyword=$1&frame=search [L]
 RewriteRule ^tim-kiem/([^/]+)/([0-9]+).html$ ?keyword=$1&p=$2&frame=search [L]
 

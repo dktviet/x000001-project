@@ -72,6 +72,8 @@ switch ($pages){
 
 	case "search"          : $title = $_lang=="vn" ? "Tìm kiếm" : "Search";break;
 
+    case "keyword"         : $title = $_lang=="vn" ? $_GET['ali'] : "Category ".  utf8_to_ascii($_GET['ali']);break;
+
 	case "registry"        : $title = $_lang=="vn" ? "Đăng ký thành viên" : "Registry";break;
 
 	case "member"          : $title = $_lang=="vn" ? "Thành viên" : "Login";break;
