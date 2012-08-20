@@ -4,10 +4,10 @@
 </td>
 <td class="smallfont" align="center"><?=$id?></td>
 <td width="26" align="center" class="smallfont">
-	<span onClick="delrow('<?=$id?>');">Xóa</span>
+	<span onClick="delrow(<?=$id?>);">Xóa</span>
 </td>
 <td class="smallfont" align="center">
-	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');"><?=killInjection($name)?></span>
+	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);"><?=$name?></span>
 </td>
 <td class="smallfont sort-num" align="center">
    	<img src="images/up.png" alt="" onclick="up_down_sort('<?=$id?>','1');" />
