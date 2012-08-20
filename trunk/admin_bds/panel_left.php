@@ -163,7 +163,19 @@
     </li>-->
     <li class="node"><a class="top">Hỗ Trợ - Liên Hệ</a>
     	<ul>
-    		 <li class="contact_list_menu"><a href="#contact">Liên Hệ</a></li>
+                <li class="contact_list_menu"><a href="#contact">Liên Hệ</a></li>
+                <?php
+                    $nav_cat = selectOne(tbl_config::tbl_category, 'status=1 AND parent_id=0 AND code = "support"', 'sort, date_added ASC');
+                    $nav_id = $nav_cat['id'];
+                    $nav_name = $nav_cat['name'];
+                    $nav_child_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $nav_id, 'ORDER BY sort, date_added ASC');
+                    foreach($nav_child_cats as $nav_child_cat){
+                            $nav_child_id = $nav_child_cat['id'];
+                            $nav_child_name = $nav_child_cat['name'];
+                ?>
+                <li class="content_list_menu"><a href="#<?=$nav_id.'_'.$nav_child_id?>" parent_cat_id="<?=$nav_id?>" cat_id="<?=$nav_child_id?>"><strong style="color:#fff;float:left;"><?=$nav_name?>:</strong> <?=$nav_child_name?></a></li>
+                <?php }?>
+
     	</ul>
     </li>
 <!--    <li class="node"><a class="top <?=$act=='contact'

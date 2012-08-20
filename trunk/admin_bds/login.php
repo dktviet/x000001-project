@@ -31,10 +31,6 @@ if (isset($_POST['btnLogin'])){
 
 
 <link href="css/cssAdmin.css" rel="stylesheet" type="text/css" />
-
-<link rel="stylesheet" href="css/system.css" type="text/css" />
-
-<link href="css/steal.css" rel="stylesheet" type="text/css" />
 <!--[if IE 7]>
 
 <link href="css/ie7.css" rel="stylesheet" type="text/css" />
