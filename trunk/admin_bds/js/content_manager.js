@@ -337,6 +337,38 @@ function edit_adv_desc(desc, id){
 	}).html('<div style="float:left;padding: 20px;"><textarea id="desc_space" name="desc_space" cols="42" rows="10"></textarea></div>');
 	$('#desc_space').val(desc);
 }
+function edit_support_code(support, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa hỗ trợ trực tuyến',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var support = $('#support_space').val();
+				$.post("ajax/content_action.php", {
+					fnc:'edit_support_code',
+					tbl: tbl,
+					id: id,
+					val: support
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#support_code_'+id).text(support);
+                                                $('#support_code_'+id).attr('onclick','edit_support_code(\''+support+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;"><input id="support_space" name="support_space" size="40" /></div>');
+	$('#support_space').val(support);
+}
 
 function edit_detail(id){
 	var cur_url = $(location).attr('href');
@@ -476,6 +508,50 @@ function add_new_properties(tbl, parent_cat_id, cat_id){
                                     fnc:'add_new_properties',
                                     cat_id: cat_id,
                                     name: name,
+                                    sort: sort
+                            }, function(data) {
+                                    if(data.error == 'SUCCESS'){
+                                        var param = 'parent_id='+parent_cat_id+'&id='+cat_id;
+                                        load_content_manager(param);
+                                    }else{
+                                        alert(data.msg);
+                                    }
+                            }, 'json');
+                            $(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div id="add_new_space"></div>');
+		$.post("ajax/content_action.php", {
+			fnc:'view_add_new_content',
+			tbl: tbl,
+                        parent_cat_id: parent_cat_id,
+			cat_id: cat_id
+		}, function(data) {
+			$('#add_new_space').html(data);
+		});
+}
+function add_new_support(tbl, parent_cat_id, cat_id){
+	$('#dialog').dialog({
+		title: 'Thêm hỗ trợ trực tuyến',
+		autoOpen: true,
+		modal: true,
+		width: 570,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+                            var name = $('#txtName').val();
+                            var detail_short = $('#txtshort').val();
+                            var sort = $('#txtSort').val();
+                            $.post("ajax/content_action.php", {
+                                    fnc:'add_new_support',
+                                    tbl: tbl,
+                                    parent_cat_id: parent_cat_id,
+                                    cat_id: cat_id,
+                                    name: name,
+                                    detail_short: detail_short,
                                     sort: sort
                             }, function(data) {
                                     if(data.error == 'SUCCESS'){

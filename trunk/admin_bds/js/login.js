@@ -14,3 +14,6 @@ $(document).ready(function() {
 		return true;
 	});
 });
+function setFocus(){
+    $('#modlgn_username').focus();
+}
