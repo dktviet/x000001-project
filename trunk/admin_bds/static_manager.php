@@ -58,7 +58,10 @@
             <td class="smallfont" align="center">
                     <span id="detail_<?=$id?>" onclick="edit_detail('<?=$id?>');"><?=$detail!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
             </td>
-            <td class="smallfont" align="center"><img id="image_<?=$id?>" onclick="edit_image('<?=$id?>','<?=$code?>');" src="<?=$image_thumbs!=''?'../'.$image_thumbs:'images/no_image.gif'?>" width="100" alt="" /></td>
+            <td class="smallfont" align="center">
+                <img id="image_<?=$id?>" onclick="edit_image(<?=$id?>,'<?=$code?>');" src="<?=$image_thumbs!=''?'../'.$image_thumbs:'images/no_image.gif'?>" width="100" alt="" />
+                <img onclick="edit_image(<?=$id?>,'<?=$code?>');" src="images/icons/pencil.png" alt="" />
+            </td>
             <td class="smallfont" align="center">
                     <span id="views_num_<?=$id?>" onclick="show_views_input(<?=$id?>);"><?=$views?></span>
                     <input type="text" id="views_input_<?=$id?>" name="views_input" onblur="update_views('<?=$id?>',this.value);" value="<?=$views?>" size="2" style="display:none;" />
