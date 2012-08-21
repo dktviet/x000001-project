@@ -169,7 +169,9 @@
 		$code = $_POST['code'];
 		$img_check_clear = $_POST['chkClearImg'];
 		$errMsg = '';
-		$errMsg .= checkUpload($_FILES["txtImage"],".jpg;.gif;.bmp",2048*1024,0);
+		$errMsg .= checkUpload($_FILES["txtImage"],".jpg",2048*1024,0);
+                if($errMsg != '')
+                        die("<script>alert('".$errMsg."'); window.location='".$url."';</script>");
                 $folder_img = date('d-m-Y');
 		$path = '../../images/'.$code;
                 if(!is_dir($path)) mkdir($path,0777);
