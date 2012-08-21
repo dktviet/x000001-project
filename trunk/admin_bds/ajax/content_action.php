@@ -357,7 +357,9 @@
 		$code = $_POST['code'];
 		$img_check_clear = $_POST['chkClearImg'];
 		$errMsg = '';
-		$errMsg .= checkUpload($_FILES["txtImage"],".jpg;.gif;.bmp",2048*1024,0);
+		$errMsg .= checkUpload($_FILES["txtImage"],".jpg;",2048*1024,0);
+                if($errMsg != '')
+                        die("<script>alert('".$errMsg."'); window.location='".$url."';</script>");
                 $folder_img = date('d-m-Y');
 		$path = '../../images/'.$code;
                 if(!is_dir($path)) mkdir($path,0777);
@@ -663,7 +665,9 @@
                 $insert_content = insert($tbl,$fields_arr);
                 if($insert_content || $insert_content != ''){
                     $id = $insert_content;
-                    $errMsg .= checkUpload($_FILES["txtImage"],".jpg;.gif;.bmp",2048*1024,0);
+                    $errMsg .= checkUpload($_FILES["txtImage"],".jpg;",2048*1024,0);
+                    if($errMsg != '')
+                        die("<script>alert('".$errMsg."'); window.location='".$url."';</script>");
                     $path = '../../images/'.$code_folder;
                     if(!is_dir($path)) mkdir($path,0777);
                     $path .= '/'.$folder_img;
