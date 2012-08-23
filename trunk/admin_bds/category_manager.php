@@ -3,6 +3,7 @@
 	require_once('lib/func.lib.php');
 	$cat_id = $_GET['id'];
         $get_info = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
+        $parent_code = $get_info['code'];
 	$cat_title = $get_info['name'];
 ?>
 <script type="text/javascript" language="javascript" src="js/category_manager.js"></script>
@@ -29,7 +30,24 @@
 			<th width="20" class="title"><input type="checkbox" name="chkall" onClick="chkallClick(this);"></th>
 			<th width="34" class="title"><a class="title" href="<?=getLinkSort(1)?>">ID</a></th>
 			<th width="20" class="title">&nbsp;</th>
+                        <?php
+                            if($parent_code == 'news' || $parent_code == 'product'){
+                        ?>
+                        <th width="163" class="title">
+                            <a class="title" href="<?=getLinkSort(2)?>">Tên danh mục</a>
+                            <br>
+                            <a class="title" href="<?=getLinkSort(2)?>">Mô tả</a>
+                        </th>
+                        <th width="100" class="title">
+                            <a class="title" href="<?=getLinkSort(2)?>">SEO KEY</a>
+                            <br>
+                            <a class="title" href="<?=getLinkSort(2)?>">Tiêu đề SEO</a>
+                        </th>
+                        <?php
+                            }else{
+                        ?>
 			<th width="163" class="title"><a class="title" href="<?=getLinkSort(2)?>">Tên danh mục</a></th>
+                        <?php }?>
 			<th width="111" class="title"><a class="title" href="<?=getLinkSort(3)?>">Thứ tự sắp xếp</a></th>
 			<th width="102" class="title"><a class="title" href="<?=getLinkSort(4)?>">Hiển thị</a></th>
 			<th width="102" class="title"><a class="title" href="<?=getLinkSort(5)?>">Top menu</a></th>
@@ -43,17 +61,21 @@
 	$sortby="order by date_added";
 	$sortby = $_REQUEST['sortby']!='' ? "order by ".(int)$_REQUEST['sortby'] : "order by id";
 	$direction=($_REQUEST['direction']==''||$_REQUEST['direction']=='0'?" asc":" ");
-	$field = 'id, name, sort, status, date_added, last_modified, top_menu';
+	$field = 'id, name, description, sort, status, date_added, last_modified, top_menu, seo_key, title';
 	$nav_cats = selectMulti(tbl_config::tbl_category, $field, $where, $sortby . $direction);
 	$i=0;
 	foreach($nav_cats as $nav_cat){
 		$nav_id = $nav_cat['id'];
 		$nav_name = $nav_cat['name'];
+                $desc = $nav_cat['description'];
 		$sort = $nav_cat['sort'];
 		$status = $nav_cat['status'];
 		$top_menu = $nav_cat['top_menu'];
-		$date_added = $nav_cat['date_added'];
+		$seo_key = $nav_cat['seo_key'];
+                $title = $nav_cat['title'];
+                $date_added = $nav_cat['date_added'];
 		$last_modified = $nav_cat['last_modified'];
+
 		$mau = $i++%2 ? 'class="row0"' : 'class="row1"';
 	?>
 		<tr <?=$mau?> id="cat_id_<?=$nav_id?>">
@@ -62,14 +84,31 @@
 			<td class="smallfont" align="center"><?=$nav_id?></td>
 			<td align="center" class="smallfont">
 				<span onClick="delrow('<?=$nav_id?>');">Xóa</span>
-	        </td>
+                        </td>
+                        <?php
+                            if($parent_code == 'news' || $parent_code == 'product'){
+                        ?>
 			<td class="smallfont" align="center">
-				<span id="name_<?=$nav_id?>" onclick="edit_name('<?=$nav_name?>','<?=$nav_id?>');"><?=$nav_name?></span>
+				<span id="name_<?=$nav_id?>" onclick="edit_name('<?=$nav_name?>',<?=$nav_id?>);"><?=$nav_name?></span>
+                                <br><hr>
+                                <span id="desc_<?=$nav_id?>" onclick="edit_desc('<?=$desc?>',<?=$nav_id?>);"><?=$desc!=''?'<img src="images/icons/pencil.png" alt="" />':'<img src="images/empty.png" alt="" />'?></span>
 			</td>
+			<td class="smallfont" align="center">
+				<span id="seo_key_<?=$nav_id?>" onclick="edit_seo_key('<?=$seo_key?>',<?=$nav_id?>);"><?=$seo_key!=''?$seo_key:'<img src="images/empty.png" alt="" />'?></span>
+                                <br><hr>
+                                <span id="title_<?=$nav_id?>" onclick="edit_title('<?=$title?>',<?=$nav_id?>);"><?=$title!=''?$title:'<img src="images/empty.png" alt="" />'?></span>
+			</td>
+                        <?php
+                            }else{
+                        ?>
+			<td class="smallfont" align="center">
+				<span id="name_<?=$nav_id?>" onclick="edit_name('<?=$nav_name?>',<?=$nav_id?>);"><?=$nav_name?></span>
+			</td>
+                        <?php }?>
 			<td class="smallfont sort-num" align="center">
-	            <img src="images/up.png" alt="" onclick="up_down_sort('<?=$nav_id?>','1');" />
+                                <img src="images/up.png" alt="" onclick="up_down_sort(<?=$nav_id?>,1);" />
 				<div id="sort_num_<?=$nav_id?>" align="center"><?=$sort?></div>
-				<img src="images/down.png" alt="" onclick="up_down_sort('<?=$nav_id?>','0');" />
+				<img src="images/down.png" alt="" onclick="up_down_sort(<?=$nav_id?>,0);" />
 	        </td>
 			<td class="smallfont" align="center"><img id="status_icon_<?=$nav_id?>" src="<?=$status==0?'images/uncheck.png':'images/check.png'?>" onclick="show_hide('<?=$nav_id?>','<?=$status>0?'0':'1'?>');" style="cursor:pointer;" /></td>
 			<td class="smallfont" align="center"><img id="top_menu_icon_<?=$nav_id?>" src="<?=$top_menu==0?'images/uncheck.png':'images/check.png'?>" onclick="top_menu('<?=$nav_id?>','<?=$top_menu>0?'0':'1'?>');" style="cursor:pointer;" /></td>
