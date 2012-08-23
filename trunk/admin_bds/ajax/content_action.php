@@ -392,11 +392,11 @@
 			$extImg=getFileExtention($_FILES['txtImage']['name']);
 			if (makeUpload($_FILES['txtImage'],"$path/".$code."_".$add_img_name."_l".$id.$extImg)){
 				@chmod("$path/".$code."_".$add_img_name."_l".$id.$extImg, 0777);
-				change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path/".$code."_".$add_img_name."_l".$id.$extImg,800,1000);
-				if($code == 'news'){
-					change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code."_".$add_img_name."_t".$id.$extImg,140,100);
+				change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path/".$code."_".$add_img_name."_l".$id.$extImg,800,800);
+				if($code == 'adv'){
+					change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code."_".$add_img_name."_t".$id.$extImg,210,600);
 				}else{
-					change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code."_".$add_img_name."_t".$id.$extImg,292,950);
+					change_img_size("$path/".$code."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code."_".$add_img_name."_t".$id.$extImg,170,110);
 				}
 				$fields_arr = array("image_large" => "'".$pathdb."/".$code."_".$add_img_name."_l".$id.$extImg."'",
 									"image_thumbs" => "'".$pathdb_thumb."/".$code."_".$add_img_name."_t".$id.$extImg."'",
@@ -779,11 +779,11 @@
                     $extImg=getFileExtention($_FILES['txtImage']['name']);
                     if (makeUpload($_FILES['txtImage'],"$path/".$code_folder."_".$add_img_name."_l".$id.$extImg)){
                             @chmod("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg, 0777);
-                            change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,800,1000);
-                            if($code == 'news'){
-                                    change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code_folder."_".$add_img_name."_t".$id.$extImg,140,100);
+                            change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,800,800);
+                            if($code == 'adv'){
+                                    change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code_folder."_".$add_img_name."_t".$id.$extImg,210,600);
                             }else{
-                                    change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code_folder."_".$add_img_name."_t".$id.$extImg,292,950);
+                                    change_img_size("$path/".$code_folder."_".$add_img_name."_l".$id.$extImg,"$path_thumb/".$code_folder."_".$add_img_name."_t".$id.$extImg,170,110);
                             }
                             $fields_arr = array("image_large" => "'".$pathdb."/".$code_folder."_".$add_img_name."_l".$id.$extImg."'",
                                                                     "image_thumbs" => "'".$pathdb_thumb."/".$code_folder."_".$add_img_name."_t".$id.$extImg."'",
@@ -882,10 +882,12 @@
 		);
                 if($ext_id == 0){
                     $insert = insert(tbl_config::tbl_product_extend,$fields_arr);
+                }else if($properties_id == 0){
+                    $delete = delete_where(tbl_config::tbl_product_extend,'id='.$ext_id);
                 }else{
                     $update = update(tbl_config::tbl_product_extend,$fields_arr,'id='.$ext_id);
                 }
-                if(($insert && $insert != '') || $update){
+                if(($insert && $insert != '') || $update || $delete){
                         $err = 'SUCCESS';
                         $errMsg = "Cập nhật thành công";
                 }else{
