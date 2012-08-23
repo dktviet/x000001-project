@@ -15,7 +15,11 @@
                 case 'sort_row' 	: sort_row($id, $val);      break;
 		case 'top_menu' 	: top_menu($id, $val);      break;
 		case 'edit_name' 	: edit_name($id, $val);     break;
-		case 'add_new' 		: insert_new_category();    break;
+                case 'edit_seo_key' 	: edit_seo_key($id, $val);  break;
+                case 'edit_title' 	: edit_title($id, $val);    break;
+                case 'edit_desc'        : edit_desc($id, $val);     break;
+                case 'view_add_new' 	: view_add_new($id);        break;
+		case 'add_new' 		: insert_new_category($id); break;
 	}
 	
 	function del($id){
@@ -179,33 +183,89 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
-	function insert_new_category(){
-		$parent_id = $_POST['parent_id'];
-		$name = $_POST['name'];
+	function edit_seo_key($id, $val){
+		$fields_arr = array("seo_key" => "'$val'", "last_modified" => time());
+		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật SEO KEY thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
+	function edit_title($id, $val){
+                $fields_arr = array("title" => "'$val'", "last_modified" => time());
+		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật Tiêu đề cho SEO thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
+        function edit_desc($id, $val){
+		$fields_arr = array("description" => "'$val'", "last_modified" => time());
+		$result = update(tbl_config::tbl_category,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật mô tả thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
+	function view_add_new($id){
+                $get_parent = selectOne(tbl_config::tbl_category, 'id = ' . $id);
+                $code = $get_parent['code'];
+		$html = '';
+                if($code == 'product' || $code == 'news'){
+                    $html = '<div style="float:left;padding: 20px;">
+                                Tên danh mục:<input type="text" id="name_space" value="" size="40" onkeyup="document.getElementById(\'seo_key_space\').value = this.value;document.getElementById(\'title_space\').value = this.value;" /><br>
+                                SEO KEY:<input type="text" id="seo_key_space" value="" size="40" /><br>
+                                Tiêu đề SEO:<input type="text" id="title_space" value="" size="40" /><br>
+                                Mô tả:<textarea id="desc_space" name="desc_space" cols="40" rows="10"></textarea>
+                             </div>';
+                }else{
+                    $html = '<div style="float:left;padding: 20px;">
+                                Tên danh mục:<input type="text" id="name_space" value="" size="40" />
+                             </div>';
+                }
+		echo $html;
+	}
+	function insert_new_category($id){
+		$name = $_POST['name'] ? $_POST['name'] : 'no_name';
+                $desc = $_POST['desc'] ? $_POST['desc'] : '';
+                $seo_key = $_POST['seo_key'] ? $_POST['seo_key'] : '';
+                $title = $_POST['title'] ? $_POST['title'] : '';
 		$time = time();
 		$fields_arr = array(
 			"name"          => "'$name'",
-			"parent_id"     => "'$parent_id'",
+                        "description"   => "'$desc'",
+			"parent_id"     => "'$id'",
 			"status"        => "1",
 			"date_added"    => "$time",
-			"last_modified" => "$time"
+			"last_modified" => "$time",
+                        "seo_key"       => "'$seo_key'",
+                        "title"         => "'$title'"
 		);
 		$insert_id = insert(tbl_config::tbl_category,$fields_arr);
 		if($insert_id && $insert_id > 0) {
 			$err = 'SUCCESS';
 			$errMsg = "Thêm danh mục mới thành công";
-			$id = $insert_id;
+			$inserted_id = $insert_id;
 		}else{
 			$err = 'ERROR';
 			$errMsg = "Không thể thêm danh mục mới!";
-			$id = '';
+			$inserted_id = '';
 		}
-		echo json_encode(array('error' => $err, 'msg' => $errMsg, 'id' => $id, 'time' => date('d/m/Y h:i:s A',$time)));
+		echo json_encode(array('error' => $err, 'msg' => $errMsg, 'id' => $inserted_id, 'time' => date('d/m/Y h:i:s A',$time)));
 	}
 ?>
-
-
-
 
 
 

@@ -6,16 +6,14 @@
 	$val = $_POST['val'];
 	
 	switch ($fnc){
-		case 'show_hide' 		: show_hide($id, $val); 		break;
-		case 'sort_row' 		: sort_row($id, $val); 		break;
-		case 'update_views'             : update_views($id, $val); 	break;
-		case 'edit_name' 		: edit_name($id, $val);    break;
-		case 'view_edit_detail_short' 	: view_edit_detail_short($id);	break;
-		case 'update_detail_short' 	: update_detail_short($id);	break;
-		case 'view_edit_detail'         : view_edit_detail($id);		break;
-		case 'update_detail'            : update_detail($id);		break;
-		case 'view_edit_image'          : view_edit_image($id);		break;
-		case 'update_image'             : update_image($id);		break;
+		case 'show_hide' 		: show_hide($id, $val);     break;
+		case 'sort_row' 		: sort_row($id, $val);      break;
+		case 'update_views'             : update_views($id, $val);  break;
+		case 'edit_name' 		: edit_name($id, $val);     break;
+		case 'view_edit_detail'         : view_edit_detail($id);    break;
+		case 'update_detail'            : update_detail($id);       break;
+		case 'view_edit_image'          : view_edit_image($id);     break;
+		case 'update_image'             : update_image($id);        break;
 	}
 	
 	function show_hide($id, $val){
@@ -73,43 +71,6 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
-	function view_edit_detail_short($id){
-		require_once ('../ckeditor/ckeditor.php') ;
-		require_once ('../ckfinder/ckfinder.php') ;
-		$random_id = rand(1,9999);
-		$detail_short = selectOne(tbl_config::tbl_static,'id = '.$id);
-		$url = $_POST['url'];
-		$form_data = '<form id="short_detail_form" name="short_detail_form" method="post" enctype="multipart/form-data" action="ajax/static_action.php">
-                    <input type="hidden" name="fnc" value="update_detail_short" />
-                    <input type="hidden" name="url" value="'.$url.'" />
-                    <input type="hidden" name="id" value="'.$id.'" />
-                    <div style="float:left;padding: 20px;">Nội dung ngắn:
-                            <textarea name="txtshort" cols="100" rows="10" id="txtshort'.$random_id.'" class="to_get_id_short">'.$detail_short['detail_short'].'</textarea>
-                    </div>
-		</form>';
-                $form_data .= script_for_edit_content();
-		$ckeditor = new CKEditor( ) ;
-		$ckeditor->basePath    = 'ckeditor/' ;
-		CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
-		$ckeditor->replace("txtshort".$random_id);
-		echo $form_data;
-	}
-	function update_detail_short($id){
-		$val = $_POST['txtshort'];
-		$url = $_POST['url'];
-		$fields_arr = array("detail_short" => "'$val'", "last_modified" => time());
-		$result = update(tbl_config::tbl_static,$fields_arr,"id=".$id);
-		if ($result){
-			$err = 'SUCCESS';
-			$errMsg = 'Cập nhật Nội dung ngắn thành công!';
-		}else{
-			$err = 'ERROR';
-			$errMsg = 'Không thể cập nhật!';
-		}
-		if($err == 'SUCCESS'){
-			echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
-		}
-	}
 	function view_edit_detail($id){
 		require_once ('../ckeditor/ckeditor.php') ;
 		require_once ('../ckfinder/ckfinder.php') ;
@@ -120,11 +81,10 @@
                     <input type="hidden" name="fnc" value="update_detail" />
                     <input type="hidden" name="url" value="'.$url.'" />
                     <input type="hidden" name="id" value="'.$id.'" />
-                    <div style="float:left;padding: 20px;">Nội dung tiếng Việt:
+                    <div style="float:left;padding: 20px;">Nội dung chi tiết:
                             <textarea name="txtlong" cols="100" rows="10" id="txtlong'.$random_id.'" class="to_get_id">'.$detail['detail'].'</textarea>
                     </div>
 		</form>';
-                $form_data .= script_for_edit_content();
 		$ckeditor = new CKEditor( ) ;
 		$ckeditor->basePath    = 'ckeditor/' ;
 		CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
@@ -132,7 +92,7 @@
 		echo $form_data;
 	}
 	function update_detail($id){
-		$val = $_POST['txtlong'];
+		$val = html_entity($_POST['txtlong']);
 		$url = $_POST['url'];
 		$fields_arr = array("detail" => "'$val'", "last_modified" => time());
 		$result = update(tbl_config::tbl_static,$fields_arr,"id=".$id);
@@ -220,19 +180,6 @@
 		}
 		echo "<script>alert('".$errMsg."'); window.location='".$url."';</script>";
 	}
-        function script_for_edit_content(){
-            return $script = '<script>
-                $(\'#short_en_show\').hide();
-                $(\'#long_en_show\').hide();
-                $(\'#short_en_call input\').click(function() {
-                        $(\'#short_en_show\').slideToggle(\'slow\');
-                });
-                $(\'#long_en_call input\').click(function() {
-                        $(\'#long_en_show\').slideToggle(\'slow\');
-                });
-            </script>';
-        }
-	
 ?>
 
 
