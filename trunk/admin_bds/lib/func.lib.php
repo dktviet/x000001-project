@@ -298,7 +298,7 @@ function comboProperties($name, $arrSource, $class, $index, $all, $allow_change=
         $onchange = $allow_change ? 'onChange="choose_properties(this.value, '.$ext_id.', '.$prod_id.');" ' : '';
 	$out = '';
 	$out .= '<select id="'.$name.'" name="'.$name.'" class="'.$class.'" '.$onchange.'size="1">';
-	$out .= $all==1 ? '<option value="">--Chọn thuộc tính--</option>' : '';
+	$out .= $all==1 ? '<option value="0">--Chọn thuộc tính--</option>' : '';
 	$cats = $arrSource;
 	foreach ($cats as $cat){
 		$selected = $cat[0] == $index ? 'selected' : '';
