@@ -7,21 +7,22 @@
 	<span onClick="delrow(<?=$id?>);">Xóa</span>
 </td>
 <td class="smallfont" align="center">
-	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);"><?=killInjection($name)?></span>
+	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);" title="Bấm để sửa"><?=$name!=''?$name:'<img src="images/empty.png" alt="" />'?></span>
         <br><hr>
-	<span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);"><?=$get_cat_info['name']?></span>
+	<span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);" title="Bấm để sửa"><?=$get_cat_info['name']?></span>
         <br><hr>
-        <span id="seo_key_<?=$id?>" onclick="edit_seo_key('<?=$seo_key?>',<?=$id?>);"><?=$seo_key!=''?$seo_key:'<img src="images/icons/pencil.png" alt="" />'?></span>
+        <span id="seo_key_<?=$id?>" onclick="edit_seo_key('<?=$seo_key?>',<?=$id?>);" title="Bấm để sửa"><?=$seo_key!=''?$seo_key:'<img src="images/empty.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="short_detail_<?=$id?>" onclick="edit_short_detail('<?=$id?>');"><?=$detail_short!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
+	<span id="detail_short_<?=$id?>" onclick="edit_short_detail(<?=$id?>);" title="Bấm để sửa"><?=$detail_short!=''?'<img src="images/icons/pencil.png" alt="" />':'<img src="images/empty.png" alt="" />'?></span>
+        <br><hr>
+	<span id="detail_<?=$id?>" onclick="edit_detail(<?=$id?>);" title="Bấm để sửa"><?=$detail!=''?'<img src="images/icons/pencil.png" alt="" />':'<img src="images/empty.png" alt="" />'?></span>
+        <br><hr>
+	<span id="title_<?=$id?>" onclick="edit_title('<?=killInjection($title)?>',<?=$id?>);" title="Bấm để sửa"><?=$title!=''?$title:'<img src="images/empty.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="detail_<?=$id?>" onclick="edit_detail('<?=$id?>');"><?=$detail!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>			
-</td>
-<td class="smallfont" align="center">
-    <img id="image_<?=$id?>" onclick="edit_image('<?=$id?>','<?=$code?>');" src="../<?=$image_thumbs!=''?$image_thumbs:'images/no_image.gif'?>" width="100" alt="" />
-    <img onclick="edit_image('<?=$id?>','<?=$code?>');" src="images/icons/pencil.png" alt="" />
+    <img id="image_<?=$id?>" onclick="edit_image('<?=$id?>','<?=$code?>');" src="../<?=$image_thumbs!=''?$image_thumbs:'images/no_image.gif'?>" width="100" alt="" title="Bấm để sửa" />
+    <img onclick="edit_image('<?=$id?>','<?=$code?>');" src="images/icons/pencil.png" alt="" title="Bấm để sửa" />
 </td>
 <td class="smallfont" align="center">
 <?php
@@ -46,11 +47,10 @@
 ?>
 </td>
 <td class="smallfont" align="center">
-	<span id="price_num_<?=$id?>" onclick="show_price_input(<?=$id?>);"><?=$price?></span>
+	<span id="price_num_<?=$id?>" onclick="show_price_input(<?=$id?>);" title="Bấm để sửa"><?=FormatNumber($price)?></span>
 	<input type="text" id="price_input_<?=$id?>" name="price_input" onblur="update_price(<?=$id?>,this.value);" value="<?=$price?>" size="2" style="display:none;" />
-</td>
-<td class="smallfont" align="center">
-	<span id="views_num_<?=$id?>" onclick="show_views_input(<?=$id?>);"><?=$views?></span>
+        <br><hr>
+	<span id="views_num_<?=$id?>" onclick="show_views_input(<?=$id?>);" title="Bấm để sửa"><?=FormatNumber($views)?></span>
 	<input type="text" id="views_input_<?=$id?>" name="views_input" onblur="update_views(<?=$id?>,this.value);" value="<?=$views?>" size="2" style="display:none;" />
 </td>
 <td class="smallfont sort-num" align="center">

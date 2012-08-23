@@ -7,19 +7,19 @@
 	<span onClick="delrow('<?=$id?>');">Xóa</span>
 </td>
 <td class="smallfont" align="center">
-	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');"><?=killInjection($name)?></span>
+	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');" title="Bấm để sửa"><?=killInjection($name)?></span>
         <br><br>
-        <span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);"><?=$get_cat_info['name']?></span>
+        <span id="parent_name_<?=$id?>" onclick="edit_parent(<?=$id?>);" title="Bấm để sửa"><?=$get_cat_info['name']?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="adv_desc_<?=$id?>" onclick="edit_adv_desc('<?=killInjection($detail_short)?>',<?=$id?>);"><?=$detail_short!=''?$detail_short:'<img src="images/icons/pencil.png" alt="" />'?></span>
+	<span id="adv_desc_<?=$id?>" onclick="edit_adv_desc('<?=killInjection($detail_short)?>',<?=$id?>);" title="Bấm để sửa"><?=$detail_short!=''?$detail_short:'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="adv_link_<?=$id?>" onclick="edit_adv_link('<?=killInjection($detail)?>',<?=$id?>);"><?=$detail!=''?$detail:'<img src="images/icons/pencil.png" alt="" />'?></span>
+	<span id="adv_link_<?=$id?>" onclick="edit_adv_link('<?=killInjection($detail)?>',<?=$id?>);" title="Bấm để sửa"><?=$detail!=''?$detail:'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont" align="center">
-    <img id="image_<?=$id?>" onclick="edit_image('<?=$id?>','<?=$code?>');" src="../<?=$image_thumbs!=''?$image_thumbs:'images/no_image.gif'?>" width="100" alt="" />
-    <img onclick="edit_image('<?=$id?>','<?=$code?>');" src="images/icons/pencil.png" alt="" />
+    <img id="image_<?=$id?>" onclick="edit_image('<?=$id?>','<?=$code?>');" src="../<?=$image_thumbs!=''?$image_thumbs:'images/no_image.gif'?>" width="100" alt="" title="Bấm để sửa" />
+    <img onclick="edit_image('<?=$id?>','<?=$code?>');" src="images/icons/pencil.png" alt="" title="Bấm để sửa" />
 </td>
 <td class="smallfont sort-num" align="center">
    	<img src="images/up.png" alt="" onclick="up_down_sort('<?=$id?>','1');" />
