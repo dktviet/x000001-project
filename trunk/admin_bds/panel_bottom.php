@@ -3,3 +3,4 @@
     </span>
 </div>
 <div id="dialog" title="Dialog Title"></div>
+<div id="loading" title="Show Loading when process"></div>

@@ -12,8 +12,7 @@
                     <th width="24" class="title"><a class="title" href="<?=getLinkSort(1)?>">ID</a></th>
                     <th width="54" class="title"><a class="title" href="<?=getLinkSort(2)?>">Mã nội dung</a></th>
                     <th width="152" class="title"><a class="title" href="<?=getLinkSort(3)?>">Tiêu đề</a></th>
-                    <th width="71" class="title"><a class="title" href="<?=getLinkSort(4)?>">Nội dung ngắn</a></th>
-                    <th width="63" class="title"><a class="title" href="<?=getLinkSort(5)?>">Nội dung chi tiết</a></th>
+                    <th width="63" class="title"><a class="title" href="<?=getLinkSort(5)?>">Nội dung</a></th>
                     <th width="100" class="title"><a class="title" href="<?=getLinkSort(6)?>">Hình ảnh</a></th>
                     <th width="59" class="title"><a class="title" href="<?=getLinkSort(7)?>">Lượt xem</a></th>
                     <th width="109" class="title"><a class="title" href="<?=getLinkSort(8)?>">Thứ tự sắp xếp</a></th>
@@ -23,8 +22,8 @@
 		</tr>
     </thead>
 <?
-        $field = 'id, code, name, detail_short, detail, image_thumbs, image_large, sort, status, date_added, last_modified, views';
-        $where = 'code = "intro" AND parent_id = 0';
+        $field = 'id, code, name, detail, image_thumbs, sort, status, date_added, last_modified, views';
+        $where = 'code IN ("intro","info") AND parent_id = 0';
 	$sortby="order by date_added";
 	$sortby = $_REQUEST['sortby']!='' ? "order by ".(int)$_REQUEST['sortby'] : "order by id";
 	$direction=($_REQUEST['direction']==''||$_REQUEST['direction']=='0'?" desc":" ");
@@ -34,10 +33,8 @@
 		$id = $content['id'];
                 $code = $content['code'];
                 $name = $content['name'];
-                $detail_short = $content['detail_short'];
                 $detail = $content['detail'];
                 $image_thumbs = $content['image_thumbs'];
-                $image_large = $content['image_large'];
                 $sort = $content['sort'];
                 $status = $content['status'];
                 $date_added = $content['date_added'];
@@ -53,10 +50,7 @@
                     <span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>','<?=$id?>');"><?=killInjection($name)?></span>
             </td>
             <td class="smallfont" align="center">
-                    <span id="short_detail_<?=$id?>" onclick="edit_short_detail('<?=$id?>');"><?=$detail_short!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
-            </td>
-            <td class="smallfont" align="center">
-                    <span id="detail_<?=$id?>" onclick="edit_detail('<?=$id?>');"><?=$detail!=''?'...':'<img src="images/icons/pencil.png" alt="" />'?></span>
+                    <span id="detail_<?=$id?>" onclick="edit_detail('<?=$id?>');"><?=$detail!=''?'<img src="images/icons/pencil.png" alt="" />':'<img src="images/empty.png" alt="" />'?></span>
             </td>
             <td class="smallfont" align="center">
                 <img id="image_<?=$id?>" onclick="edit_image(<?=$id?>,'<?=$code?>');" src="<?=$image_thumbs!=''?'../'.$image_thumbs:'images/no_image.gif'?>" width="100" alt="" />
