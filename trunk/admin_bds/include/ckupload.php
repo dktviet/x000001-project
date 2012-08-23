@@ -1,5 +1,6 @@
 <?php
-$url = 'images/'.time()."_".$_FILES['upload']['name'];
+require_once '../../config.php';
+$url = $curHost . 'images/'.time()."_".$_FILES['upload']['name'];
  //extensive suitability check before doing anything with the file...
     if (($_FILES['upload'] == "none") OR (empty($_FILES['upload']['name'])) )
     {

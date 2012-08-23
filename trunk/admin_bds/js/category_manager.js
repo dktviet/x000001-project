@@ -125,7 +125,104 @@ function edit_name(name, id){
 	$('#name_space').val(name);
 	$('#name_space').focus(function(){$('#name_space').val('');});
 }
-function add_new(parent_id){
+function edit_seo_key(seo_key, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa SEO KEY',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var seo_key = $('#seo_key_space').val();
+				$.post("ajax/category_action.php", {
+					fnc:'edit_seo_key',
+					tbl: tbl,
+					id: id,
+					val: seo_key
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#seo_key_'+id).text(seo_key);
+                                                $('#seo_key_'+id).attr('onclick','edit_seo_key(\''+seo_key+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;">SEO KEY:<input type="text" id="seo_key_space" value="" size="32" /></div>');
+	$('#seo_key_space').val(seo_key);
+}
+function edit_title(title, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa title cho SEO',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var title = $('#title_space').val();
+				$.post("ajax/category_action.php", {
+					fnc:'edit_title',
+					tbl: tbl,
+					id: id,
+					val: title
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#title_'+id).text(title);
+                                                $('#title_'+id).attr('onclick','edit_title(\''+title+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;">Tiêu đề cho SEO:<input type="text" id="title_space" value="" size="32" /></div>');
+	$('#title_space').val(title);
+}
+function edit_desc(desc, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa mô tả',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var desc = $('#desc_space').val();
+				$.post("ajax/category_action.php", {
+					fnc:'edit_desc',
+					tbl: tbl,
+					id: id,
+					val: desc
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#desc_'+id).text(desc);
+                                                $('#desc_'+id).attr('onclick','edit_desc(\''+desc+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;"><textarea id="desc_space" name="desc_space" cols="42" rows="10"></textarea></div>');
+	$('#desc_space').val(desc);
+}
+
+function add_new(id){
 	$('#dialog').dialog({
 		title: 'Thêm danh mục',
 		autoOpen: true,
@@ -135,13 +232,19 @@ function add_new(parent_id){
 		buttons: {
 			'Cập nhật': function() {
 				var name = $('#name_space').val();
+                                var desc = $('#desc_space').val();
+                                var seo_key = $('#seo_key_space').val();
+                                var title = $('#title_space').val();
 				$.post("ajax/category_action.php", {
 					fnc:'add_new',
 					name:name,
-					parent_id:parent_id
+                                        desc:desc,
+                                        seo_key:seo_key,
+                                        title:title,
+					id:id
 				}, function(data) {
 					if(data.error=='SUCCESS'){
-                                                var para = 'id='+parent_id;
+                                                var para = 'id='+id;
                                                 load_category_manager(para);
 					}else{
 						alert(data.msg);
@@ -153,6 +256,11 @@ function add_new(parent_id){
 				$(this).dialog('close');
 			}
 		}
-	}).html('<div style="float:left;padding: 20px;">Tên danh mục:<input type="text" id="name_space" value="" size="40" /></div>');
-	$('#name_space').focus();
+	}).html('<div id="add_new_space"></div>');
+        $.post("ajax/category_action.php", {
+                fnc:'view_add_new',
+                id: id
+        }, function(data) {
+                $('#add_new_space').html(data);
+        });
 }

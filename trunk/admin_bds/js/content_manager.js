@@ -231,6 +231,38 @@ function edit_seo_key(seo_key, id){
 	}).html('<div style="float:left;padding: 20px;">SEO KEY:<input type="text" id="seo_key_space" value="" size="32" /></div>');
 	$('#seo_key_space').val(seo_key);
 }
+function edit_title(title, id){
+	var tbl = $('h3').attr('tbl_data');
+	$('#dialog').dialog({
+		title: 'Sửa title cho SEO',
+		autoOpen: true,
+		modal: true,
+		width: 400,
+		position: 'center',
+		buttons: {
+			'Cập nhật': function() {
+				var title = $('#title_space').val();
+				$.post("ajax/content_action.php", {
+					fnc:'edit_title',
+					tbl: tbl,
+					id: id,
+					val: title
+				}, function(data) {
+					alert(data.msg);
+					if(data.error == 'SUCCESS'){
+						$('#title_'+id).text(title);
+                                                $('#title_'+id).attr('onclick','edit_title(\''+title+'\','+id+');');
+					}
+				}, 'json');
+				$(this).dialog('close');
+			},
+			'Hủy': function() {
+				$(this).dialog('close');
+			}
+		}
+	}).html('<div style="float:left;padding: 20px;">Tiêu đề cho SEO:<input type="text" id="title_space" value="" size="32" /></div>');
+	$('#title_space').val(title);
+}
 function edit_parent(row_id){
 	var tbl = $('h3').attr('tbl_data');
         var parent_cat_id = $('h3').attr('parent_id');

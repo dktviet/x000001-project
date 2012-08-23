@@ -55,6 +55,7 @@ $(document).ready(function() {
 		load_category_manager(admin.param);
 	});
 	$('.static_list_menu').click(function() {
+                $('.content_list_menu').find('a.current').removeClass('current');
 		$('.static_list_menu').find('a.current').removeClass('current');
 		$(this).find('a').addClass('current');
                 load_static_manager();
@@ -62,6 +63,7 @@ $(document).ready(function() {
 
 	$('.content_list_menu').click(function() {
 		$('.content_list_menu').find('a.current').removeClass('current');
+                $('.static_list_menu').find('a.current').removeClass('current');
 		$(this).find('a').addClass('current');
                 var parent_cat_id = $(this).find('a').attr('parent_cat_id');
 		var cat_id = $(this).find('a').attr('cat_id');
@@ -84,16 +86,11 @@ $(document).ready(function() {
 		load_contact_list();
 	});
 
-// Display and Hide Eng block BEGIN
-	$('#short_en_show').hide();
-	$('#long_en_show').hide();
-	$('#short_en_call input').click(function() {
-		$('#short_en_show').slideToggle('slow');
-	});
-	$('#long_en_call input').click(function() {
-		$('#long_en_show').slideToggle('slow');
-	});
-// Display and Hide Eng block END
+        $("#loading").bind("ajaxStart", function(){
+            $(this).fadeIn();
+        }).bind("ajaxComplete", function(){
+            $(this).fadeOut();
+        });
 
 });
 function load_contact_list(){

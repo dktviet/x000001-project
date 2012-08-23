@@ -83,35 +83,6 @@ function edit_name(name, id){
 	}).html('<div style="float:left;padding: 20px;">Tên nội dung:<input type="text" id="name_space" value="" /></div>');
 	$('#name_space').val(name);
 }
-function edit_short_detail(id){
-	var cur_url = $(location).attr('href');
-	$('#detail_short_space').html('');
-	$('#dialog').dialog({
-		title: 'Sửa nội dung ngắn',
-		autoOpen: true,
-		modal: true,
-		width: 800,
-		position: 'center',
-		buttons: {
-			'Cập nhật': function() {
-				if($('#short_detail_form').submit()){
-					$(this).dialog('close');
-				}
-			},
-			'Hủy': function() {
-				$(this).dialog('close');
-			}
-		}
-	}).html('<div id="detail_short_space"></div>');
-		$.post("ajax/static_action.php", {
-			fnc:'view_edit_detail_short',
-			url: cur_url,
-			id: id
-		}, function(data) {
-				$('#detail_short_space').html(data);
-				$('#detail_short_id').val(id);
-		});
-}
 function edit_detail(id){
 	var cur_url = $(location).attr('href');
 	$('#detail_space').html('');
