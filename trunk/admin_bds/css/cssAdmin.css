@@ -1661,3 +1661,12 @@ font-weight: bold;
 	font-weight:bold;
 	cursor:pointer;
 }
+
+#loading{
+        display:block;
+        position:absolute;
+        top:50%;
+        left:35%;
+        width:110px;
+        background-image: url(../images/loading.gif);
+}
