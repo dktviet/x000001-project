@@ -60,7 +60,8 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = '/images/';
+require_once '../../config.php';
+$baseUrl = $curHost . 'images/';
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the
