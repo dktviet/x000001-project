@@ -22,6 +22,7 @@
 		case 'update_price'             : update_price($tbl,$id, $val); 	break;
 		case 'edit_name' 		: edit_name($tbl, $id, $val);           break;
                 case 'edit_seo_key' 		: edit_seo_key($tbl, $id, $val);        break;
+                case 'edit_title' 		: edit_title($tbl, $id, $val);          break;
 		case 'view_edit_parent'         : view_edit_parent($parent_cat_id, $cat_id);            break;
 		case 'update_parent'            : update_parent($tbl, $id, $val);                       break;
                 case 'view_add_new_content'     : view_add_new_content($tbl, $parent_cat_id, $cat_id);  break;
@@ -197,6 +198,18 @@
 		}
 		echo json_encode(array('error' => $err, 'msg' => $errMsg));
 	}
+	function edit_title($tbl, $id, $val){
+                $fields_arr = array("title" => "'$val'", "last_modified" => time());
+		$result = update($tbl,$fields_arr,"id=".$id);
+		if ($result){
+			$err = 'SUCCESS';
+			$errMsg = "Cập nhật Tiêu đề cho SEO thành công.";
+		}else{
+			$err = 'ERROR';
+			$errMsg = "Không thể cập nhật!";
+		}
+		echo json_encode(array('error' => $err, 'msg' => $errMsg));
+	}
 	function view_edit_parent($parent_cat_id, $cat_id){
 		$arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name','parent_id = ' . $parent_cat_id);
 		if ($arraySourceCombo){
@@ -245,7 +258,7 @@
 		echo $form_data;
 	}
 	function update_detail_short($tbl, $id){
-		$val = $_POST['txtshort'];
+		$val = html_entity($_POST['txtshort']);
 		$url = $_POST['url'];
 		$fields_arr = array("detail_short" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
@@ -307,7 +320,7 @@
 		echo $form_data;
 	}
 	function update_detail($tbl, $id){
-		$val = $_POST['txtlong'];
+		$val = html_entity($_POST['txtlong']);
 		$url = $_POST['url'];
 		$fields_arr = array("detail" => "'$val'", "last_modified" => time());
 		$result = update($tbl,$fields_arr,"id=".$id);
@@ -413,8 +426,9 @@
         function view_add_new_content($tbl, $parent_cat_id, $cat_id){
             $random_id = rand(1,9999);
             $arraySourceCombo    = getArrayCombo(tbl_config::tbl_category,'id','name','parent_id = ' . $parent_cat_id);
-            $get_parent_code = selectOne(tbl_config::tbl_category, 'id = ' . $parent_cat_id);
-            $code = $get_parent_code['code'];
+            $get_parent = selectOne(tbl_config::tbl_category, 'id = ' . $parent_cat_id);
+            $code = $get_parent['code'];
+            $get_cat = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
             if($code == 'properties'){
                 $html = '<table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
                         <tr>
@@ -430,7 +444,8 @@
                                 <td width="69%" class="smallfont">
                                         <input value="" type="text" id="txtSort" name="txtSort" class="textbox" size="10">
                                 </td>
-                        </tr>';
+                        </tr>
+                        </table>';
             }else if($code == 'adv'){
                 $url = $_POST['url'];
                 $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
@@ -480,9 +495,10 @@
                                 <td width="83%" class="smallfont">
                                         <input value="" type="text" name="txtSort" class="textbox" size="10">
                                 </td>
-                        </tr>';
+                        </tr>
+                     </table>
+                     </form>';
             }else if($code == 'support'){
-                $get_cat = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
                 $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
                     <input type="hidden" name="fnc" value="add_new" />
                     <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
@@ -506,7 +522,106 @@
                                 <td width="69%" class="smallfont">
                                         <input value="" type="text" id="txtSort" name="txtSort" class="textbox" size="10" />
                                 </td>
+                        </tr>
+                     </table>
+                     </form>';
+            }else if($code == 'product'){
+                $url = $_POST['url'];
+                require_once ('../ckeditor/ckeditor.php') ;
+                require_once ('../ckfinder/ckfinder.php') ;
+                $html = '<form id="add_new_form" name="add_new_form" enctype="multipart/form-data" method="post" action="ajax/content_action.php">
+                    <input type="hidden" name="fnc" value="add_new" />
+                    <input type="hidden" name="url" value="'.$url.'" />
+                    <input type="hidden" name="tbl" value="'.$tbl.'" />
+                    <input type="hidden" name="parent_cat_id" value="'.$parent_cat_id.'" />
+                    <input type="hidden" name="cat_id" value="'.$cat_id.'" />
+                    <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Tiêu đề</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtName" class="textbox" size="34" onkeyup="document.getElementById(\'txtTitle\').value = this.value;" />
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">SEO KEY</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="'.$get_parent['name'].' - '.$get_cat['name'].'" type="text" name="txtSeokey" class="textbox" size="34">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Tiêu đề SEO</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" id="txtTitle" name="txtTitle" class="textbox" size="34">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Hình ảnh</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <input type="file" name="txtImage" class="textbox" size="34" />
+                                        (Kích thước&lt;2MB)(jpg,gif,bmp)
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Nội dung chi tiết</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <textarea name="txtlong" cols="80" rows="10" id="txtlong'.$random_id.'"></textarea>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Thuộc danh mục</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">'.comboCategory('ddCat',$arraySourceCombo,'smallfont',$cat_id,0).'</td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Lượt xem</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtViews" class="textbox" size="10">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Thứ tự sắp xếp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtSort" class="textbox" size="10">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Giá sp</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" name="txtPrice" class="textbox" size="10">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">-----------------</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont"><strong>Thuộc tính:</strong></td>
                         </tr>';
+                    $get_parent_id = selectOne(tbl_config::tbl_category, 'status=1 AND parent_id=0 AND code = "properties"', 'sort, date_added ASC');
+                    $parent_id = $get_parent_id['id'];
+                    $prop_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $parent_id, 'ORDER BY sort, date_added ASC');
+                    foreach($prop_cats as $prop_cat){
+                    $html .= '<tr>
+                                <td width="15%" class="smallfont" align="right">'.$prop_cat['name'].'</td>
+                                <td width="1%" class="smallfont" align="right"></td>
+                                <td width="83%" class="smallfont">
+                                        '.comboProperties(utf8_to_ascii($prop_cat['name']),getArrayCombo(tbl_config::tbl_properties,'id','name','parent_id = ' . $prop_cat['id']),'smallfont',0,1,false).'
+                                </td>
+                        </tr>';
+                    }
+                $html .= '</table>
+                </form>';
+                $html .= script_for_edit_content();
+                $ckeditor = new CKEditor( ) ;
+                $ckeditor->basePath    = 'ckeditor/' ;
+                CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
+                $ckeditor->replace('txtlong'.$random_id);
             }else{
                 $url = $_POST['url'];
                 require_once ('../ckeditor/ckeditor.php') ;
@@ -519,10 +634,24 @@
                     <input type="hidden" name="cat_id" value="'.$cat_id.'" />
                     <table border="0" cellpadding="2" bordercolor="#111111" width="100%" cellspacing="0">
                         <tr>
-                                <td width="15%" class="smallfont" align="right">Tên</td>
+                                <td width="15%" class="smallfont" align="right">Tiêu đề</td>
                                 <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
                                 <td width="83%" class="smallfont">
-                                        <input value="" type="text" name="txtName" class="textbox" size="34">
+                                        <input value="" type="text" name="txtName" class="textbox" size="34" onkeyup="document.getElementById(\'txtTitle\').value = this.value;" />
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">SEO KEY</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="'.$get_parent['name'].' - '.$get_cat['name'].'" type="text" name="txtSeokey" class="textbox" size="34">
+                                </td>
+                        </tr>
+                        <tr>
+                                <td width="15%" class="smallfont" align="right">Tiêu đề SEO</td>
+                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="83%" class="smallfont">
+                                        <input value="" type="text" id="txtTitle" name="txtTitle" class="textbox" size="34">
                                 </td>
                         </tr>
                         <tr>
@@ -531,13 +660,6 @@
                                 <td width="83%" class="smallfont">
                                         <input type="file" name="txtImage" class="textbox" size="34" />
                                         (Kích thước&lt;2MB)(jpg,gif,bmp)
-                                </td>
-                        </tr>
-                        <tr>
-                                <td width="15%" class="smallfont" align="right">Nội dung ngắn</td>
-                                <td width="1%" class="smallfont" align="center"></td>
-                                <td width="83%" class="smallfont">
-                                        <textarea name="txtshort" cols="80" rows="10" id="txtshort'.$random_id.'"></textarea>
                                 </td>
                         </tr>
                         <tr>
@@ -566,39 +688,12 @@
                                         <input value="" type="text" name="txtSort" class="textbox" size="10">
                                 </td>
                         </tr>';
-                if($code == 'product'){
-                    $html .= '<tr>
-                                <td width="15%" class="smallfont" align="right">Giá sp</td>
-                                <td width="1%" class="smallfont" align="right"></td>
-                                <td width="83%" class="smallfont">
-                                        <input value="" type="text" name="txtPrice" class="textbox" size="10">
-                                </td>
-                        </tr>
-                        <tr>
-                                <td width="15%" class="smallfont" align="right">-----------------</td>
-                                <td width="1%" class="smallfont" align="right"></td>
-                                <td width="83%" class="smallfont"><strong>Thuộc tính:</strong></td>
-                        </tr>';
-                    $get_parent_id = selectOne(tbl_config::tbl_category, 'status=1 AND parent_id=0 AND code = "properties"', 'sort, date_added ASC');
-                    $parent_id = $get_parent_id['id'];
-                    $prop_cats = selectMulti(tbl_config::tbl_category, 'id, name', 'status=1 AND parent_id = ' . $parent_id, 'ORDER BY sort, date_added ASC');
-                    foreach($prop_cats as $prop_cat){
-                    $html .= '<tr>
-                                <td width="15%" class="smallfont" align="right">'.$prop_cat['name'].'</td>
-                                <td width="1%" class="smallfont" align="right"></td>
-                                <td width="83%" class="smallfont">
-                                        '.comboProperties(utf8_to_ascii($prop_cat['name']),getArrayCombo(tbl_config::tbl_properties,'id','name','parent_id = ' . $prop_cat['id']),'smallfont',0,1,false).'
-                                </td>
-                        </tr>';
-                    }
-                }
                 $html .= '</table>
                 </form>';
                 $html .= script_for_edit_content();
                 $ckeditor = new CKEditor( ) ;
                 $ckeditor->basePath    = 'ckeditor/' ;
                 CKFinder::SetupCKEditor( $ckeditor, 'ckfinder/' ) ;
-                $ckeditor->replace('txtshort'.$random_id);
                 $ckeditor->replace('txtlong'.$random_id);
             }
             echo $html;
@@ -609,13 +704,14 @@
                 $get_cat = selectOne(tbl_config::tbl_category, 'id = ' . $cat_id);
                 $url = $_POST['url'];
 		$name = $_POST['txtName'] ? trim($_POST['txtName']) : '';
-                $txtshort = $_POST['txtshort'] ? trim($_POST['txtshort']) : '';
-                $txtlong = $_POST['txtlong'] ? trim($_POST['txtlong']) : '';
+                $txtlong = $_POST['txtlong'] ? trim(html_entity($_POST['txtlong'])) : '';
+                $txtshort = $_POST['txtlong'] ? catchu(strip_tags($_POST['txtlong']), 160) : '';
                 $parent_id = $_POST['ddCat'];
 		$views = $_POST['txtViews'] ? $_POST['txtViews'] : 0;
                 $price = $_POST['txtPrice'] ? $_POST['txtPrice'] : 0;
                 $sort = $_POST['txtSort'] ? $_POST['txtSort'] : 0;
-                $seo_key = $get_parent['name'] . ' - ' . $get_cat['name'];
+                $seo_key = $_POST['txtSeokey'] ? $_POST['txtSeokey'] : '';
+                $title = $_POST['txtTitle'] ? $_POST['txtTitle'] : '';
                 $folder_img = date('d-m-Y');
 		$errMsg = '';
 		$time = time();
@@ -634,7 +730,7 @@
                             "date_added"    => $time,
                             "last_modified" => $time,
                             "seo_key"       => "'$seo_key'",
-                            "title"         => "'$name'"
+                            "title"         => "'$title'"
                     );
                 }else if($code_folder == 'adv'){
                     $fields_arr = array(
@@ -659,7 +755,7 @@
                             "date_added"    => $time,
                             "last_modified" => $time,
                             "seo_key"       => "'$seo_key'",
-                            "title"         => "'$name'"
+                            "title"         => "'$title'"
                     );
                 }
                 $insert_content = insert($tbl,$fields_arr);
