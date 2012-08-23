@@ -92,7 +92,7 @@
 		echo $form_data;
 	}
 	function update_detail($id){
-		$val = html_entity($_POST['txtlong']);
+		$val = $_POST['txtlong'];
 		$url = $_POST['url'];
 		$fields_arr = array("detail" => "'$val'", "last_modified" => time());
 		$result = update(tbl_config::tbl_static,$fields_arr,"id=".$id);

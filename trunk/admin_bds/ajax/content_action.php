@@ -663,6 +663,13 @@
                                 </td>
                         </tr>
                         <tr>
+                                <td width="15%" class="smallfont" align="right">Nội dung ngắn</td>
+                                <td width="1%" class="smallfont" align="center"></td>
+                                <td width="83%" class="smallfont">
+                                        <textarea name="txtshort" cols="80" rows="10" id="txtshort"></textarea>
+                                </td>
+                        </tr>
+                        <tr>
                                 <td width="15%" class="smallfont" align="right">Nội dung chi tiết</td>
                                 <td width="1%" class="smallfont" align="center"></td>
                                 <td width="83%" class="smallfont">
@@ -705,7 +712,10 @@
                 $url = $_POST['url'];
 		$name = $_POST['txtName'] ? trim($_POST['txtName']) : '';
                 $txtlong = $_POST['txtlong'] ? trim(html_entity($_POST['txtlong'])) : '';
-                $txtshort = $_POST['txtlong'] ? catchu(strip_tags($_POST['txtlong']), 160) : '';
+                if($code_folder == 'news')
+                    $txtshort = $_POST['txtshort'] ? trim($_POST['txtshort']) : '';
+                else
+                    $txtshort = $_POST['txtlong'] ? catchu(strip_tags($_POST['txtlong']), 160) : '';
                 $parent_id = $_POST['ddCat'];
 		$views = $_POST['txtViews'] ? $_POST['txtViews'] : 0;
                 $price = $_POST['txtPrice'] ? $_POST['txtPrice'] : 0;
