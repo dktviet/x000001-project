@@ -9,8 +9,13 @@
     <br>
     <a class="title" href="<?=getLinkSort(3)?>">SEO KEY</a>
 </th>
-<th width="71" class="title"><a class="title" href="<?=getLinkSort(4)?>">Nội dung ngắn</a></th>
-<th width="63" class="title"><a class="title" href="<?=getLinkSort(5)?>">Nội dung chi tiết</a></th>
+<th width="100" class="title">
+    <a class="title" href="<?=getLinkSort(4)?>">Nội dung ngắn</a>
+    <br>
+    <a class="title" href="<?=getLinkSort(5)?>">Nội dung chi tiết</a>
+    <br>
+    <a class="title" href="<?=getLinkSort(5)?>">Tiêu đề SEO</a>
+</th>
 <th width="100" class="title"><a class="title" href="<?=getLinkSort(6)?>">Hình ảnh</a></th>
 <th width="59" class="title"><a class="title" href="<?=getLinkSort(7)?>">Lượt xem</a></th>
 <th width="109" class="title"><a class="title" href="<?=getLinkSort(8)?>">Thứ tự sắp xếp</a></th>

@@ -7,10 +7,10 @@
 	<span onClick="delrow('<?=$id?>');">Xóa</span>
 </td>
 <td class="smallfont" align="center">
-	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);"><?=$name?></span>
+	<span id="name_<?=$id?>" onclick="edit_name('<?=killInjection($name)?>',<?=$id?>);" title="Bấm để sửa"><?=$name?></span>
 </td>
 <td class="smallfont" align="center">
-	<span id="support_code_<?=$id?>" onclick="edit_support_code('<?=$detail_short?>',<?=$id?>);"><?=$detail_short!=''?$detail_short:'<img src="images/icons/pencil.png" alt="" />'?></span>
+	<span id="support_code_<?=$id?>" onclick="edit_support_code('<?=$detail_short?>',<?=$id?>);" title="Bấm để sửa"><?=$detail_short!=''?$detail_short:'<img src="images/icons/pencil.png" alt="" />'?></span>
 </td>
 <td class="smallfont sort-num" align="center">
    	<img src="images/up.png" alt="" onclick="up_down_sort('<?=$id?>','1');" />
