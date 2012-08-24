@@ -8,6 +8,7 @@ var admin = {
     param: ''
 };
 $(document).ready(function() {
+        $("#shadow").css("height", $(document).height()).hide();
         admin.url = $(location).attr('href');
         admin.main_url = admin.url.split('#')[0];
         admin.param_url = admin.url.split('#')[1];
@@ -85,11 +86,12 @@ $(document).ready(function() {
 		$(this).find('a').addClass('current');
 		load_contact_list();
 	});
-
         $("#loading").bind("ajaxStart", function(){
+            $("#shadow").fadeIn();
             $(this).fadeIn();
         }).bind("ajaxComplete", function(){
             $(this).fadeOut();
+            $("#shadow").fadeOut();
         });
 
 });

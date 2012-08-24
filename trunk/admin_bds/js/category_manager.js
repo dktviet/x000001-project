@@ -1,7 +1,7 @@
 function delrow(id){
 	var cat_id = $('h3').attr('cat_id');
         var para = 'id='+cat_id;
-	if(confirm('Bạn có chắc chắn muốn xóa ?')){
+	if(confirm('Các mục con của danh mục này cũng sẽ bị xoá. Bạn có chắc chắn muốn xóa ?')){
 		$.post("ajax/category_action.php", {
 			fnc:'del',
 			id: id 
@@ -29,7 +29,7 @@ function del_multi_row(){
         $.each($('.chk:checked'), function() {
             multi_id.push($(this).val());
         });
-	if(confirm('Bạn có chắc chắn muốn xóa ?')){
+	if(confirm('Các mục con của các danh mục này cũng sẽ bị xoá. Bạn có chắc chắn muốn xóa ?')){
 		$.post("ajax/category_action.php", {
 			fnc:'del_multi',
 			chk: multi_id 
@@ -105,6 +105,9 @@ function edit_name(name, id){
 		buttons: {
 			'Cập nhật': function() {
 				var name = $('#name_space').val();
+                                if(test_empty(name)){
+                                        alert('Tên không được để trống!');$('#name_space').focus();return false;
+                                }
 				$.post("ajax/category_action.php", {
 					fnc:'edit_name',
 					id: id,
@@ -235,6 +238,9 @@ function add_new(id){
                                 var desc = $('#desc_space').val();
                                 var seo_key = $('#seo_key_space').val();
                                 var title = $('#title_space').val();
+                                if(test_empty(name)){
+                                        alert('Tên không được để trống!');$('#name_space').focus();return false;
+                                }
 				$.post("ajax/category_action.php", {
 					fnc:'add_new',
 					name:name,

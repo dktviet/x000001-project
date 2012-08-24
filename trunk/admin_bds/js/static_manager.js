@@ -63,6 +63,9 @@ function edit_name(name, id){
 		buttons: {
 			'Cập nhật': function() {
 				var name = $('#name_space').val();
+                                if(test_empty(name)){
+                                        alert('Tên không được để trống!');$('#name_space').focus();return false;
+                                }
 				$.post("ajax/static_action.php", {
 					fnc:'edit_name',
 					id: id,
