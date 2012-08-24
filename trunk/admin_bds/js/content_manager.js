@@ -134,6 +134,7 @@ function show_views_input(id){
 }
 function update_views(id,views){
 	var tbl = $('h3').attr('tbl_data');
+        views = views || views != '' ? views : 0;
 	$.post("ajax/content_action.php", {
 		fnc:'update_views',
 		tbl: tbl,
@@ -152,8 +153,9 @@ function show_price_input(id){
 	$('#price_input_'+id).show();
 	$('#price_input_'+id).focus();
 }
-function update_price(id,price){
+function update_price(id, price){
 	var tbl = $('h3').attr('tbl_data');
+        price = price || price != ''? price : 0;
 	$.post("ajax/content_action.php", {
 		fnc:'update_price',
 		tbl: tbl,
@@ -178,6 +180,9 @@ function edit_name(name, id){
 		buttons: {
 			'Cập nhật': function() {
 				var name = $('#name_space').val();
+                                if(test_empty(name)){
+                                        alert('Tên không được để trống!');$('#name_space').focus();return false;
+                                }
 				$.post("ajax/content_action.php", {
 					fnc:'edit_name',
 					tbl: tbl,
@@ -380,6 +385,9 @@ function edit_support_code(support, id){
 		buttons: {
 			'Cập nhật': function() {
 				var support = $('#support_space').val();
+                                if(test_empty(support)){
+                                        alert('Nội dung được để trống!');$('#support_space').focus();return false;
+                                }
 				$.post("ajax/content_action.php", {
 					fnc:'edit_support_code',
 					tbl: tbl,
@@ -444,6 +452,9 @@ function edit_adv_link(link, id){
 		buttons: {
 			'Cập nhật': function() {
 				var link = $('#adv_link_space').val();
+                                if(test_empty(link)){
+                                        alert('Link không được để trống!');$('#adv_link_space').focus();return false;
+                                }
 				$.post("ajax/content_action.php", {
 					fnc:'edit_adv_link',
 					tbl: tbl,
@@ -506,9 +517,12 @@ function add_new(tbl, parent_cat_id, cat_id){
 		position: 'center',
 		buttons: {
 			'Cập nhật': function() {
-				if($('#add_new_form').submit()){
-					$(this).dialog('close');
-				}
+                                var name = $('#txtName').val();
+                                if(test_empty(name)){
+                                        alert('Tên không được để trống!');$('#txtName').focus();return false;
+                                }else if($('#add_new_form').submit()){
+                                        $('#dialog').dialog('close');
+                                }
 			},
 			'Hủy': function() {
 				$(this).dialog('close');
@@ -536,6 +550,9 @@ function add_new_properties(tbl, parent_cat_id, cat_id){
 			'Cập nhật': function() {
                             var name = $('#txtName').val();
                             var sort = $('#txtSort').val();
+                            if(test_empty(name)){
+                                    alert('Tên không được để trống!');$('#txtName').focus();return false;
+                            }
                             $.post("ajax/content_action.php", {
                                     fnc:'add_new_properties',
                                     cat_id: cat_id,
@@ -577,6 +594,12 @@ function add_new_support(tbl, parent_cat_id, cat_id){
                             var name = $('#txtName').val();
                             var detail_short = $('#txtshort').val();
                             var sort = $('#txtSort').val();
+                            if(test_empty(name)){
+                                    alert('Tên không được để trống!');$('#txtName').focus();return false;
+                            }
+                            if(test_empty(detail_short)){
+                                    alert('Nội dung không được để trống!');$('#txtshort').focus();return false;
+                            }
                             $.post("ajax/content_action.php", {
                                     fnc:'add_new_support',
                                     tbl: tbl,
@@ -635,7 +658,6 @@ function choose_properties(properties_id, ext_id, prod_id){
         var parent_cat_id = $('h3').attr('parent_id');
         var cat_id = $('h3').attr('cat_id');
         var para = 'parent_id='+parent_cat_id+'&id='+cat_id;
-
         $.post("ajax/content_action.php", {
                 fnc: 'update_properties',
                 ext_id: ext_id,

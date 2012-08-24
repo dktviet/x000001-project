@@ -1054,7 +1054,7 @@ function FormatNumber($number) {
 }
 
 function html_entity($string, $encode = true){
-        $string = $encode ? $string = htmlentities($string) : html_entity_decode($string);
+        $string = $encode ? $string = htmlentities($string, ENT_QUOTES, 'UTF-8') : html_entity_decode($string, ENT_QUOTES, 'UTF-8');
         return $string;
 }
 

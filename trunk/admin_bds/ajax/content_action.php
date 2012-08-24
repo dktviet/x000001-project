@@ -540,19 +540,19 @@
                                 <td width="15%" class="smallfont" align="right">Tiêu đề</td>
                                 <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
                                 <td width="83%" class="smallfont">
-                                        <input value="" type="text" name="txtName" class="textbox" size="34" onkeyup="document.getElementById(\'txtTitle\').value = this.value;" />
+                                        <input value="" type="text" id="txtName" name="txtName" class="textbox" size="34" onkeyup="document.getElementById(\'txtTitle\').value = this.value;" />
                                 </td>
                         </tr>
                         <tr>
                                 <td width="15%" class="smallfont" align="right">SEO KEY</td>
-                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="1%" class="smallfont" align="center"></td>
                                 <td width="83%" class="smallfont">
                                         <input value="'.$get_parent['name'].' - '.$get_cat['name'].'" type="text" name="txtSeokey" class="textbox" size="34">
                                 </td>
                         </tr>
                         <tr>
                                 <td width="15%" class="smallfont" align="right">Tiêu đề SEO</td>
-                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="1%" class="smallfont" align="center"></td>
                                 <td width="83%" class="smallfont">
                                         <input value="" type="text" id="txtTitle" name="txtTitle" class="textbox" size="34">
                                 </td>
@@ -637,19 +637,19 @@
                                 <td width="15%" class="smallfont" align="right">Tiêu đề</td>
                                 <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
                                 <td width="83%" class="smallfont">
-                                        <input value="" type="text" name="txtName" class="textbox" size="34" onkeyup="document.getElementById(\'txtTitle\').value = this.value;" />
+                                        <input value="" type="text" id="txtName" name="txtName" class="textbox" size="34" onkeyup="document.getElementById(\'txtTitle\').value = this.value;" />
                                 </td>
                         </tr>
                         <tr>
                                 <td width="15%" class="smallfont" align="right">SEO KEY</td>
-                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="1%" class="smallfont" align="center"></td>
                                 <td width="83%" class="smallfont">
                                         <input value="'.$get_parent['name'].' - '.$get_cat['name'].'" type="text" name="txtSeokey" class="textbox" size="34">
                                 </td>
                         </tr>
                         <tr>
                                 <td width="15%" class="smallfont" align="right">Tiêu đề SEO</td>
-                                <td width="1%" class="smallfont" align="center"><font color="#FF0000">*</font></td>
+                                <td width="1%" class="smallfont" align="center"></td>
                                 <td width="83%" class="smallfont">
                                         <input value="" type="text" id="txtTitle" name="txtTitle" class="textbox" size="34">
                                 </td>
@@ -935,8 +935,6 @@
         }
 	
 ?>
-
-
 
 
 
