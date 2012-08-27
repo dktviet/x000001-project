@@ -1,3 +1,0 @@
-http://localhost/bds/http://localhost/bds/trang-chu.html
-http://localhost/bds/gioi-thieu.html
-http://localhost/bds/lien-he.html
